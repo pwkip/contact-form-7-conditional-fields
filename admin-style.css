@@ -1,0 +1,4 @@
+#wpcf7cf-add-button, .delete-button { text-decoration: none; display: inline-block; vertical-align: baseline; color:#4ed521; }
+.delete-button { color: #d54e21 !important; }
+#wpcf7cf-new-entry { display: inline-block; display:none; }
+#wpcf7cf-delete-button { display: none; }
