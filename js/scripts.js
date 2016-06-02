@@ -12,35 +12,29 @@ $(document).ready(function() {
             console.log(condition);
             if (condition.then_visibility == 'hide') continue;
 
-            if ($('[name='+condition.if_field+']').length) {
+            $field = $('[name='+condition.if_field+']').length ? $('[name='+condition.if_field+']') : $('[name='+condition.if_field+'\\[\\]]');
 
-                // single field
+            if ($field.length == 1) {
 
-                $field = $('[name='+condition.if_field+']');
+                // single field (tested with text field, single checkbox)
+
                 if (condition.operator == 'equals' && $field.val() == condition.if_value || condition.operator == 'not equals' && $field.val() != condition.if_value) {
+                    if ($field.attr('type') == 'checkbox' && !$field.attr('checked')) continue;
                     $('#'+condition.then_field).show();
                 }
 
-            } else if ($('[name='+condition.if_field+'\\[\\]]').length) {
+            } else if ($field.length > 1) {
 
-                // multiple fields (checkboxes)
-
-                $fields = $('[name='+condition.if_field+'\\[\\]]');
+                // multiple fields (tested with checkboxes, exclusive checkboxes)
 
                 var all_values = [];
                 var checked_values = [];
-                $fields.each(function() {
+                $field.each(function() {
                     all_values.push($(this).val());
                     if($(this).is(':checked')) {
                         checked_values.push($(this).val());
                     }
                 });
-
-                console.log(all_values);
-                console.log(checked_values);
-                console.log(condition.operator);
-                console.log(condition.if_value);
-                console.log(condition.then_field);
 
                 if (condition.operator == 'equals' && $.inArray(condition.if_value, checked_values) != -1) {
                     $('#'+condition.then_field).show();
