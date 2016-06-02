@@ -5,7 +5,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 3.6.1
 Tested up to: 4.5.2
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,3 +43,8 @@ First release
 = 0.1.1 =
 
 Fixed bug with exclusive checkboxes (https://wordpress.org/support/topic/groups-not-showing)
+
+= 0.1.2 =
+
+* Make code work with select element that allows multiple options.
+* Only load javascript on pages that contain a CF7 form
