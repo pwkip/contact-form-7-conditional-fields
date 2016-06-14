@@ -112,14 +112,12 @@ class ContactForm7ConditionalFields {
 		$args = wp_parse_args( $args, array() );
 		$type = 'group';
 
-		$description = __( "Generate a group tag to group form elements that can be shown conditionally. For more details, see %s.", 'cf7cf' );
-
-		$desc_link = wpcf7_link( __( 'http://bdwm.be/cf7cf', 'cf7cf' ), __( 'Group', 'cf7cf' ) );
+		$description = __( "Generate a group tag to group form elements that can be shown conditionally.", 'cf7cf' );
 
 		?>
 		<div class="control-box">
 			<fieldset>
-				<legend><?php echo sprintf( esc_html( $description ), $desc_link ); ?></legend>
+				<legend><?php echo sprintf( esc_html( $description ) ); ?></legend>
 
 				<table class="form-table">
 					<tbody>
@@ -129,29 +127,6 @@ class ContactForm7ConditionalFields {
 						<td><input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /></td>
 					</tr>
 
-					<tr>
-						<th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-style' ); ?>"><?php echo esc_html( __( 'Style', 'cf7cf' ) ); ?></label></th>
-						<td>
-							<fieldset>
-								<legend class="screen-reader-text"><?php echo esc_html( __( 'Style', 'cf7cf' ) ); ?></legend>
-								<select class="stylevalue oneline option" id="<?php echo esc_attr( $args['content'] . '-style' ); ?>">
-									<option value="" selected="selected"><?php echo esc_html( __( 'None', 'cf7cf' ) ); ?></option>
-									<option value="fieldset"><?php echo esc_html( __( 'Fieldset', 'cf7cf' ) ); ?></option>
-								</select>
-							</fieldset>
-							<input type="hidden" name="style" id="<?php echo esc_attr( $args['content'] . '-style-hidden' ); ?>" class="stylevalue oneline option">
-						</td>
-					</tr>
-
-					<tr>
-						<th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'Id attribute', 'contact-form-7' ) ); ?></label></th>
-						<td><input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" /></td>
-					</tr>
-
-					<tr>
-						<th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class attribute', 'contact-form-7' ) ); ?></label></th>
-						<td><input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" /></td>
-					</tr>
 					</tbody>
 				</table>
 			</fieldset>
@@ -177,7 +152,19 @@ add_filter( 'wpcf7_contact_form_properties', 'wpcf7cf_properties', 10, 2 );
 function wpcf7cf_properties($properties, $wpcf7form) {
 	if (!is_admin()) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor aswell.
 		$form = $properties['form'];
-		$form = preg_replace( '/\[group (.*?)\]/s', '<div id="$1" class="wpcf7cf_group">', $form );
+
+		$find = array(
+			'/\[group\s(.*?)\s.*?class:([^\s:\]]*).*?\]/s', // match the class
+			// remove all other junk
+			'/\[group\s([^\s\]]*)\s?(.*?)\]/s'
+		);
+
+		$replace = array(
+			'[group $1 class="$2"]',
+			'<div id="$1" data-class="wpcf7cf_group" $2>'
+		);
+
+		$form = preg_replace( $find, $replace, $form );
 		$form = preg_replace( '/\[\/group\]/s', '</div>', $form );
 
 		$properties['form'] = $form;

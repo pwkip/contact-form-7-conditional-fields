@@ -4,7 +4,7 @@
 	
 $(document).ready(function() {
     function display_fields() {
-        $('.wpcf7cf_group').hide();
+        $('[data-class=wpcf7cf_group]').hide();
         for (var i=0; i < wpcf7cf_options.length; i++) {
 
             var condition = wpcf7cf_options[i];
