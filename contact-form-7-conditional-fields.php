@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.1.3
+Version: 0.1.4
 Author URI: http://bdwm.be/
 */
 
@@ -26,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.1.3' );
+define( 'WPCF7CF_VERSION', '0.1.4' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -154,26 +154,40 @@ function wpcf7cf_properties($properties, $wpcf7form) {
 		$form = $properties['form'];
 
 		$find = array(
-			'/\[group\s(.*?)\s.*?class:([^\s:\]]*).*?\]/s', // match the class
-			// remove all other junk
-			'/\[group\s([^\s\]]*)\s?(.*?)\]/s'
+			'/\[group\s*\]/s', // matches [group    ] or [group]
+			'/\[group\s+([^\s\]]*)\s*([^\]]*)\]/s', // matches [group something some:thing] or [group   something  som   ]
+			                                        // doesn't match [group-special something]
+			'/\[\/group\]/s'
 		);
 
 		$replace = array(
-			'[group $1 class="$2"]',
-			'<div id="$1" data-class="wpcf7cf_group" $2>'
+			'<div data-class="wpcf7cf_group">',
+			'<div id="$1" data-class="wpcf7cf_group">',
+			'</div>'
 		);
 
 		$form = preg_replace( $find, $replace, $form );
-		$form = preg_replace( '/\[\/group\]/s', '</div>', $form );
 
 		$properties['form'] = $form;
 	}
 	return $properties;
 }
 
+$global_count = 0;
+
 add_action('wpcf7_contact_form', 'wpcf7cf_enqueue_scripts', 10, 1);
 function wpcf7cf_enqueue_scripts($cf7form) {
-	wp_enqueue_script('cf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), '', true);
-	wp_localize_script('cf7cf-scripts', 'wpcf7cf_options', get_post_meta($cf7form->id,'wpcf7cf_options',true));
+	global $global_count, $post;
+	$global_count++;
+
+	$unit_tag = 'wpcf7-f'.$cf7form->id.'-p'.$post->ID.'-o'.$global_count;
+
+	$options = array(
+		'form_id' => $cf7form->id,
+		'unit_tag' => $unit_tag,
+		'conditions' => get_post_meta($cf7form->id,'wpcf7cf_options', true),
+	);
+
+	wp_enqueue_script('cf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
+	wp_localize_script('cf7cf-scripts', 'wpcf7cf_options_'.$global_count, $options);
 }

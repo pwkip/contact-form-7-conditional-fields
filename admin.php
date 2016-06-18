@@ -66,6 +66,9 @@ function wpcf7cf_editor_panel_conditional($form) {
 	$form_id = $_GET['post'];
 	$wpcf7cf_entries = get_post_meta($form_id,'wpcf7cf_options',true);
 
+	if (!is_array($wpcf7cf_entries)) $wpcf7cf_entries = array();
+
+
 	?>
 	<h3><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h3>
 
