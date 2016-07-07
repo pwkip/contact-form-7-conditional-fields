@@ -1,6 +1,6 @@
+var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
+
 (function($) {
-    //if (typeof wpcf7cf_options == 'undefined') return; // return if there is no form on the page
-	//console.log(wpcf7cf_options);
 
     var i=0;
     var options = [];
@@ -16,8 +16,19 @@
     $(document).ready(function() {
         function display_fields(unit_tag, wpcf7cf_conditions) {
 
-            //console.log(unit_tag);
-            //console.log(wpcf7cf_conditions);
+            //for compatibility with contact-form-7-signature-addon
+            if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
+                if (signatures[0].canvas.width == 0) {
+                    for (var i = 0; i < signatures.length; i++) {
+
+                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(0).attr('width', jQuery(".wpcf7-form-control-signature-wrap").width());
+                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(0).attr('height', jQuery(".wpcf7-form-control-signature-wrap").height());
+
+                        cf7signature_resized = 1;
+                    }
+                }
+            }
+
 
             $("#"+unit_tag+" [data-class='wpcf7cf_group']").hide();
             for (var i=0; i < wpcf7cf_conditions.length; i++) {
@@ -75,7 +86,6 @@
             var conditions = options[i]['conditions'];
             display_fields(unit_tag, conditions);
             $('#'+unit_tag+' input, #'+unit_tag+' select, #'+unit_tag+' textarea').change({unit_tag:unit_tag, conditions:conditions}, function(e) {
-                console.log('triggered '+e.data.unit_tag);
                 display_fields(e.data.unit_tag, e.data.conditions);
             });
         }

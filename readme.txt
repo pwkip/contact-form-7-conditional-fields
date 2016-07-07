@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 3.6.1
 Tested up to: 4.5.3
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,8 +39,12 @@ Because no questions have been asked frequently about this plugin.
 
 == Changelog ==
 
+= 0.1.6 =
+* made compatible with wpcf7-form-control-signature-wrap plugin https://wordpress.org/support/topic/signature-add-on-not-working
+
 = 0.1.5 =
 * fixed PHP notice thanks to @natalia_c https://wordpress.org/support/topic/php-notice-80
+* tested with WP 4.5.3
 
 = 0.1.4 =
 
