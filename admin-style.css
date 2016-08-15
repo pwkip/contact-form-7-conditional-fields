@@ -2,3 +2,4 @@
 .delete-button { color: #d54e21 !important; }
 #wpcf7cf-new-entry { display: inline-block; display:none; }
 #wpcf7cf-delete-button { display: none; }
+#wpcf7cf-settings-text { width: 100%; height: 280px; }

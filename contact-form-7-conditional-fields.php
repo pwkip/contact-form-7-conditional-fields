@@ -26,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.1.6' );
+define( 'WPCF7CF_VERSION', '0.1.7' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -177,6 +177,9 @@ $global_count = 0;
 
 add_action('wpcf7_contact_form', 'wpcf7cf_enqueue_scripts', 10, 1);
 function wpcf7cf_enqueue_scripts($cf7form) {
+
+	if (is_admin()) return;
+
 	global $global_count, $post;
 	$global_count++;
 

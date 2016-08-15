@@ -17,10 +17,10 @@ function add_conditional_panel($panels) {
 	return $panels;
 }
 
-function all_field_options($post, $selected = '') {
+function all_field_options($post, $selected = '-1') {
 	$all_fields = $post->form_scan_shortcode();
 	?>
-	<option value="-1">-- Select field --</option>
+	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>>-- Select field --</option>
 	<?php
 	foreach ($all_fields as $tag) {
 		if ($tag['type'] == 'group' || $tag['name'] == '') continue;
@@ -30,11 +30,11 @@ function all_field_options($post, $selected = '') {
 	}
 }
 
-function all_group_options($post, $selected = '') {
+function all_group_options($post, $selected = '-1') {
 	$all_groups = $post->form_scan_shortcode(array('type'=>'group'));
 
 	?>
-	<option value="-1">-- Select group --</option>
+	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>>-- Select group --</option>
 	<?php
 	foreach ($all_groups as $tag) {
 		?>
@@ -76,10 +76,10 @@ function wpcf7cf_editor_panel_conditional($form) {
 	<div id="wpcf7cf-new-entry">
 		if 
 		<select name="wpcf7cf_options[{id}][if_field]" class="if-field-select"><?php all_field_options($form); ?></select>
-		<select name="wpcf7cf_options[{id}][operator]"><?php all_operator_options(); ?></select>
-		<input name="wpcf7cf_options[{id}][if_value]" type="text" placeholder="value">
+		<select name="wpcf7cf_options[{id}][operator]" class="operator"><?php all_operator_options(); ?></select>
+		<input name="wpcf7cf_options[{id}][if_value]" class="if-value" type="text" placeholder="value">
 		then
-		<select name="wpcf7cf_options[{id}][then_visibility]"><?php all_display_options() ?></select>
+		<select name="wpcf7cf_options[{id}][then_visibility]" class="then-visibility"><?php all_display_options() ?></select>
 		<select name="wpcf7cf_options[{id}][then_field]" class="then-field-select"><?php all_group_options($form); ?></select>
 	</div>
 	<a id="wpcf7cf-delete-button" class="delete-button" title="delete rule" href="#"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
@@ -93,10 +93,10 @@ function wpcf7cf_editor_panel_conditional($form) {
 			<div class="entry" id="entry-<?php echo $i ?>">
 				if
 				<select name="wpcf7cf_options[<?php echo $i ?>][if_field]" class="if-field-select"><?php all_field_options($form, $entry['if_field']); ?></select>
-				<select name="wpcf7cf_options[<?php echo $i ?>][operator]"><?php all_operator_options($entry['operator']) ?></select>
-				<input name="wpcf7cf_options[<?php echo $i ?>][if_value]" type="text" placeholder="value" value="<?php echo $entry['if_value'] ?>">
+				<select name="wpcf7cf_options[<?php echo $i ?>][operator]" class="operator"><?php all_operator_options($entry['operator']) ?></select>
+				<input name="wpcf7cf_options[<?php echo $i ?>][if_value]" class="if-value" type="text" placeholder="value" value="<?php echo $entry['if_value'] ?>">
 				then
-				<select name="wpcf7cf_options[<?php echo $i ?>][then_visibility]"><?php all_display_options($entry['then_visibility']) ?></select>
+				<select name="wpcf7cf_options[<?php echo $i ?>][then_visibility]" class="then-visibility"><?php all_display_options($entry['then_visibility']) ?></select>
 				<select name="wpcf7cf_options[<?php echo $i ?>][then_field]" class="then-field-select"><?php all_group_options($form, $entry['then_field']); ?></select>
 				<a style="display: inline-block;" href="#" title="delete rule" class="delete-button"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
 			</div>
@@ -104,6 +104,15 @@ function wpcf7cf_editor_panel_conditional($form) {
 			$i++;
 		}
 		?>
+	</div>
+
+
+	<div id="wpcf7cf-text-entries">
+		<p><a href="#" id="wpcf7cf-settings-to-text">Export settings</a></p>
+		<div id="wpcf7cf-settings-text-wrap">
+			<textarea id="wpcf7cf-settings-text"></textarea>
+			<p><a href="#" id="wpcf7cf-settings-text-clear">Clear</a></p>
+		</div>
 	</div>
 	
 	<script>
@@ -143,6 +152,33 @@ function wpcf7cf_editor_panel_conditional($form) {
 				return false;
 				
 			});
+
+			// settings to
+
+			$('#wpcf7cf-settings-text-wrap').hide();
+
+			$('#wpcf7cf-settings-to-text').click(function() {
+				$('#wpcf7cf-settings-text-wrap').show();
+
+				$('#wpcf7cf-settings-text').val('');
+				$('#wpcf7cf-entries .entry').each(function() {
+					var $entry = $(this);
+					var line = 'if [' + $entry.find('.if-field-select').val() + ']'
+						+ ' ' + $entry.find('.operator').val()
+						+ ' "' + $entry.find('.if-value').val() + '" then '
+						+ $entry.find('.then-visibility').val()
+						+ ' [' + $entry.find('.then-field-select').val() + ']';
+					$('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" ).select();
+				});
+				return false;
+			});
+
+			$('#wpcf7cf-settings-text-clear').click(function() {
+				$('#wpcf7cf-settings-text-wrap').hide();
+				$('#wpcf7cf-settings-text').val('');
+				return false;
+			});
+
 		})( jQuery );
 	</script>
 <?php

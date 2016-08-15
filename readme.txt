@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 3.6.1
 Tested up to: 4.5.3
-Stable tag: 0.1.6
+Stable tag: 0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,11 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 0.1.7 =
+* Fix popup warning to leave page even tough no changes have been made. Thanks to @hhmaster2045 for reporting the bug. https://wordpress.org/support/topic/popup-warning-to-leave-page-even-though-no-changes-have-been-made
+* Added export option for easier troubleshooting.
+* Don't include front end javascript in backend.
 
 = 0.1.6 =
 * made compatible with wpcf7-form-control-signature-wrap plugin https://wordpress.org/support/topic/signature-add-on-not-working
