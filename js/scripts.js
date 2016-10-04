@@ -43,12 +43,22 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                     // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
 
                     if ($field.is('select')) {
-                        $field.find('option:selected').each(function() {
+                        var show = false;
+                        if(condition.operator == 'not equals') {
+                            show = true;
+                        }
+                        $field.find('option:selected').each(function () {
                             var $option = $(this);
                             if (condition.operator == 'equals' && $option.val() == condition.if_value) {
-                                $('#'+unit_tag+' #'+condition.then_field).show();
+                                show = true;
+                            } else if (condition.operator == 'not equals' && $option.val() == condition.if_value) {
+                                show = false;
                             }
                         });
+                        if(show == true) {
+                            $('#' + unit_tag + ' #' + condition.then_field).show();
+                        }
+
                         continue;
                     }
 
@@ -91,5 +101,5 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
         }
 
     });
-	
+
 })( jQuery );
