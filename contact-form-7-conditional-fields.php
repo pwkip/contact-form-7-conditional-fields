@@ -6,7 +6,7 @@ Description: Adds support for conditional fields to Contact Form 7. This plugin 
 Author: Jules Colle
 Version: 0.1.6
 Author URI: http://bdwm.be/
-*/
+ */
 
 /**
  * This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Author URI: http://bdwm.be/
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
+ */
 ?>
 <?php
 
@@ -156,7 +156,7 @@ function wpcf7cf_properties($properties, $wpcf7form) {
 		$find = array(
 			'/\[group\s*\]/s', // matches [group    ] or [group]
 			'/\[group\s+([^\s\]]*)\s*([^\]]*)\]/s', // matches [group something some:thing] or [group   something  som   ]
-			                                        // doesn't match [group-special something]
+			// doesn't match [group-special something]
 			'/\[\/group\]/s'
 		);
 
@@ -193,4 +193,136 @@ function wpcf7cf_enqueue_scripts($cf7form) {
 
 	wp_enqueue_script('cf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
 	wp_localize_script('cf7cf-scripts', 'wpcf7cf_options_'.$global_count, $options);
+}
+
+/**
+ * Remove validation requirements for fields that are hidden at the time of form submission.
+ * Called using add_filter( 'wpcf7_validate_[tag_type]', 'wpcf7cf_skip_validation_for_hidden_fields', 2, 2 );
+ * where the priority of 2
+ */
+function wpcf7cf_skip_validation_for_hidden_fields($result, $tag) {
+	global $wp_filter;
+	$hidden_fields = wpcf7cf_get_hidden_fields();
+
+	// If this field is hidden, skip the rest of the validation hooks
+	if( in_array($tag['name'], $hidden_fields) ) {
+		// end() skips to the end of the $wp_filter array, effectively skipping any filters with a priority
+		// lower than whatever priority this function was given.
+		// In our case, this means that a hidden field won't be marked as "Invalid", regardless of its contents
+		// unless it's done by a filter of priority 1 or 2
+		end( $wp_filter[ current_filter() ] );
+	}
+
+	return $result;
+}
+
+
+add_filter( 'wpcf7_posted_data', 'wpcf7cf_remove_hidden_post_data' );
+/**
+ * When a CF7 form is posted, check the form for hidden fields, then remove those fields from the post data
+ */
+function wpcf7cf_remove_hidden_post_data($posted_data) {
+	$hidden_fields = wpcf7cf_get_hidden_fields($posted_data);
+
+	foreach( $hidden_fields as $name => $value ) {
+		unset( $posted_data[$name] );
+	}
+	return $posted_data;
+}
+
+
+/**
+ * Finds the currently submitted form and returns an array of fields that are hidden and should be ignored
+ *
+ * @param bool|array $posted_data
+ * @return mixed
+ */
+function wpcf7cf_get_hidden_fields($posted_data = false) {
+	if ( isset( $posted_data['_wpcf7'] ) ) {
+		// When called by wpcf7cf_remove_hidden_post_data() and $posted_data is available
+		$form_id = $posted_data['_wpcf7'];
+	} else {
+		// When called from wpcf7cf_skip_validation_for_hidden_fields(), use WPCF7_Submission object to get form id
+		$form_id = WPCF7_Submission::get_instance()->get_posted_data( '_wpcf7' );
+	}
+
+	// We only need to run through this once, so check to see if the global variable exists.
+	if ( ! isset( $GLOBALS['wpcf7cf_hidden_fields'][$form_id] ) ) {
+		// Get the WPCF7_ContactForm object for this form
+		$contact_form = WPCF7_ContactForm::get_instance( $form_id );
+
+		// While we have the contact form object, find all used tags so we can add our validation filter
+		foreach( (array) $contact_form->form_scan_shortcode() as $tag ) {
+			//Priority of 2 allows other filters at priority 1 or 2 to actually validate hidden fields (just in case)
+			add_filter( 'wpcf7_validate_' . $tag['type'], 'wpcf7cf_skip_validation_for_hidden_fields', 2, 2 );
+		}
+
+		// Get the form properties so we have access to the form itself
+		$form_properties = $contact_form->get_properties();
+
+		//Find out which tags are in which groups
+		$dom = new DOMDocument();
+		$dom->loadHTML($form_properties['form']);
+		$divs = $dom->getElementsByTagName('div');
+		$groups = array();
+		foreach ($divs as $div) {
+			$is_group = false;
+			foreach($div->attributes as $attribute) {
+				if ( 'data-class' == $attribute->name && 'wpcf7cf_group' == $attribute->value ) {
+					// Group divs will have a data-class of wpcf7cf_group
+					$is_group = true;
+				}
+				if ( 'id' == $attribute->name ) {
+					$id = $attribute->value;
+				}
+			}
+			if ( $is_group ) {
+				// Match all tag names (format = [tag_type tag_name] or [tag_type tag_name options values etc...])
+				preg_match_all("/\[[^\s\]]* ([^\s\]]*)[^\]]*\]/", $div->textContent, $matches);
+				foreach( $matches[1] as $tag ) {
+					$groups[$id][] = $tag;
+				}
+			}
+		}
+		// $groups is now an array of groups (by id) with an array of the name of each tag that is inside that group.
+
+		// Groups are hidden by default. Find all the visible ones and mark them.
+		// This is a duplicate of the logic in js/scripts.js and needs to be included
+		// so our verification is done server-side. If we ran this verification in
+		// javascript, then all the form's normal validation could be overridden.
+		//
+		// Unfortunately, separate javascript and php validation is probably necessary since to use only php
+		// would mean that every onChange() would require an ajax call, and that'd get too slow.
+		$visible_groups = array();
+		$conditions = get_post_meta($form_id,'wpcf7cf_options', true);
+		foreach( $conditions as $condition ) {
+			if ( $condition['then_visibility'] == 'show' ) {
+				if ( is_array($posted_data[ $condition['if_field'] ]) ) {
+					if ( 'not equals' == $condition['operator'] && ! in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+						$visible_groups[] = $condition['then_field'];
+					} elseif ( 'equals' == $condition['operator'] && in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+						$visible_groups[] = $condition['then_field'];
+					}
+				} else {
+					if ( 'not equals' == $condition['operator'] && $condition['if_value'] != $posted_data[ $condition['if_field'] ] ) {
+						$visible_groups[] = $condition['then_field'];
+					} elseif ( 'equals' == $condition['operator'] && $condition['if_value'] == $posted_data[ $condition['if_field'] ] ) {
+						$visible_groups[] = $condition['then_field'];
+					}
+				}
+			}
+		}
+
+		$GLOBALS['wpcf7cf_hidden_fields'][$form_id] = array();
+		// Iterate through the groups.
+		// When we find one that's not in the $visible_groups array, add its tags to our list of hidden tags
+		foreach( $groups as $group => $fields ) {
+			if ( ! in_array($group, $visible_groups) ) {
+				$GLOBALS['wpcf7cf_hidden_fields'][$form_id] = array_merge($GLOBALS['wpcf7cf_hidden_fields'][$form_id], $fields);
+			}
+		}
+
+
+	}
+	return $GLOBALS['wpcf7cf_hidden_fields'][$form_id];
 }
