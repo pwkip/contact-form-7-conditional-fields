@@ -310,7 +310,6 @@ class ContactForm7ConditionalFields {
 			function ( $matches ) {
 				$name = $matches[1];
 				$content = $matches[2];
-				stevish_log("hidden_groups: " . print_r($this->hidden_groups, true) . "visible_groups: " . print_r($this->visible_groups, true) );
 				if ( in_array( $name, $this->hidden_groups ) ) {
 					// The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
 					return '';
