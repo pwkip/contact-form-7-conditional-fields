@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.1.8
+Version: 0.2
 Author URI: http://bdwm.be/
 */
 
@@ -26,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.1.7' );
+define( 'WPCF7CF_VERSION', '0.2' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -241,6 +241,7 @@ class ContactForm7ConditionalFields {
 					}
 				}
 				if ( $is_group  ) {
+					$groups[$id] = array();
 					// Match all tag names (format = [tag_type tag_name] or [tag_type tag_name options values etc...])
 					preg_match_all("/\[[^\s\]]* ([^\s\]]*)[^\]]*\]/", $div->textContent, $matches);
 					foreach( $matches[1] as $tag ) {
@@ -310,7 +311,6 @@ class ContactForm7ConditionalFields {
 			function ( $matches ) {
 				$name = $matches[1];
 				$content = $matches[2];
-				stevish_log("hidden_groups: " . print_r($this->hidden_groups, true) . "visible_groups: " . print_r($this->visible_groups, true) );
 				if ( in_array( $name, $this->hidden_groups ) ) {
 					// The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
 					return '';
@@ -379,7 +379,11 @@ function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
 	global $global_count, $post;
 	$global_count++;
 
-	$unit_tag = 'wpcf7-f'.$cf7form->id().'-p'.$post->ID.'-o'.$global_count;
+	if ( in_the_loop() ) {
+		$unit_tag = 'wpcf7-f'.$cf7form->id().'-p'.$post->ID.'-o'.$global_count;
+	} else {
+		$unit_tag = 'wpcf7-f'.$cf7form->id().'-o'.$global_count;
+	}
 
 	$options = array(
 		'form_id' => $cf7form->id(),
