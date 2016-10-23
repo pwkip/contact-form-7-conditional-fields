@@ -1,12 +1,15 @@
 <?php
+
+
+
 /**
 Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.2
+Version: 0.2.1
 Author URI: http://bdwm.be/
-*/
+ */
 
 /**
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +29,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.2' );
+define( 'WPCF7CF_VERSION', '0.2.1' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -225,6 +228,7 @@ class ContactForm7ConditionalFields {
 
 			//Find out which tags are in which groups
 			$dom = new DOMDocument();
+			libxml_use_internal_errors(true); //suppress warnings if invalid HTML markup. (We are not doing anything else with this for now)
 			$dom->loadHTML($form_properties['form']);
 			$divs = $dom->getElementsByTagName('div');
 			$groups = array();
@@ -282,19 +286,21 @@ class ContactForm7ConditionalFields {
 		}
 		$this->visible_groups = array();
 		$conditions = get_post_meta($form_id,'wpcf7cf_options', true);
-		foreach( $conditions as $condition ) {
-			if ( $condition['then_visibility'] == 'show' ) {
-				if ( is_array($posted_data[ $condition['if_field'] ]) ) {
-					if ( 'not equals' == $condition['operator'] && ! in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
-						$this->visible_groups[] = $condition['then_field'];
-					} elseif ( 'equals' == $condition['operator'] && in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
-						$this->visible_groups[] = $condition['then_field'];
-					}
-				} else {
-					if ( 'not equals' == $condition['operator'] && $condition['if_value'] != $posted_data[ $condition['if_field'] ] ) {
-						$this->visible_groups[] = $condition['then_field'];
-					} elseif ( 'equals' == $condition['operator'] && $condition['if_value'] == $posted_data[ $condition['if_field'] ] ) {
-						$this->visible_groups[] = $condition['then_field'];
+		if (is_array($conditions)) {
+			foreach( $conditions as $condition ) {
+				if ( $condition['then_visibility'] == 'show' ) {
+					if ( is_array($posted_data[ $condition['if_field'] ]) ) {
+						if ( 'not equals' == $condition['operator'] && ! in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+							$this->visible_groups[] = $condition['then_field'];
+						} elseif ( 'equals' == $condition['operator'] && in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+							$this->visible_groups[] = $condition['then_field'];
+						}
+					} else {
+						if ( 'not equals' == $condition['operator'] && $condition['if_value'] != $posted_data[ $condition['if_field'] ] ) {
+							$this->visible_groups[] = $condition['then_field'];
+						} elseif ( 'equals' == $condition['operator'] && $condition['if_value'] == $posted_data[ $condition['if_field'] ] ) {
+							$this->visible_groups[] = $condition['then_field'];
+						}
 					}
 				}
 			}
@@ -306,25 +312,25 @@ class ContactForm7ConditionalFields {
 		$regex = '@\[[\t ]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\t ]*\](.*?)\[[\t ]*/[\t ]*\1[\t ]*\]@s';
 		// [1] = name [2] = contents
 
-		$components['body'] = preg_replace_callback(
-			$regex,
-			function ( $matches ) {
-				$name = $matches[1];
-				$content = $matches[2];
-				if ( in_array( $name, $this->hidden_groups ) ) {
-					// The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
-					return '';
-				} elseif ( in_array( $name, $this->visible_groups ) ) {
-					// The tag name represents a visible group, so remove the tags themselves, but return everything else
-					return $content;
-				} else {
-					// The tag name doesn't represent a group that was used in the form. Leave it alone (return the entire match).
-					return $matches[0];
-				}
-			},
-			$components['body'] );
+		$components['body'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['body'] );
 		return $components;
 	}
+
+	function hide_hidden_mail_fields_regex_callback ( $matches ) {
+		$name = $matches[1];
+		$content = $matches[2];
+		if ( in_array( $name, $this->hidden_groups ) ) {
+			// The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
+			return '';
+		} elseif ( in_array( $name, $this->visible_groups ) ) {
+			// The tag name represents a visible group, so remove the tags themselves, but return everything else
+			return $content;
+		} else {
+			// The tag name doesn't represent a group that was used in the form. Leave it alone (return the entire match).
+			return $matches[0];
+		}
+	}
+
 	function hide_hidden_mail_fields_callback( $matches ) {
 		$name = $matches[1];
 		$content = $matches[2];
@@ -346,7 +352,7 @@ new ContactForm7ConditionalFields;
 add_filter( 'wpcf7_contact_form_properties', 'wpcf7cf_properties', 10, 2 );
 
 function wpcf7cf_properties($properties, $wpcf7form) {
-	if (!is_admin()) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor aswell.
+	if (!is_admin()) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor as well.
 		$form = $properties['form'];
 
 		$find = array(
