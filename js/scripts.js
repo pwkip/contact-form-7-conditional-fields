@@ -102,4 +102,17 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
     });
 
+    //reset the form completely
+    $( document ).ajaxComplete(function(e,xhr) {
+        if( typeof xhr.responseJSON !== 'undefined' &&
+            typeof xhr.responseJSON.mailSent !== 'undefined' &&
+            typeof xhr.responseJSON.into !== 'undefined' &&
+            xhr.responseJSON.mailSent === true)
+        {
+            $( xhr.responseJSON.into + ' input, '+xhr.responseJSON.into+' select, ' + xhr.responseJSON.into + ' textarea' ).change();
+        }
+    });
+
+    console.log('cf7cf code loaded');
+
 })( jQuery );

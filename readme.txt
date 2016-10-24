@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 3.6.1
 Tested up to: 4.6.1
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,11 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 0.2.2 =
+* Prevent strict standards notice to appear while adding new group via the "Conditional Fields Group" popup.
+* Only load cf7cf admin styles and scripts on cf7 pages.
+* groups are now reset to their initial states after the form is successfully submitted.
 
 = 0.2.1 =
 * Bug fix: arrow kept spinning after submitting a form without conditional fields. (https://wordpress.org/support/topic/version-0-2-gives-a-continues-spinning-arrow-after-submitting/)

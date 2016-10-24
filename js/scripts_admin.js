@@ -2,11 +2,9 @@
  * Created by jules on 7/17/2015.
  */
 
-console.log('loading scripts_admin.js');
 var old_compose = _wpcf7.taggen.compose;
 
 (function($) {
-    console.log(_wpcf7.taggen.compose);
 
     // ...before overwriting the jQuery extension point
     _wpcf7.taggen.compose = function(tagType, $form)
@@ -25,7 +23,5 @@ var old_compose = _wpcf7.taggen.compose;
 
         return ret;
     };
-
-    console.log(_wpcf7.taggen.compose);
 
 })( jQuery );
