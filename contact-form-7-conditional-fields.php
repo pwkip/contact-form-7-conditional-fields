@@ -173,7 +173,13 @@ class ContactForm7ConditionalFields {
 			// lower than whatever priority this function was given.
 			// In our case, this means that a hidden field won't be marked as "Invalid", regardless of its contents
 			// unless it's done by a filter of priority 1 or 2
-			end( $wp_filter[ current_filter() ] );
+			if ( is_object( $wp_filter[ current_filter() ] ) {
+				// As of WP 4.7, the wp_filter variable has changed. This is how to handle it now.
+				end( $wp_filter[ current_filter() ]->callbacks );
+			} else {
+				// Keep it working in older versions
+				end( $wp_filter[ current_filter() ] );
+			}
 		}
 
 		return $result;
