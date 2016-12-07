@@ -52,6 +52,7 @@ class ContactForm7ConditionalFields {
 	private $hidden_fields = array();
 	private $visible_groups = array();
 	private $hidden_groups = array();
+	private $skipped_filters = array();
 
 	function __construct() {
 
@@ -169,11 +170,30 @@ class ContactForm7ConditionalFields {
 
 		// If this field is hidden, skip the rest of the validation hooks
 		if( in_array($tag['name'], $hidden_fields) ) {
-			// end() skips to the end of the $wp_filter array, effectively skipping any filters with a priority
-			// lower than whatever priority this function was given.
-			// In our case, this means that a hidden field won't be marked as "Invalid", regardless of its contents
-			// unless it's done by a filter of priority 1 or 2
-			end( $wp_filter[ current_filter() ] );
+			// Since WP 4.7, the only way to do this is remove all the callbacks for this filter,
+			// then put them back if needed. We will be saving them in $skipped_filters.
+			foreach ( $wp_filter[ current_filter() ]->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $key => $callback ) {
+					if ( array($this, 'skip_validation_for_hidden_fields') == $callback ) {
+						// Don't kill this function or we'll lose access!
+						continue;
+					}
+					// Save this callback for later reinstatement
+					$this->skipped_filters[ current_filter() ][ $priority ][ $key ] = $callback;
+
+					// Kill the real callback
+					unset ( $wp_filter[ current_filter() ]->callbacks[ $priority ][ $key ] );
+				}
+			}
+		} else {
+			// This is not a hidden tag. If the validation filters have been removed, let's put them back now!
+			if ( isset($this->skipped_filters[ current_filter() ]) ) {
+				// Put the filters back if we removed them!
+				$wp_filter[ current_filter() ]->callbacks = $this->skipped_filters[ current_filter() ];
+
+				// Remove the skipped filters variable so we know they've been put back
+				unset( $this->skipped_filters[ current_filter() ] );
+			}
 		}
 
 		return $result;
