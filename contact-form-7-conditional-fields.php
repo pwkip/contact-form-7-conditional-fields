@@ -284,6 +284,7 @@ class ContactForm7ConditionalFields {
 		if( $this->visible_groups ) {
 			return $this->visible_groups;
 		}
+		$posted_data = $_POST;
 		$this->visible_groups = array();
 		$conditions = get_post_meta($form_id,'wpcf7cf_options', true);
 		if (is_array($conditions)) {
