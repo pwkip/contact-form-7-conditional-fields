@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.2.3
+Version: 0.2.4
 Author URI: http://bdwm.be/
  */
 
@@ -26,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.2.3' );
+define( 'WPCF7CF_VERSION', '0.2.4' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -64,6 +64,8 @@ class ContactForm7ConditionalFields {
 
 		add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
 		add_filter( 'wpcf7_mail_components', array($this, 'hide_hidden_mail_fields') );
+
+		add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
 		register_activation_hook(__FILE__, array($this, 'activate'));
 
@@ -160,17 +162,15 @@ class ContactForm7ConditionalFields {
 	 * @return mixed
 	 */
 	function skip_validation_for_hidden_fields($result, $tags) {
-		//global $wp_filter;
-		$hidden_fields = $this->get_hidden_fields();
+
+		if (count($this->hidden_fields) == 0) return $result;
 
 		$return_result = new WPCF7_Validation();
 
 		$invalid_fields = $result->get_invalid_fields();
 
-		$invalid_shown_fields = array();
-
 		foreach ($invalid_fields as $invalid_field_key => $invalid_field_data) {
-			if (!in_array($invalid_field_key, $hidden_fields)) {
+			if (!in_array($invalid_field_key, $this->hidden_fields)) {
 				// the invalid field is not a hidden field, so we'll add it to the final validation result
 				$return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
 			}
@@ -188,34 +188,30 @@ class ContactForm7ConditionalFields {
 	 * @return mixed
 	 */
 	function remove_hidden_post_data($posted_data) {
-		$hidden_fields = $this->get_hidden_fields($posted_data);
+		$this->set_hidden_fields_arrays($posted_data);
 
-		foreach( $hidden_fields as $name => $value ) {
+		foreach( $this->hidden_fields as $name => $value ) {
 			unset( $posted_data[$name] );
 		}
+
 		return $posted_data;
 	}
 
 
 	/**
-	 * Finds the currently submitted form and returns an array of fields that are hidden and should be ignored
+	 * Finds the currently submitted form and set the hidden_fields variables accoringly
 	 *
 	 * @param bool|array $posted_data
-	 * @return mixed
 	 */
-	function get_hidden_fields($posted_data = false) {
-
-		if (count( $this->hidden_fields ) > 0) return $this->hidden_fields;
+	function set_hidden_fields_arrays($posted_data = false) {
 
 		if (!$posted_data) {
 			$posted_data = WPCF7_Submission::get_instance()->get_posted_data();
 		}
 
 		$this->hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
-
-		add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
-
-		return $this->hidden_fields;
+		$this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups']));
+		$this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
 	}
 
 	function hide_hidden_mail_fields( $components ) {
@@ -319,5 +315,5 @@ function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
 add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
 
 function wpcf7cf_form_hidden_fields($hidden_fields) {
-	return array('_wpcf7cf_hidden_group_fields' => '');
+	return array('_wpcf7cf_hidden_group_fields' => '', '_wpcf7cf_hidden_groups' => '', '_wpcf7cf_visible_groups' => '');
 }

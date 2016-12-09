@@ -4,9 +4,9 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=j_col
 Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
-Requires at least: 3.6.1
-Tested up to: 4.6.1
-Stable tag: 0.2.3
+Requires at least: 4.1
+Tested up to: 4.7
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,9 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 0.2.4 =
+* Fixed bug that destroyed the conditional fields in email functionality
 
 = 0.2.3 =
 * Added support for conditional fields in the other email fields (subject, sender, recipient, additional_headers). Thanks @stevish!

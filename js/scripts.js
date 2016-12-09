@@ -109,14 +109,28 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             $form = $(form.target);
 
             $hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
+            $hidden_groups = $form.find('[name="_wpcf7cf_hidden_groups"]');
+            $visible_groups = $form.find('[name="_wpcf7cf_visible_groups"]');
 
             var hidden_fields = [];
+            var hidden_groups = [];
+            var visible_groups = [];
 
             $form.find('input:hidden,select:hidden,textarea:hidden').each(function () {
                 hidden_fields.push($(this).attr('name'));
             });
 
+            $form.find('[data-class="wpcf7cf_group"]:hidden').each(function () {
+                hidden_groups.push($(this).attr('id'));
+            });
+
+            $form.find('[data-class="wpcf7cf_group"]:visible').each(function () {
+                visible_groups.push($(this).attr('id'));
+            });
+
             $($hidden_group_fields).val(JSON.stringify(hidden_fields));
+            $($hidden_groups).val(JSON.stringify(hidden_groups));
+            $($visible_groups).val(JSON.stringify(visible_groups));
 
             return true;
         });
