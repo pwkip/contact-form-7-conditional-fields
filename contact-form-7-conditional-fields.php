@@ -49,6 +49,7 @@ class ContactForm7ConditionalFields {
 	private $hidden_fields = array();
 	private $visible_groups = array();
 	private $hidden_groups = array();
+	private $skipped_filters = array();
 
 	function __construct() {
 
@@ -163,6 +164,7 @@ class ContactForm7ConditionalFields {
 		//global $wp_filter;
 		$hidden_fields = $this->get_hidden_fields();
 
+<<<<<<< HEAD
 		$return_result = new WPCF7_Validation();
 
 		$invalid_fields = $result->get_invalid_fields();
@@ -173,6 +175,33 @@ class ContactForm7ConditionalFields {
 			if (!in_array($invalid_field_key, $hidden_fields)) {
 				// the invalid field is not a hidden field, so we'll add it to the final validation result
 				$return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
+=======
+		// If this field is hidden, skip the rest of the validation hooks
+		if( in_array($tag['name'], $hidden_fields) ) {
+			// Since WP 4.7, the only way to do this is remove all the callbacks for this filter,
+			// then put them back if needed. We will be saving them in $skipped_filters.
+			foreach ( $wp_filter[ current_filter() ]->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $key => $callback ) {
+					if ( array($this, 'skip_validation_for_hidden_fields') == $callback ) {
+						// Don't kill this function or we'll lose access!
+						continue;
+					}
+					// Save this callback for later reinstatement
+					$this->skipped_filters[ current_filter() ][ $priority ][ $key ] = $callback;
+
+					// Kill the real callback
+					unset ( $wp_filter[ current_filter() ]->callbacks[ $priority ][ $key ] );
+				}
+			}
+		} else {
+			// This is not a hidden tag. If the validation filters have been removed, let's put them back now!
+			if ( isset($this->skipped_filters[ current_filter() ]) ) {
+				// Put the filters back if we removed them!
+				$wp_filter[ current_filter() ]->callbacks = $this->skipped_filters[ current_filter() ];
+
+				// Remove the skipped filters variable so we know they've been put back
+				unset( $this->skipped_filters[ current_filter() ] );
+>>>>>>> c11b109b8a99ed41bcb6598531adf501570284b9
 			}
 		}
 
@@ -218,6 +247,46 @@ class ContactForm7ConditionalFields {
 		return $this->hidden_fields;
 	}
 
+<<<<<<< HEAD
+=======
+	function get_visible_groups($posted_data) {
+		// Groups are hidden by default. Find all the visible ones and mark them.
+		// This is a duplicate of the logic in js/scripts.js and needs to be included
+		// so our verification is done server-side. If we ran this verification in
+		// javascript, then all the form's normal validation could be overridden.
+		//
+		// Unfortunately, separate javascript and php validation is probably necessary since to use only php
+		// would mean that every onChange() would require an ajax call, and that'd get too slow.
+		$form_id = $posted_data['_wpcf7'];
+		if( $this->visible_groups ) {
+			return $this->visible_groups;
+		}
+		$posted_data = $_POST;
+		$this->visible_groups = array();
+		$conditions = get_post_meta($form_id,'wpcf7cf_options', true);
+		if (is_array($conditions)) {
+			foreach( $conditions as $condition ) {
+				if ( $condition['then_visibility'] == 'show' ) {
+					if ( is_array($posted_data[ $condition['if_field'] ]) ) {
+						if ( 'not equals' == $condition['operator'] && ! in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+							$this->visible_groups[] = $condition['then_field'];
+						} elseif ( 'equals' == $condition['operator'] && in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
+							$this->visible_groups[] = $condition['then_field'];
+						}
+					} else {
+						if ( 'not equals' == $condition['operator'] && $condition['if_value'] != $posted_data[ $condition['if_field'] ] ) {
+							$this->visible_groups[] = $condition['then_field'];
+						} elseif ( 'equals' == $condition['operator'] && $condition['if_value'] == $posted_data[ $condition['if_field'] ] ) {
+							$this->visible_groups[] = $condition['then_field'];
+						}
+					}
+				}
+			}
+		}
+		return $this->visible_groups;
+	}
+
+>>>>>>> c11b109b8a99ed41bcb6598531adf501570284b9
 	function hide_hidden_mail_fields( $components ) {
 		$regex = '@\[[\t ]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\t ]*\](.*?)\[[\t ]*/[\t ]*\1[\t ]*\]@s';
 		// [1] = name [2] = contents
@@ -227,7 +296,10 @@ class ContactForm7ConditionalFields {
 		$components['sender'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['sender'] );
 		$components['recipient'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['recipient'] );
 		$components['additional_headers'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['additional_headers'] );
+<<<<<<< HEAD
 
+=======
+>>>>>>> c11b109b8a99ed41bcb6598531adf501570284b9
 		return $components;
 	}
 
