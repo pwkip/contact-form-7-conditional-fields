@@ -1,13 +1,10 @@
 <?php
-
-
-
 /**
 Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.2.2
+Version: 0.2.3
 Author URI: http://bdwm.be/
  */
 
@@ -29,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '0.2.2' );
+define( 'WPCF7CF_VERSION', '0.2.3' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -84,8 +81,7 @@ class ContactForm7ConditionalFields {
 	}
 
 	public static function enqueue_css() {
-
-		wp_enqueue_style('cf7cf-style', plugins_url('style.css', __FILE__));
+		wp_enqueue_style('cf7cf-style', plugins_url('style.css', __FILE__), array(), WPCF7CF_VERSION);
 	}
 
 	public static function add_shortcodes() {
@@ -163,20 +159,24 @@ class ContactForm7ConditionalFields {
 	 *
 	 * @return mixed
 	 */
-	function skip_validation_for_hidden_fields($result, $tag) {
-		global $wp_filter;
+	function skip_validation_for_hidden_fields($result, $tags) {
+		//global $wp_filter;
 		$hidden_fields = $this->get_hidden_fields();
 
-		// If this field is hidden, skip the rest of the validation hooks
-		if( in_array($tag['name'], $hidden_fields) ) {
-			// end() skips to the end of the $wp_filter array, effectively skipping any filters with a priority
-			// lower than whatever priority this function was given.
-			// In our case, this means that a hidden field won't be marked as "Invalid", regardless of its contents
-			// unless it's done by a filter of priority 1 or 2
-			end( $wp_filter[ current_filter() ] );
+		$return_result = new WPCF7_Validation();
+
+		$invalid_fields = $result->get_invalid_fields();
+
+		$invalid_shown_fields = array();
+
+		foreach ($invalid_fields as $invalid_field_key => $invalid_field_data) {
+			if (!in_array($invalid_field_key, $hidden_fields)) {
+				// the invalid field is not a hidden field, so we'll add it to the final validation result
+				$return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
+			}
 		}
 
-		return $result;
+		return $return_result;
 	}
 
 
@@ -204,108 +204,18 @@ class ContactForm7ConditionalFields {
 	 * @return mixed
 	 */
 	function get_hidden_fields($posted_data = false) {
-		if ( isset( $posted_data['_wpcf7'] ) ) {
-			// When called by wpcf7cf_remove_hidden_post_data() and $posted_data is available
-			$form_id = $posted_data['_wpcf7'];
-		} else {
-			// When called from skip_validation_for_hidden_fields(), use WPCF7_Submission object to get form id
-			$form_id = WPCF7_Submission::get_instance()->get_posted_data( '_wpcf7' );
+
+		if (count( $this->hidden_fields ) > 0) return $this->hidden_fields;
+
+		if (!$posted_data) {
+			$posted_data = WPCF7_Submission::get_instance()->get_posted_data();
 		}
 
-		// We only need to run through this once, so check to see if the global variable exists.
-		if ( 0 == count( $this->hidden_fields ) ) {
-			// Get the WPCF7_ContactForm object for this form
-			$contact_form = WPCF7_ContactForm::get_instance( $form_id );
+		$this->hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
 
-			// While we have the contact form object, find all used tags so we can add our validation filter
-			foreach( (array) $contact_form->form_scan_shortcode() as $tag ) {
-				//Priority of 2 allows other filters at priority 1 or 2 to actually validate hidden fields (just in case)
-				add_filter( 'wpcf7_validate_' . $tag['type'], array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
-			}
+		add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
-			// Get the form properties so we have access to the form itself
-			$form_properties = $contact_form->get_properties();
-
-			//Find out which tags are in which groups
-			$dom = new DOMDocument();
-			libxml_use_internal_errors(true); //suppress warnings if invalid HTML markup. (We are not doing anything else with this for now)
-			$dom->loadHTML($form_properties['form']);
-			$divs = $dom->getElementsByTagName('div');
-			$groups = array();
-			foreach ($divs as $div) {
-				$is_group = false;
-				$id = 0;
-				foreach($div->attributes as $attribute) {
-					if ( 'data-class' == $attribute->name && 'wpcf7cf_group' == $attribute->value ) {
-						// Group divs will have a data-class of wpcf7cf_group
-						$is_group = true;
-					}
-					if ( 'id' == $attribute->name ) {
-						$id = $attribute->value;
-					}
-				}
-				if ( $is_group  ) {
-					$groups[$id] = array();
-					// Match all tag names (format = [tag_type tag_name] or [tag_type tag_name options values etc...])
-					preg_match_all("/\[[^\s\]]* ([^\s\]]*)[^\]]*\]/", $div->textContent, $matches);
-					foreach( $matches[1] as $tag ) {
-						$groups[$id][] = $tag;
-					}
-				}
-			}
-			// $groups is now an array of groups (by id) with an array of the name of each tag that is inside that group.
-
-
-			$visible_groups = $this->get_visible_groups($posted_data);
-
-			// Iterate through the groups.
-			// When we find one that's not in the $visible_groups array, add its tags to our list of hidden tags
-			foreach( $groups as $group => $fields ) {
-				if ( ! in_array($group, $visible_groups) ) {
-					$this->hidden_groups[] = $group;
-					$this->hidden_fields = array_merge($this->hidden_fields, $fields);
-				}
-			}
-
-
-		}
 		return $this->hidden_fields;
-	}
-
-	function get_visible_groups($posted_data) {
-		// Groups are hidden by default. Find all the visible ones and mark them.
-		// This is a duplicate of the logic in js/scripts.js and needs to be included
-		// so our verification is done server-side. If we ran this verification in
-		// javascript, then all the form's normal validation could be overridden.
-		//
-		// Unfortunately, separate javascript and php validation is probably necessary since to use only php
-		// would mean that every onChange() would require an ajax call, and that'd get too slow.
-		$form_id = $posted_data['_wpcf7'];
-		if( $this->visible_groups ) {
-			return $this->visible_groups;
-		}
-		$this->visible_groups = array();
-		$conditions = get_post_meta($form_id,'wpcf7cf_options', true);
-		if (is_array($conditions)) {
-			foreach( $conditions as $condition ) {
-				if ( $condition['then_visibility'] == 'show' ) {
-					if ( is_array($posted_data[ $condition['if_field'] ]) ) {
-						if ( 'not equals' == $condition['operator'] && ! in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
-							$this->visible_groups[] = $condition['then_field'];
-						} elseif ( 'equals' == $condition['operator'] && in_array( $condition['if_value'], $posted_data[ $condition['if_field'] ] ) ) {
-							$this->visible_groups[] = $condition['then_field'];
-						}
-					} else {
-						if ( 'not equals' == $condition['operator'] && $condition['if_value'] != $posted_data[ $condition['if_field'] ] ) {
-							$this->visible_groups[] = $condition['then_field'];
-						} elseif ( 'equals' == $condition['operator'] && $condition['if_value'] == $posted_data[ $condition['if_field'] ] ) {
-							$this->visible_groups[] = $condition['then_field'];
-						}
-					}
-				}
-			}
-		}
-		return $this->visible_groups;
 	}
 
 	function hide_hidden_mail_fields( $components ) {
@@ -313,6 +223,11 @@ class ContactForm7ConditionalFields {
 		// [1] = name [2] = contents
 
 		$components['body'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['body'] );
+		$components['subject'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['subject'] );
+		$components['sender'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['sender'] );
+		$components['recipient'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['recipient'] );
+		$components['additional_headers'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['additional_headers'] );
+
 		return $components;
 	}
 
@@ -399,4 +314,10 @@ function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
 
 	wp_enqueue_script('cf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
 	wp_localize_script('cf7cf-scripts', 'wpcf7cf_options_'.$global_count, $options);
+}
+
+add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
+
+function wpcf7cf_form_hidden_fields($hidden_fields) {
+	return array('_wpcf7cf_hidden_group_fields' => '');
 }

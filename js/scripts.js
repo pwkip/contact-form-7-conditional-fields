@@ -100,6 +100,26 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             });
         }
 
+        // before the form values are serialized to submit via ajax, we quickly add all invisible fields in the hidden
+        // _wpcf7cf_hidden_group_fields field, so the PHP code knows which fields were inside hidden groups.
+        // TODO: maybe modify this code so it only takes fields which are strictly inside hidden group tags.
+        // TODO: For now the hidden field is filled with all hidden form elements.
+
+        $('form.wpcf7-form').on('form-pre-serialize', function(form,options,veto) {
+            $form = $(form.target);
+
+            $hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
+
+            var hidden_fields = [];
+
+            $form.find('input:hidden,select:hidden,textarea:hidden').each(function () {
+                hidden_fields.push($(this).attr('name'));
+            });
+
+            $($hidden_group_fields).val(JSON.stringify(hidden_fields));
+
+            return true;
+        });
     });
 
     //reset the form completely
@@ -112,7 +132,5 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             $( xhr.responseJSON.into + ' input, '+xhr.responseJSON.into+' select, ' + xhr.responseJSON.into + ' textarea' ).change();
         }
     });
-
-    console.log('cf7cf code loaded');
 
 })( jQuery );

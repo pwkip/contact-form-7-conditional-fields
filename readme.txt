@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 3.6.1
 Tested up to: 4.6.1
-Stable tag: 0.2.2
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,12 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 0.2.3 =
+* Added support for conditional fields in the other email fields (subject, sender, recipient, additional_headers). Thanks @stevish!
+* WP 4.7 broke the required conditional fields inside hidden groups, implemented in version 0.2. Thanks again to @stevish for pointing this out.
+* Got rid of checking which groups are hidden both on the front-end (JS) and in the back-end (PHP). Now this is only done in the front-end.
+* Tested the plugin with WP 4.7
 
 = 0.2.2 =
 * Prevent strict standards notice to appear while adding new group via the "Conditional Fields Group" popup.
