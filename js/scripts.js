@@ -29,24 +29,27 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                 }
             }
 
-
             $("#"+unit_tag+" [data-class='wpcf7cf_group']").hide();
             for (var i=0; i < wpcf7cf_conditions.length; i++) {
 
                 var condition = wpcf7cf_conditions[i];
-                if (condition.then_visibility == 'hide') continue;
 
-                $field = $('#'+unit_tag+' [name='+condition.if_field+']').length ? $('#'+unit_tag+' [name='+condition.if_field+']') : $('#'+unit_tag+' [name='+condition.if_field+'\\[\\]]');
+                $field = $('#'+unit_tag+' [name="'+condition.if_field+'"]').length ? $('#'+unit_tag+' [name="'+condition.if_field+'"]') : $('#'+unit_tag+' [name="'+condition.if_field+'[]"]');
 
                 if ($field.length == 1) {
+
+
 
                     // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
 
                     if ($field.is('select')) {
+
                         var show = false;
+
                         if(condition.operator == 'not equals') {
                             show = true;
                         }
+
                         $field.find('option:selected').each(function () {
                             var $option = $(this);
                             if (condition.operator == 'equals' && $option.val() == condition.if_value) {
@@ -55,6 +58,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                                 show = false;
                             }
                         });
+
                         if(show == true) {
                             $('#' + unit_tag + ' #' + condition.then_field).show();
                         }
@@ -62,8 +66,17 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         continue;
                     }
 
-                    if (condition.operator == 'equals' && $field.val() == condition.if_value || condition.operator == 'not equals' && $field.val() != condition.if_value) {
-                        if ($field.attr('type') == 'checkbox' && !$field.attr('checked')) continue;
+                    console.log(condition);
+
+                    if ($field.attr('type') == 'checkbox') {
+                        if (
+                                $field.is(':checked') && condition.operator == 'equals'     && $field.val() == condition.if_value
+                            || !$field.is(':checked') && condition.operator == 'not equals' && $field.val() == condition.if_value
+                            || condition.operator == 'not equals' && $field.val() != condition.if_value
+                        ) {
+                            $('#'+unit_tag+' #'+condition.then_field).show();
+                        }
+                    } else if (condition.operator == 'equals' && $field.val() == condition.if_value || condition.operator == 'not equals' && $field.val() != condition.if_value) {
                         $('#'+unit_tag+' #'+condition.then_field).show();
                     }
 

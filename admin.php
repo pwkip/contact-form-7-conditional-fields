@@ -55,15 +55,6 @@ function all_operator_options($selected = 'equals') {
 	}
 }
 
-function all_display_options($selected = 'show') {
-	$all_options = array('show', 'hide');
-	foreach($all_options as $option) {
-		?>
-		<option value="<?php echo $option ?>" <?php echo $selected == $option?'selected':'' ?>><?php echo $option ?></option>
-		<?php
-	}
-}
-
 function wpcf7cf_editor_panel_conditional($form) {
 
 	$form_id = $_GET['post'];
@@ -81,8 +72,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 		<select name="wpcf7cf_options[{id}][if_field]" class="if-field-select"><?php all_field_options($form); ?></select>
 		<select name="wpcf7cf_options[{id}][operator]" class="operator"><?php all_operator_options(); ?></select>
 		<input name="wpcf7cf_options[{id}][if_value]" class="if-value" type="text" placeholder="value">
-		then
-		<select name="wpcf7cf_options[{id}][then_visibility]" class="then-visibility"><?php all_display_options() ?></select>
+		then show
 		<select name="wpcf7cf_options[{id}][then_field]" class="then-field-select"><?php all_group_options($form); ?></select>
 	</div>
 	<a id="wpcf7cf-delete-button" class="delete-button" title="delete rule" href="#"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
@@ -98,8 +88,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 				<select name="wpcf7cf_options[<?php echo $i ?>][if_field]" class="if-field-select"><?php all_field_options($form, $entry['if_field']); ?></select>
 				<select name="wpcf7cf_options[<?php echo $i ?>][operator]" class="operator"><?php all_operator_options($entry['operator']) ?></select>
 				<input name="wpcf7cf_options[<?php echo $i ?>][if_value]" class="if-value" type="text" placeholder="value" value="<?php echo $entry['if_value'] ?>">
-				then
-				<select name="wpcf7cf_options[<?php echo $i ?>][then_visibility]" class="then-visibility"><?php all_display_options($entry['then_visibility']) ?></select>
+				then show
 				<select name="wpcf7cf_options[<?php echo $i ?>][then_field]" class="then-field-select"><?php all_group_options($form, $entry['then_field']); ?></select>
 				<a style="display: inline-block;" href="#" title="delete rule" class="delete-button"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
 			</div>
@@ -168,8 +157,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 					var $entry = $(this);
 					var line = 'if [' + $entry.find('.if-field-select').val() + ']'
 						+ ' ' + $entry.find('.operator').val()
-						+ ' "' + $entry.find('.if-value').val() + '" then '
-						+ $entry.find('.then-visibility').val()
+						+ ' "' + $entry.find('.if-value').val() + '" then show'
 						+ ' [' + $entry.find('.then-field-select').val() + ']';
 					$('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" ).select();
 				});

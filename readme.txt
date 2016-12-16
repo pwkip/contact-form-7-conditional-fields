@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 4.7
-Stable tag: 0.2.4
+Stable tag: 0.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ Because no questions have been asked frequently about this plugin.
 
 == Changelog ==
 
+= 0.2.5 =
+* Changed deprecated function wpcf7_add_shortcode to wpcf7_add_form_tag as it was causing errors in debug mode. (https://wordpress.org/support/topic/wpcf7_add_shortcode-deprecated-notice-2/)
+* Removed the hide option and fixed the not-equals option for single checkboxes
+
 = 0.2.4 =
 * Fixed bug that destroyed the conditional fields in email functionality
 
@@ -85,27 +89,22 @@ Because no questions have been asked frequently about this plugin.
 * tested with WP 4.5.3
 
 = 0.1.4 =
-
 * Prevent conflicts between different forms on one page.
 * Prevent conflicts between multiple instances of the same form on one page. (https://wordpress.org/support/topic/bug-153)
 * Changed regex to convert \[group\] tags to &lt;div&gt; tags, as it was posing some conflicts with other plugins (https://wordpress.org/support/topic/plugin-influence-cf7-send-button-style)
 
 = 0.1.3 =
-
 * Removed fielset, id and class attributes for group tags, because they weren't used anyway and broke the shortcode
 * If extra attributes are added to the group shortcode, this will no longer break functionality (even though no attributes are supported)
 
 = 0.1.2 =
-
 * Make code work with select element that allows multiple options.
 * Only load javascript on pages that contain a CF7 form
 
 = 0.1.1 =
-
 Fixed bug with exclusive checkboxes (https://wordpress.org/support/topic/groups-not-showing)
 
 = 0.1 =
-
 First release
 
 
