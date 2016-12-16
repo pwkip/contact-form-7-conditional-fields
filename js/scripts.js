@@ -66,8 +66,6 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         continue;
                     }
 
-                    console.log(condition);
-
                     if ($field.attr('type') == 'checkbox') {
                         if (
                                 $field.is(':checked') && condition.operator == 'equals'     && $field.val() == condition.if_value
@@ -94,6 +92,8 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         }
                     });
 
+
+
                     if (condition.operator == 'equals' && $.inArray(condition.if_value, checked_values) != -1) {
                         $('#'+unit_tag+' #'+condition.then_field).show();
                     } else if (condition.operator == 'not equals' && $.inArray(condition.if_value, all_values) != -1 && $.inArray(condition.if_value, checked_values) == -1) {
@@ -109,6 +109,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             var conditions = options[i]['conditions'];
             display_fields(unit_tag, conditions);
             $('#'+unit_tag+' input, #'+unit_tag+' select, #'+unit_tag+' textarea').change({unit_tag:unit_tag, conditions:conditions}, function(e) {
+                console.log('change');
                 display_fields(e.data.unit_tag, e.data.conditions);
             });
         }
@@ -159,5 +160,15 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             $( xhr.responseJSON.into + ' input, '+xhr.responseJSON.into+' select, ' + xhr.responseJSON.into + ' textarea' ).change();
         }
     });
+
+    // fix for exclusive checkboxes in IE (this will call the change-event again after all other checkboxes are unchecked, triggering the display_fields() function)
+    var old_wpcf7ExclusiveCheckbox = $.fn.wpcf7ExclusiveCheckbox;
+    $.fn.wpcf7ExclusiveCheckbox = function() {
+        return this.find('input:checkbox').click(function() {
+            var name = $(this).attr('name');
+            console.log('new func');
+            $(this).closest('form').find('input:checkbox[name="' + name + '"]').not(this).prop('checked', false).eq(0).change();
+        });
+    };
 
 })( jQuery );
