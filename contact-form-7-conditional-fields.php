@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 0.2.6
+Version: 0.2.8
 Author URI: http://bdwm.be/
  */
 
@@ -64,6 +64,9 @@ class ContactForm7ConditionalFields {
 
 		add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
 		add_filter( 'wpcf7_mail_components', array($this, 'hide_hidden_mail_fields') );
+		add_filter('wpcf7_additional_mail', array($this, 'hide_hidden_mail_fields_additional_mail'), 10, 2);
+
+			//apply_filters( 'wpcf7_additional_mail',$additional_mail, $contact_form )
 
 		add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
@@ -97,7 +100,8 @@ class ContactForm7ConditionalFields {
 	}
 
 	function shortcode_handler($tag) {
-		$tag = new WPCF7_Shortcode($tag);
+		//$tag = new WPCF7_Shortcode($tag);
+		$tag = new WPCF7_FormTag($tag);
 		//ob_start();
 		//print_r($tag);
 		//return print_r($tag, true);
@@ -210,7 +214,13 @@ class ContactForm7ConditionalFields {
 			$posted_data = WPCF7_Submission::get_instance()->get_posted_data();
 		}
 
-		$this->hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
+		$hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
+		foreach ($hidden_fields as $field) {
+			$this->hidden_fields[] = $field;
+			if (wpcf7cf_endswith($field, '[]')) {
+				$this->hidden_fields[] = substr($field,0,strlen($field)-2);
+			}
+		}
 		$this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups']));
 		$this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
 	}
@@ -226,6 +236,19 @@ class ContactForm7ConditionalFields {
 		$components['additional_headers'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $components['additional_headers'] );
 
 		return $components;
+	}
+
+	function hide_hidden_mail_fields_additional_mail($additional_mail, $contact_form) {;
+
+		$regex = '@\[[\t ]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\t ]*\](.*?)\[[\t ]*/[\t ]*\1[\t ]*\]@s';
+
+		$additional_mail['mail_2']['body'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $additional_mail['mail_2']['body'] );
+		$additional_mail['mail_2']['subject'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $additional_mail['mail_2']['subject'] );
+		$additional_mail['mail_2']['sender'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $additional_mail['mail_2']['sender'] );
+		$additional_mail['mail_2']['recipient'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $additional_mail['mail_2']['recipient'] );
+		$additional_mail['mail_2']['additional_headers'] = preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $additional_mail['mail_2']['additional_headers'] );
+
+		return $additional_mail;
 	}
 
 	function hide_hidden_mail_fields_regex_callback ( $matches ) {
@@ -317,4 +340,11 @@ add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
 
 function wpcf7cf_form_hidden_fields($hidden_fields) {
 	return array('_wpcf7cf_hidden_group_fields' => '', '_wpcf7cf_hidden_groups' => '', '_wpcf7cf_visible_groups' => '');
+}
+
+function wpcf7cf_endswith($string, $test) {
+	$strlen = strlen($string);
+	$testlen = strlen($test);
+	if ($testlen > $strlen) return false;
+	return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
 }

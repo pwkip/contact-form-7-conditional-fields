@@ -21,7 +21,7 @@ function add_conditional_panel($panels) {
 }
 
 function all_field_options($post, $selected = '-1') {
-	$all_fields = $post->form_scan_shortcode();
+	$all_fields = $post->scan_form_tags();
 	?>
 	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>>-- Select field --</option>
 	<?php
@@ -34,7 +34,7 @@ function all_field_options($post, $selected = '-1') {
 }
 
 function all_group_options($post, $selected = '-1') {
-	$all_groups = $post->form_scan_shortcode(array('type'=>'group'));
+	$all_groups = $post->scan_form_tags(array('type'=>'group'));
 
 	?>
 	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>>-- Select group --</option>
@@ -186,7 +186,11 @@ function wpcf7cf_save_contact_form( $contact_form )
 
 	unset($_POST['wpcf7cf_options']['{id}']); // remove the dummy entry
 
-	update_post_meta( $post_id, 'wpcf7cf_options', $_POST['wpcf7cf_options'] );
+    $options = array_values($_POST['wpcf7cf_options']);
+
+	update_post_meta( $post_id, 'wpcf7cf_options', $options );
+
+    return;
 
 };
 
