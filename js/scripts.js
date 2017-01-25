@@ -38,8 +38,6 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
                 if ($field.length == 1) {
 
-
-
                     // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
 
                     if ($field.is('select')) {

@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.7
-Stable tag: 0.2.8
+Tested up to: 4.7.1
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,17 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 1.0 =
+* I feel that at this point the plugin is stable enough in most cases, so it's about time to take it out of beta :)
+* Update JS en CSS version numbers
+* Fix PHP warning with forms that are not using conditional fields (https://wordpress.org/support/topic/conditional-formatting-error/)
+* Tested on WP 4.7.1
+
+= 0.2.9 =
+* Re-added wpcf7_add_shortcode() function if wpcf7_add_form_tag() is not found, because some people claimed to get a "function not found" error for the wpcf7_add_form_tag function with the latest version of CF7 installed. (https://wordpress.org/support/topic/activation-issue-5/ and https://wordpress.org/support/topic/http-500-unable-to-handle-request-error-after-update/)
+* Fixed some PHP notices (https://wordpress.org/support/topic/undefined-index-error-in-ajax-response/)
+* Attempted to fix error with the CF7 success page redirects plugin (https://wordpress.org/support/topic/warning-invalid-argument-error-for-forms-without-conditional-fields/)
 
 = 0.2.8 =
 * forgot to update version number in 0.2.7, so changing version to 0.2.8 now.
