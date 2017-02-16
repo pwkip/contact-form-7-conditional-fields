@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 1.0
+Version: 1.1
 Author URI: http://bdwm.be/
  */
 
@@ -26,7 +26,7 @@ Author URI: http://bdwm.be/
 ?>
 <?php
 
-define( 'WPCF7CF_VERSION', '1.0' );
+define( 'WPCF7CF_VERSION', '1.1' );
 define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 define( 'WPCF7CF_PLUGIN', __FILE__ );
 define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -270,22 +270,11 @@ class ContactForm7ConditionalFields {
 			return '';
 		} elseif ( in_array( $name, $this->visible_groups ) ) {
 			// The tag name represents a visible group, so remove the tags themselves, but return everything else
-			return $content;
-		} else {
-			// The tag name doesn't represent a group that was used in the form. Leave it alone (return the entire match).
-			return $matches[0];
-		}
-	}
+			//return $content;
+			$regex = '@\[[\t ]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\t ]*\](.*?)\[[\t ]*/[\t ]*\1[\t ]*\]@s';
 
-	function hide_hidden_mail_fields_callback( $matches ) {
-		$name = $matches[1];
-		$content = $matches[2];
-		if ( in_array( $name, $this->hidden_groups ) ) {
-			// The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
-			return '';
-		} elseif ( in_array( $name, $this->visible_groups ) ) {
-			// The tag name represents a visible group, so remove the tags themselves, but return everything else
-			return $content;
+			// instead of just returning the $content, return the preg_replaced content :)
+			return preg_replace_callback($regex, array($this, 'hide_hidden_mail_fields_regex_callback'), $content );
 		} else {
 			// The tag name doesn't represent a group that was used in the form. Leave it alone (return the entire match).
 			return $matches[0];

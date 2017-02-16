@@ -100,15 +100,24 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 
 	<div id="wpcf7cf-text-entries">
-		<p><a href="#" id="wpcf7cf-settings-to-text">Export settings</a></p>
+		<p><a href="#" id="wpcf7cf-settings-to-text">import/export</a></p>
 		<div id="wpcf7cf-settings-text-wrap">
 			<textarea id="wpcf7cf-settings-text"></textarea>
+			<br>
+			Import actions (Beta feature!):
+			<input type="button" value="Add conditions" id="add-fields" >
+			<input type="button" value="Overwrite conditions" id="overwrite-fields" >
+			<span style="color:red"><b>WARNING</b>: If you screw something up, just reload the page without saving. If you click <em>save</em> after screwing up, you're screwed.</span>
+
 			<p><a href="#" id="wpcf7cf-settings-text-clear">Clear</a></p>
+
 		</div>
 	</div>
+
 	
 	<script>
 		(function($) {
+
 			var index = $('#wpcf7cf-entries .entry').length;
 
 			$('.delete-button').click(function(){
@@ -121,31 +130,53 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 			$('#wpcf7cf-add-button').click(function(){
 				
-				// if ($('#wpcf7cf-new-entry .if-field-select').val() == '-1' || $('#wpcf7cf-new-entry .then-field-select').val() == '-1') {
-					// alert('Please select 2 fields');
-					// $(this).parent().remove();
-					// return false;
-				// } else if($('#wpcf7cf-new-entry .if-field-select').val() == $('#wpcf7cf-new-entry .then-field-select').val())  {
-					// alert('The fields cannot be the same');
-					// $(this).parent().remove();
-					// return false;
-				// }
-				
-				var $delete_button = $('#wpcf7cf-delete-button').clone().removeAttr('id');
-				$('<div class="entry" id="entry-'+index+'">'+($('#wpcf7cf-new-entry').html().replace(/{id}/g, index))+'</div>').prependTo('#wpcf7cf-entries').append($delete_button);
-				$delete_button.click(function(){
+				var id = add_condition_fields();
 
-					//if (confirm('You sure?')===false) return false;
-					$(this).parent().remove();
-					return false;
-
-				});
-				index++;
 				return false;
 				
 			});
 
-			// settings to
+			function clear_all_condition_fields() {
+				$('.entry').remove();
+			}
+
+			function add_condition_fields() {
+				var $delete_button = $('#wpcf7cf-delete-button').clone().removeAttr('id');
+				$('<div class="entry" id="entry-'+index+'">'+($('#wpcf7cf-new-entry').html().replace(/{id}/g, index))+'</div>').prependTo('#wpcf7cf-entries').append($delete_button);
+				$delete_button.click(function(){
+					$(this).parent().remove();
+					return false;
+				});
+				index++;
+
+				return (index-1);
+			}
+
+			function import_condition_fields() {
+				var lines = $('#wpcf7cf-settings-text').val().split(/\r?\n/);
+				console.log(lines);
+				for (var i = lines.length+1; i>-1; i--) {
+
+					var str = lines[i];
+
+					var match = regex.exec(str);
+
+					if (match == null) continue;
+
+					console.log(match[1]+' '+match[2]+' '+match[3]+' '+match[4]);
+
+					var id = add_condition_fields();
+
+					$('#entry-'+id+' .if-field-select').val(match[1]);
+					$('#entry-'+id+' .operator').val(match[2]);
+					$('#entry-'+id+' .if-value').val(match[3]);
+					$('#entry-'+id+' .then-field-select').val(match[4]);
+
+					regex.lastIndex = 0;
+				}
+			}
+
+			// export/import settings
 
 			$('#wpcf7cf-settings-text-wrap').hide();
 
@@ -162,6 +193,17 @@ function wpcf7cf_editor_panel_conditional($form) {
 					$('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" ).select();
 				});
 				return false;
+			});
+
+			var regex = /if \[(.*)] (.*equals) "(.*)" then show \[(.*)]/g;
+
+			$('#add-fields').click(function() {
+				import_condition_fields();
+			});
+
+			$('#overwrite-fields').click(function() {
+				clear_all_condition_fields();
+				import_condition_fields();
 			});
 
 			$('#wpcf7cf-settings-text-clear').click(function() {

@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.7.1
-Stable tag: 1.0
+Tested up to: 4.7.2
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,11 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 1.1 =
+* Added import feature
+* Added support for nested groups in email
+* Tested on WP version 4.7.2 with Contact Form 7 version 4.6.1
 
 = 1.0 =
 * I feel that at this point the plugin is stable enough in most cases, so it's about time to take it out of beta :)
