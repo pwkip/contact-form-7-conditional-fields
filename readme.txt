@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 4.7.2
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,10 +24,43 @@ Then you should go to the "Conditional fields" tab to create one or more conditi
 
 A detailed example of how to use the plugin can be found here: [http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/](http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/)
 
-= What's new? =
+== Main/ New features ==
 
-* Required fields can be used inside hidden groups without causing validation problems.
-* Conditional groups can now be added to the emails as well. Just wrap the content with `[group-name] ... [/group-name]` tags.
+= Compatible with Contact Form 7 Multi-Step Forms =
+
+Conditional Fields for Contact Form 7 is now fully compatible with <a target="_blank" href="https://wordpress.org/plugins/contact-form-7-multi-step-module/">Contact Form 7 Multi-Step Forms</a>
+
+= Support for required fields =
+
+Required fields can be used inside hidden groups without causing validation problems.
+
+= Hide/show info in emails based on what groups are visible =
+
+Conditional groups can now be added to the emails as well.
+Just wrap the content with `[group-name] ... [/group-name]` tags.
+
+= Groups can be nested =
+Groups can be nested, both in the form and in the email
+
+Example form:
+`
+[group group-1]
+  [group group-inside-1]
+    ...
+  [/group]
+[/group]`
+
+Example email:
+`
+[group-1]
+  [group-inside-1]
+    ...
+  [/group-inside-1]
+[/group-1]`
+
+= Advanced =
+
+Advanced users can now code up the conditions as plain text instead of using the select boxes, using the import/export feature.
 
 
 == Installation ==
@@ -36,9 +69,12 @@ Please follow the [standard installation procedure for WordPress plugins](http:/
 
 == Frequently Asked Questions ==
 
-= Why are there not more Frequently asked questions? =
+= Something isn't working. Why? =
 
-Because no questions have been asked frequently about this plugin.
+I will assume that you successfully installed both plugins, that you were able to create some conditional groups, and that you managed to create some conditions. But for some reason it's not working the way you expect it too. Here are the most common problems/causes people have encountered in the support forums. (Ordered from most frequent to least frequent.)
+
+1. <strong>All field names should be unique</strong> - Even though your fields might never show up at the same time, it is still important to realize that WPCF7CF will not remove the fields, it merely hides them. So all fields will be submitted when the form is sent. Because of this no two fields can have the same name.
+1. <strong>All my groups show up all the time and never get hidden.</strong> - Likely this is due to a javascript error caused by your theme or another plugin. WPCF7CF loads it's scripts at the bottom of the HTML page. If some javascript error gets triggered before, the code will not be executed. Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing theme. Your browser's developer tools (F12) might point you in the right direction.
 
 == Screenshots ==
 
@@ -46,6 +82,13 @@ Because no questions have been asked frequently about this plugin.
 2. Front End
 
 == Changelog ==
+
+= 1.2 =
+* Made compatible with <a href="https://wordpress.org/plugins/contact-form-7-multi-step-module/">Contact Form 7 Multi-Step Forms</a>
+* Small bug fix by Manual from advantia.net: now only considering fields which are strictly inside hidden group tags with form submit. Important in some edge cases where form elements get hidden by other mechanisms, i.e. tabbed forms.
+* Started work on CF7CF Pro, made some structural code modifications so the free plugin can function as the base for both plugins.
+* Removed some debug code
+* Updated readme file
 
 = 1.1 =
 * Added import feature

@@ -46,12 +46,15 @@ function all_group_options($post, $selected = '-1') {
 	}
 }
 
-function all_operator_options($selected = 'equals') {
-	$all_options = array('equals', 'not equals');
-	foreach($all_options as $option) {
-		?>
-		<option value="<?php echo $option ?>" <?php echo $selected == $option?'selected':'' ?>><?php echo $option ?></option>
-		<?php
+if (!function_exists('all_operator_options')) {
+	function all_operator_options($selected = 'equals') {
+		$all_options = array('equals', 'not equals');
+		$all_options = apply_filters('wpcf7cf_get_operators', $all_options);
+		foreach($all_options as $option) {
+			?>
+			<option value="<?php echo htmlentities($option) ?>" <?php echo $selected == $option?'selected':'' ?>><?php echo htmlentities($option) ?></option>
+			<?php
+		}
 	}
 }
 
@@ -113,107 +116,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 		</div>
 	</div>
-
-	
-	<script>
-		(function($) {
-
-			var index = $('#wpcf7cf-entries .entry').length;
-
-			$('.delete-button').click(function(){
-
-				//if (confirm('You sure?')===false) return false;
-				$(this).parent().remove();
-				return false;
-
-			});
-
-			$('#wpcf7cf-add-button').click(function(){
-				
-				var id = add_condition_fields();
-
-				return false;
-				
-			});
-
-			function clear_all_condition_fields() {
-				$('.entry').remove();
-			}
-
-			function add_condition_fields() {
-				var $delete_button = $('#wpcf7cf-delete-button').clone().removeAttr('id');
-				$('<div class="entry" id="entry-'+index+'">'+($('#wpcf7cf-new-entry').html().replace(/{id}/g, index))+'</div>').prependTo('#wpcf7cf-entries').append($delete_button);
-				$delete_button.click(function(){
-					$(this).parent().remove();
-					return false;
-				});
-				index++;
-
-				return (index-1);
-			}
-
-			function import_condition_fields() {
-				var lines = $('#wpcf7cf-settings-text').val().split(/\r?\n/);
-				console.log(lines);
-				for (var i = lines.length+1; i>-1; i--) {
-
-					var str = lines[i];
-
-					var match = regex.exec(str);
-
-					if (match == null) continue;
-
-					console.log(match[1]+' '+match[2]+' '+match[3]+' '+match[4]);
-
-					var id = add_condition_fields();
-
-					$('#entry-'+id+' .if-field-select').val(match[1]);
-					$('#entry-'+id+' .operator').val(match[2]);
-					$('#entry-'+id+' .if-value').val(match[3]);
-					$('#entry-'+id+' .then-field-select').val(match[4]);
-
-					regex.lastIndex = 0;
-				}
-			}
-
-			// export/import settings
-
-			$('#wpcf7cf-settings-text-wrap').hide();
-
-			$('#wpcf7cf-settings-to-text').click(function() {
-				$('#wpcf7cf-settings-text-wrap').show();
-
-				$('#wpcf7cf-settings-text').val('');
-				$('#wpcf7cf-entries .entry').each(function() {
-					var $entry = $(this);
-					var line = 'if [' + $entry.find('.if-field-select').val() + ']'
-						+ ' ' + $entry.find('.operator').val()
-						+ ' "' + $entry.find('.if-value').val() + '" then show'
-						+ ' [' + $entry.find('.then-field-select').val() + ']';
-					$('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" ).select();
-				});
-				return false;
-			});
-
-			var regex = /if \[(.*)] (.*equals) "(.*)" then show \[(.*)]/g;
-
-			$('#add-fields').click(function() {
-				import_condition_fields();
-			});
-
-			$('#overwrite-fields').click(function() {
-				clear_all_condition_fields();
-				import_condition_fields();
-			});
-
-			$('#wpcf7cf-settings-text-clear').click(function() {
-				$('#wpcf7cf-settings-text-wrap').hide();
-				$('#wpcf7cf-settings-text').val('');
-				return false;
-			});
-
-		})( jQuery );
-	</script>
 <?php
 }
 
