@@ -21,8 +21,8 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                 if (signatures[0].canvas.width == 0) {
                     for (var i = 0; i < signatures.length; i++) {
 
-                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(0).attr('width', jQuery(".wpcf7-form-control-signature-wrap").width());
-                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(0).attr('height', jQuery(".wpcf7-form-control-signature-wrap").height());
+                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('width', jQuery(".wpcf7-form-control-signature-wrap").width());
+                        jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('height', jQuery(".wpcf7-form-control-signature-wrap").height());
 
                         cf7signature_resized = 1;
                     }
