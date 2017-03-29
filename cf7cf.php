@@ -17,7 +17,7 @@ class ContactForm7ConditionalFields {
         add_action('load-toplevel_page_wpcf7', array(__CLASS__, 'tag_generator'));
 
         // compatibility with CF7 multi-step forms
-        if (!function_exists('cf7msm_get')) add_filter( 'wpcf7_posted_data', array($this,'cf7msm_merge_post_with_cookie'), 8, 1 );
+        add_filter( 'wpcf7_posted_data', array($this,'cf7msm_merge_post_with_cookie'), 8, 1 );
 
         add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
         add_filter( 'wpcf7_mail_components', array($this, 'hide_hidden_mail_fields') );
@@ -169,6 +169,8 @@ class ContactForm7ConditionalFields {
 
     function cf7msm_merge_post_with_cookie($posted_data) {
 
+        if (!function_exists('cf7msm_get')) return $posted_data;
+
         if (!$posted_data) {
             $posted_data = WPCF7_Submission::get_instance()->get_posted_data();
         }
@@ -185,8 +187,8 @@ class ContactForm7ConditionalFields {
 
         // remove all the currently posted data from the cookie data (we don't wanna add it twice)
         $cookie_data_hidden_group_fields = array_diff($cookie_data_hidden_group_fields, array_keys($posted_data));
-        $cookie_data_hidden_groups = array_diff($cookie_data_hidden_groups, $this->hidden_groups, $this->visible_groups);
-        $cookie_data_visible_groups = array_diff($cookie_data_visible_groups, $this->hidden_groups, $this->visible_groups);
+        $cookie_data_hidden_groups = array_diff((array) $cookie_data_hidden_groups, $this->hidden_groups, $this->visible_groups);
+        $cookie_data_visible_groups = array_diff((array) $cookie_data_visible_groups, $this->hidden_groups, $this->visible_groups);
 
         // update current post data with cookie data
         $posted_data['_wpcf7cf_hidden_group_fields'] = addslashes(json_encode(array_merge((array) $cookie_data_hidden_group_fields, $this->hidden_fields)));
