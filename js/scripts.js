@@ -18,9 +18,9 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
-                if (signatures[0].canvas.width == 0) {
-                    for (var i = 0; i < signatures.length; i++) {
 
+                for (var i = 0; i < signatures.length; i++) {
+                    if (signatures[i].canvas.width == 0) {
                         jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('width', jQuery(".wpcf7-form-control-signature-wrap").width());
                         jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('height', jQuery(".wpcf7-form-control-signature-wrap").height());
 

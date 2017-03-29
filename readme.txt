@@ -83,6 +83,9 @@ I will assume that you successfully installed both plugins, that you were able t
 
 == Changelog ==
 
+= 1.2.3 =
+* Improve compatibility with Signature Addon some more.
+
 = 1.2.2 =
 * Fix critical bug that was present in version 1.2 and 1.2.1
 
