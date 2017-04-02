@@ -16,14 +16,16 @@ class ContactForm7ConditionalFields {
         add_action('load-contact_page_wpcf7-new', array(__CLASS__, 'tag_generator'));
         add_action('load-toplevel_page_wpcf7', array(__CLASS__, 'tag_generator'));
 
-        // compatibility with CF7 multi-step forms
+        // compatibility with CF7 multi-step forms by Webhead LLC.
         add_filter( 'wpcf7_posted_data', array($this,'cf7msm_merge_post_with_cookie'), 8, 1 );
+
+        // compatibility with CF7 Multi Step by NinjaTeam https://wordpress.org/plugins/cf7-multi-step/
+        add_action('wp_ajax_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
+        add_action('wp_ajax_nopriv_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
 
         add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
         add_filter( 'wpcf7_mail_components', array($this, 'hide_hidden_mail_fields') );
         add_filter('wpcf7_additional_mail', array($this, 'hide_hidden_mail_fields_additional_mail'), 10, 2);
-
-        //apply_filters( 'wpcf7_additional_mail',$additional_mail, $contact_form )
 
         add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
@@ -196,6 +198,11 @@ class ContactForm7ConditionalFields {
         $posted_data['_wpcf7cf_visible_groups'] = addslashes(json_encode(array_merge((array) $cookie_data_visible_groups, $this->visible_groups)));
 
         return $posted_data;
+    }
+
+    // compatibility with CF7 Multi Step by NinjaTeam https://wordpress.org/plugins/cf7-multi-step/
+    function cf7mls_validation_callback() {
+        $this->set_hidden_fields_arrays($_POST);
     }
 
 

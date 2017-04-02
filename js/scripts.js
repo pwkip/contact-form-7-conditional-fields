@@ -18,9 +18,9 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
-
                 for (var i = 0; i < signatures.length; i++) {
                     if (signatures[i].canvas.width == 0) {
+
                         jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('width', jQuery(".wpcf7-form-control-signature-wrap").width());
                         jQuery(".wpcf7-form-control-signature-body>canvas").eq(i).attr('height', jQuery(".wpcf7-form-control-signature-wrap").height());
 
@@ -163,37 +163,49 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
         // before the form values are serialized to submit via ajax, we quickly add all invisible fields in the hidden
         // _wpcf7cf_hidden_group_fields field, so the PHP code knows which fields were inside hidden groups.
-
         $('form.wpcf7-form').on('form-pre-serialize', function(form,options,veto) {
             $form = $(form.target);
-
-            $hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
-            $hidden_groups = $form.find('[name="_wpcf7cf_hidden_groups"]');
-            $visible_groups = $form.find('[name="_wpcf7cf_visible_groups"]');
-
-            var hidden_fields = [];
-            var hidden_groups = [];
-            var visible_groups = [];
-
-            $form.find('[data-class="wpcf7cf_group"]').each(function () {
-                var $this = $(this);
-                if ($this.hasClass('wpcf7cf-hidden')) {
-                    hidden_groups.push($this.attr('id'));
-                    $this.find('input,select,textarea').each(function () {
-                        hidden_fields.push($(this).attr('name'));
-                    });
-                } else {
-                    visible_groups.push($this.attr('id'));
-                }
-            });
-
-            $hidden_group_fields.val(JSON.stringify(hidden_fields));
-            $hidden_groups.val(JSON.stringify(hidden_groups));
-            $visible_groups.val(JSON.stringify(visible_groups));
-
-            return true;
+            wpcf7cf_update_hidden_fields($form);
+        });
+        // Actually we need to add the hidden fields values after every change in case the form values
+        // get submitted trough Ajax by another plugin (Example multi-step form plugins)
+        $('form.wpcf7-form :input').change(function() {
+            wpcf7cf_update_hidden_fields($(this).closest('form'));
+        });
+        // And in case a form gets submitted without any input:
+        $('form.wpcf7-form').each(function(){
+            wpcf7cf_update_hidden_fields($(this));
         });
     });
+
+    function wpcf7cf_update_hidden_fields($form) {
+
+        $hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
+        $hidden_groups = $form.find('[name="_wpcf7cf_hidden_groups"]');
+        $visible_groups = $form.find('[name="_wpcf7cf_visible_groups"]');
+
+        var hidden_fields = [];
+        var hidden_groups = [];
+        var visible_groups = [];
+
+        $form.find('[data-class="wpcf7cf_group"]').each(function () {
+            var $this = $(this);
+            if ($this.hasClass('wpcf7cf-hidden')) {
+                hidden_groups.push($this.attr('id'));
+                $this.find('input,select,textarea').each(function () {
+                    hidden_fields.push($(this).attr('name'));
+                });
+            } else {
+                visible_groups.push($this.attr('id'));
+            }
+        });
+
+        $hidden_group_fields.val(JSON.stringify(hidden_fields));
+        $hidden_groups.val(JSON.stringify(hidden_groups));
+        $visible_groups.val(JSON.stringify(visible_groups));
+
+        return true;
+    }
 
     //reset the form completely
     $( document ).ajaxComplete(function(e,xhr) {
