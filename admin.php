@@ -13,10 +13,12 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 add_filter('wpcf7_editor_panels', 'add_conditional_panel');
 
 function add_conditional_panel($panels) {
-	$panels['contitional-panel'] = array(
-		'title' => __( 'Conditional fields', 'wpcf7cf' ),
-		'callback' => 'wpcf7cf_editor_panel_conditional'
-	);
+	if ( current_user_can( 'wpcf7_edit_contact_form', $post_id ) ) {
+		$panels['contitional-panel'] = array(
+			'title' => __( 'Conditional fields', 'wpcf7cf' ),
+			'callback' => 'wpcf7cf_editor_panel_conditional'
+		);
+	}
 	return $panels;
 }
 
