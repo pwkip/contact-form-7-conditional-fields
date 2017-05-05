@@ -1,4 +1,7 @@
 <?php
+
+global $wpcf7cf_global_count;
+
 class ContactForm7ConditionalFields {
     private $hidden_fields = array();
     private $visible_groups = array();
@@ -171,7 +174,7 @@ class ContactForm7ConditionalFields {
 
     function cf7msm_merge_post_with_cookie($posted_data) {
 
-        if (!function_exists('cf7msm_get')) return $posted_data;
+        if (!function_exists('cf7msm_get') || !key_exists('cf7msm_posted_data',$_COOKIE)) return $posted_data;
 
         if (!$posted_data) {
             $posted_data = WPCF7_Submission::get_instance()->get_posted_data();
@@ -306,31 +309,32 @@ function wpcf7cf_properties($properties, $wpcf7form) {
     return $properties;
 }
 
-$global_count = 0;
+$wpcf7cf_global_count = 0;
 
 add_action('wpcf7_contact_form', 'wpcf7cf_enqueue_scripts', 10, 1);
 function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
 
     if (is_admin()) return;
 
-    global $global_count, $post;
-    $global_count++;
+    global $wpcf7cf_global_count, $post;
+    $wpcf7cf_global_count++;
 
     if ( in_the_loop() ) {
         $post_id = empty($post->ID) ? '0' : $post->ID;
-        $unit_tag = 'wpcf7-f'.$cf7form->id().'-p'.$post_id.'-o'.$global_count;
+        $unit_tag = 'wpcf7-f'.$cf7form->id().'-p'.$post_id.'-o'.$wpcf7cf_global_count;
     } else {
-        $unit_tag = 'wpcf7-f'.$cf7form->id().'-o'.$global_count;
+        $unit_tag = 'wpcf7-f'.$cf7form->id().'-o'.$wpcf7cf_global_count;
     }
 
     $options = array(
         'form_id' => $cf7form->id(),
         'unit_tag' => $unit_tag,
         'conditions' => get_post_meta($cf7form->id(),'wpcf7cf_options', true),
+        'settings' => get_option(WPCF7CF_OPTIONS)
     );
 
-    wp_enqueue_script('cf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
-    wp_localize_script('cf7cf-scripts', 'wpcf7cf_options_'.$global_count, $options);
+    wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
+    wp_localize_script('wpcf7cf-scripts', 'wpcf7cf_options_'.$wpcf7cf_global_count, $options);
 }
 
 add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);

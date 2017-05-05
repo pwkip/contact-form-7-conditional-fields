@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.7.2
-Stable tag: 1.2.3
+Tested up to: 4.7.4
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,10 +62,11 @@ Example email:
 
 Advanced users can now code up the conditions as plain text instead of using the select boxes, using the import/export feature.
 
-
 == Installation ==
 
 Please follow the [standard installation procedure for WordPress plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
+
+Follow [this tutorial](http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/) if you are not sure how to use the plugin.
 
 == Frequently Asked Questions ==
 
@@ -76,12 +77,68 @@ I will assume that you successfully installed both plugins, that you were able t
 1. <strong>All field names should be unique</strong> - Even though your fields might never show up at the same time, it is still important to realize that WPCF7CF will not remove the fields, it merely hides them. So all fields will be submitted when the form is sent. Because of this no two fields can have the same name.
 1. <strong>All my groups show up all the time and never get hidden.</strong> - Likely this is due to a javascript error caused by your theme or another plugin. WPCF7CF loads it's scripts at the bottom of the HTML page. If some javascript error gets triggered before, the code will not be executed. Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing theme. Your browser's developer tools (F12) might point you in the right direction.
 
+= How do i show fields based on multiple conditions? (AND, OR, NAND, NOR) =
+
+<strong>if a=1 AND b=2 then, show [group x]</strong>
+
+You will need to create nested groups for the number of conditions, so your form might look like this:
+
+`[select a "1" "2" "3"]
+[select b "1" "2" "3"]
+[group x-1][group x-2]TADA![/group][/group]`
+
+and use these conditions
+
+`if [a] equals "1" then show [x-1]
+if [b] equals "2" then show [x-2]`
+
+<strong>if a=1 OR b=2 then, show [group x]</strong>
+
+This is more straightforward, as OR conditions are assumed. Giving this form:
+
+`[select a "1" "2" "3"]
+[select b "1" "2" "3"]
+[group x]TADA![/group]`
+
+You can simply use these conditions:
+
+`if [a] equals "1" then show [x]
+if [b] equals "2" then show [x]`
+
+<strong>if a=1 NAND b=2 then, show [group x]</strong>
+
+Same form as OR, but just use "not equals" instead of "equals":
+
+`if [a] not equals "1" then show [x]
+if [b] not equals "2" then show [x]`
+
+<strong>if a=1 NOR b=2 then, show [group x]</strong>
+
+Same form as AND, but just use "not equals" instead of "equals":
+
+`if [a] not equals "1" then show [x-1]
+if [b] not equals "2" then show [x-2]`
+
 == Screenshots ==
 
 1. Back End
 2. Front End
 
 == Changelog ==
+
+= 1.3.2 =
+* Removed a piece of code that was trying to load a non existing stylesheet
+* Updated FAQ
+
+= 1.3.1 =
+* Fixed bug in 1.3 that broke everything
+
+= 1.3 =
+* Fixed small bug with integration with Contact Form 7 Multi-Step Forms
+* Also trigger hiding/showing of groups while typing or pasting text in input fields
+* Added support for input type="reset"
+* Added animations
+* Added settings page to wp-admin: Contact > Conditional Fields
 
 = 1.2.3 =
 * Make plugin compatible with CF7 Multi Step by NinjaTeam https://wordpress.org/plugins/cf7-multi-step/

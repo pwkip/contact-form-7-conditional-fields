@@ -121,18 +121,108 @@ var old_compose = _wpcf7.taggen.compose;
 
     function update_entries() {
         $('.if-value').css({'visibility':'visible'});
+        $('.if-value').autocomplete( "disable" );
+
         $('.entry').each(function() {
             var $entry = $(this);
             if ($entry.find('.operator').eq(0).val() == 'is empty' || $entry.find('.operator').eq(0).val() == 'not empty') {
                 $entry.find('.if-value').eq(0).css({'visibility':'hidden'});
+            } else if ($entry.find('.operator').eq(0).val().endsWith('(regex)')) {
+                $entry.find('.if-value').eq(0).autocomplete( "enable" );
             }
         });
     }
 
+    var regexes = [
+        { label: wpcf7cf_options_0.regex_email_label, desc: wpcf7cf_options_0.regex_email },
+        { label: wpcf7cf_options_0.regex_numeric_label, desc: wpcf7cf_options_0.regex_numeric },
+        { label: wpcf7cf_options_0.regex_alphanumeric_label, desc: wpcf7cf_options_0.regex_alphanumeric },
+        { label: wpcf7cf_options_0.regex_alphabetic_label, desc: wpcf7cf_options_0.regex_alphabetic },
+        { label: wpcf7cf_options_0.regex_date_label, desc: wpcf7cf_options_0.regex_date },
+        { label: wpcf7cf_options_0.regex_custom_1_label, desc: wpcf7cf_options_0.regex_custom_1 },
+        { label: wpcf7cf_options_0.regex_custom_2_label, desc: wpcf7cf_options_0.regex_custom_2 },
+        { label: wpcf7cf_options_0.regex_custom_3_label, desc: wpcf7cf_options_0.regex_custom_3 },
+        { label: wpcf7cf_options_0.regex_custom_4_label, desc: wpcf7cf_options_0.regex_custom_4 },
+        { label: wpcf7cf_options_0.regex_custom_5_label, desc: wpcf7cf_options_0.regex_custom_5 },
+    ];
+
+    var i = regexes.length;
+    while (i--) {
+        if (null == regexes[i].label || null == regexes[i].desc || regexes[i].label == '' || regexes[i].desc == '') {
+            regexes.splice(i,1);
+        }
+    }
+
+    var termTemplate = "<span class='ui-autocomplete-term'>%s</span>";
+
+    $('.if-value').autocomplete({
+        disabled: true,
+        source: function(request, response) {
+            var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+            response($.grep(regexes, function(value) {
+                return matcher.test(value.label || value.value || value) || matcher.test(value.desc);
+            }));
+        },
+        focus: function( event, ui ) {
+            $( event.target ).val( ui.item.desc );
+            return false;
+        },
+        select: function( event, ui ) {
+            $( event.target ).val( ui.item.desc );
+            return false;
+        },
+        open: function(e,ui) {
+            $el = $(e.target);
+            var styledTerm = termTemplate.replace('%s', $el.val());
+
+            $('.ui-autocomplete').find('em').each(function() {
+                var me = $(this);
+                me.html( me.text().replace($el.val(), styledTerm) );
+            });
+        }
+    }).each(function() {
+        $(this).autocomplete( "instance" )._renderItem = function( ul, item ) {
+            return $("<li>")
+            .append("<div><em>" + item.label + "</em><br><em>" + item.desc + "</em></div>")
+            .appendTo(ul);
+        }
+    });
+
     update_entries();
+
     $('.operator').change(function() {
         update_entries();
     });
 
+    // $('.if-value').autocomplete({
+    //     source: regexes
+    // });
+    // $('.if-value').each(function() {
+    //     $(this).data("uiAutocomplete")._renderItem = function (ul, item) {
+    //         return $("<li></li>").append("pff").appendTo(ul);
+    //     }
+    // });
+
+    // ------------------------------------
+    //            OPTIONS PAGE
+    // ------------------------------------
+
+    $(document).ready(function() {
+
+        $('.wpcf7cf-options-notice .notice-dismiss-2').click(function () {
+            $('.wpcf7cf-options-notice .notice-dismiss').click();
+        });
+        $('.wpcf7cf-options-notice .notice-dismiss').click(function () {
+            wpcf7cf_dismiss_notice();
+        });
+
+        function wpcf7cf_dismiss_notice() {
+            $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
+            $.post(ajaxurl, {action:'wpcf7cf_dismiss_notice'}, function(response) {
+                // nothing to do. dismiss_notice option should be set to TRUE server side by now.
+            });
+        }
+
+    });
 
 })( jQuery );

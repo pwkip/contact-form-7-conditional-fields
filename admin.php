@@ -6,8 +6,10 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 	if ( false === strpos( $hook_suffix, 'wpcf7' ) ) {
 		return; //don't load styles and scripts if this isn't a CF7 page.
 	}
-	wp_enqueue_style( 'contact-form-7-cf-admin', wpcf7cf_plugin_url( 'admin-style.css' ), array(), WPCF7CF_VERSION, 'all' );
-	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array(), WPCF7CF_VERSION,true);
+
+	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete'), WPCF7CF_VERSION,true);
+	wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', get_option(WPCF7CF_OPTIONS));
+
 }
 
 add_filter('wpcf7_editor_panels', 'add_conditional_panel');

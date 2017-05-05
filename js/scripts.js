@@ -14,7 +14,9 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
     }
 
     $(document).ready(function() {
-        function display_fields(unit_tag, wpcf7cf_conditions) {
+        function display_fields(unit_tag, wpcf7cf_conditions, wpcf7cf_settings) {
+
+            console.log('display fields');
 
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
@@ -29,7 +31,8 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                 }
             }
 
-            $("#"+unit_tag+" [data-class='wpcf7cf_group']").hide().addClass('wpcf7cf-hidden');
+            $("#"+unit_tag+" [data-class='wpcf7cf_group']").addClass('wpcf7cf-hidden');
+
             for (var i=0; i < wpcf7cf_conditions.length; i++) {
 
                 var condition = wpcf7cf_conditions[i];
@@ -66,7 +69,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         });
 
                         if(show == true) {
-                            $('#' + unit_tag + ' #' + condition.then_field).show().removeClass('wpcf7cf-hidden');
+                            $('#' + unit_tag + ' #' + condition.then_field).removeClass('wpcf7cf-hidden');
                         }
 
                         continue;
@@ -85,7 +88,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                             condition.operator == 'equals (regex)'     && $field.is(':checked')  && regex_patt.test($field.val())      ||
                             condition.operator == 'not equals (regex)' && !$field.is(':checked')
                         ) {
-                            $('#'+unit_tag+' #'+condition.then_field).show().removeClass('wpcf7cf-hidden');
+                            $('#'+unit_tag+' #'+condition.then_field).removeClass('wpcf7cf-hidden');
                         }
                     } else if (
                         ( condition.operator == 'equals'             && $field.val() == condition.if_value ) ||
@@ -99,7 +102,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         ( condition.operator == 'is empty'           && $field.val() == ''                 ) ||
                         ( condition.operator == 'not empty'          && $field.val() != ''                 )
                     ) {
-                        $('#'+unit_tag+' #'+condition.then_field).show().removeClass('wpcf7cf-hidden');
+                        $('#'+unit_tag+' #'+condition.then_field).removeClass('wpcf7cf-hidden');
                     }
 
 
@@ -129,7 +132,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                         ( condition.operator == 'is empty'   && checked_values.length == 0 ) ||
                         ( condition.operator == 'not empty'  && checked_values.length > 0  )
                     ) {
-                        $('#'+unit_tag+' #'+condition.then_field).show().removeClass('wpcf7cf-hidden');
+                        $('#'+unit_tag+' #'+condition.then_field).removeClass('wpcf7cf-hidden');
                     }
 
 
@@ -144,21 +147,59 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                             ( condition.operator == '>=' &&                  checked_values[ind] >= condition.if_value ) ||
                             ( condition.operator == '<=' &&                  checked_values[ind] <= condition.if_value )
                         ) {
-                            $('#'+unit_tag+' #'+condition.then_field).show().removeClass('wpcf7cf-hidden');
+                            $('#'+unit_tag+' #'+condition.then_field).removeClass('wpcf7cf-hidden');
                         }
                     }
                 }
-
             }
+
+            var show_animation = { "height": "show", "marginTop": "show", "marginBottom": "show", "paddingTop": "show", "paddingBottom": "show" };
+            var hide_animation = { "height": "hide", "marginTop": "hide", "marginBottom": "hide", "paddingTop": "hide",  "paddingBottom": "hide" };
+
+            var animation_intime = parseInt(wpcf7cf_settings.animation_intime);
+            var animation_outtime = parseInt(wpcf7cf_settings.animation_outtime);
+
+            if (wpcf7cf_settings.animation == 'no') {
+                animation_intime = 0;
+                animation_outtime = 0;
+            }
+
+            $("#" + unit_tag + " [data-class='wpcf7cf_group']").each(function (index) {
+                $group = $(this);
+                if ($group.is(':animated')) $group.finish(); // stop any current animations on the group
+                if ($group.css('display') == 'none' && !$group.hasClass('wpcf7cf-hidden')) {
+                    $group.animate(show_animation, animation_intime); // show
+                } else if ($group.css('display') != 'none' && $group.hasClass('wpcf7cf-hidden')) {
+                    $group.animate(hide_animation, animation_outtime); // hide
+                }
+            });
         }
 
+        var timeout;
+
         for (var i = 0; i<options.length; i++) {
+
             var unit_tag = options[i]['unit_tag'];
             var conditions = options[i]['conditions'];
-            display_fields(unit_tag, conditions);
-            $('#'+unit_tag+' input, #'+unit_tag+' select, #'+unit_tag+' textarea').change({unit_tag:unit_tag, conditions:conditions}, function(e) {
-                display_fields(e.data.unit_tag, e.data.conditions);
+            var settings = options[i]['settings'];
+
+            display_fields(unit_tag, conditions, settings);
+
+            $('#'+unit_tag+' input, #'+unit_tag+' select, #'+unit_tag+' textarea').on('input paste change',{unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
+                clearTimeout(timeout);
+                timeout = setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings); }, 100);
             });
+
+            // $('#'+unit_tag+' input:not([type="radio"]):not([type="checkbox"]), #'+unit_tag+' textarea').on('input paste',{unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
+            //     clearTimeout(timeout);
+            //     timeout = setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings) }, 400);
+            // });
+
+            // bring form in initial state if
+            $('#'+unit_tag+' form').on('reset', {unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
+                setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings); }, 200);
+            });
+
         }
 
         // before the form values are serialized to submit via ajax, we quickly add all invisible fields in the hidden
@@ -167,12 +208,8 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             $form = $(form.target);
             wpcf7cf_update_hidden_fields($form);
         });
-        // Actually we need to add the hidden fields values after every change in case the form values
-        // get submitted trough Ajax by another plugin (Example multi-step form plugins)
-        $('form.wpcf7-form :input').change(function() {
-            wpcf7cf_update_hidden_fields($(this).closest('form'));
-        });
-        // And in case a form gets submitted without any input:
+
+        // Also add hidden fields in case a form gets submitted without any input:
         $('form.wpcf7-form').each(function(){
             wpcf7cf_update_hidden_fields($(this));
         });

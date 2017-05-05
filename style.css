@@ -1,1 +1,4 @@
-/**/
+/* initially hide all groups (even before JS is loaded), so the page will never render them while loading */
+[data-class="wpcf7cf_group"] {
+    display:none;
+}
