@@ -314,6 +314,4 @@ function wpcf7cf_dismiss_notice() {
     $wpcf7cf_options['notice_dismissed'] = true;
     $wpcf7cf_options['wpcf7cf_settings_saved'] = 1;
     update_option(WPCF7CF_OPTIONS,$wpcf7cf_options);
-    echo 'haha';
-    exit();
 }

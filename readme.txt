@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 4.7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,12 +70,34 @@ Follow [this tutorial](http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-f
 
 == Frequently Asked Questions ==
 
-= Something isn't working. Why? =
+= Email message is not showing the correct values =
 
-I will assume that you successfully installed both plugins, that you were able to create some conditional groups, and that you managed to create some conditions. But for some reason it's not working the way you expect it too. Here are the most common problems/causes people have encountered in the support forums. (Ordered from most frequent to least frequent.)
+<strong>All field names should be unique</strong>
 
-1. <strong>All field names should be unique</strong> - Even though your fields might never show up at the same time, it is still important to realize that WPCF7CF will not remove the fields, it merely hides them. So all fields will be submitted when the form is sent. Because of this no two fields can have the same name.
-1. <strong>All my groups show up all the time and never get hidden.</strong> - Likely this is due to a javascript error caused by your theme or another plugin. WPCF7CF loads it's scripts at the bottom of the HTML page. If some javascript error gets triggered before, the code will not be executed. Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing theme. Your browser's developer tools (F12) might point you in the right direction.
+Even though your fields might never show up at the same time, it is still important to realize that WPCF7CF will not remove the fields, it merely hides them. So all fields will be submitted when the form is sent. Because of this no two fields can have the same name.
+
+Incorrect form (2 input elements having the same name "a"):
+`
+[group group-1][select a "1" "2" "3"][/group]
+[group group-2][select a "1" "2" "3"][/group]
+`
+
+Correct form (all groups and fields have unique names):
+`
+[group group-1][select a "1" "2" "3"][/group]
+[group group-2][select b "1" "2" "3"][/group]
+`
+
+= All my groups show up all the time and never get hidden. =
+
+<strong>Reason #1: Javascript error</strong>
+Check your browser console (F12) for any javascript errors. WPCF7CF loads it's scripts at the bottom of the HTML page, so if some javascript error gets triggered before that, the code will not be executed in most browsers.
+Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing theme.
+
+<strong>Reason #2: wp_footer() isn't loaded</strong>
+Check if your theme is calling the `wp_footer()` function. Typically this function will be called in your theme's footer.php file.
+The conditional fields javascript code is loaded during wp_footer, so a call to this function is crucial. If there is no such call in your theme, go to your theme's footer.php file and add this code right before the closing `</body>` tag:
+`<?php wp_footer() ?>`
 
 = How do i show fields based on multiple conditions? (AND, OR, NAND, NOR) =
 
@@ -129,6 +151,7 @@ if [b] not equals "2" then show [x-2]`
 = 1.3.2 =
 * Removed a piece of code that was trying to load a non existing stylesheet
 * Updated FAQ
+* Code rearangement and additions for the upcomming Conditional Fields Pro plugin
 
 = 1.3.1 =
 * Fixed bug in 1.3 that broke everything
@@ -153,7 +176,7 @@ if [b] not equals "2" then show [x-2]`
 = 1.2 =
 * Made compatible with <a href="https://wordpress.org/plugins/contact-form-7-multi-step-module/">Contact Form 7 Multi-Step Forms</a>
 * Small bug fix by Manual from advantia.net: now only considering fields which are strictly inside hidden group tags with form submit. Important in some edge cases where form elements get hidden by other mechanisms, i.e. tabbed forms.
-* Started work on CF7CF Pro, made some structural code modifications so the free plugin can function as the base for both plugins.
+* Started work on WPCF7CF Pro, made some structural code modifications so the free plugin can function as the base for both plugins.
 * Removed some debug code
 * Updated readme file
 

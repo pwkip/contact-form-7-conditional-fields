@@ -16,8 +16,6 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
     $(document).ready(function() {
         function display_fields(unit_tag, wpcf7cf_conditions, wpcf7cf_settings) {
 
-            console.log('display fields');
-
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
                 for (var i = 0; i < signatures.length; i++) {
@@ -122,12 +120,6 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                     var checked_value_index = $.inArray(condition.if_value, checked_values);
                     var value_index = $.inArray(condition.if_value, all_values);
 
-                    // console.log(all_values);
-                    // console.log(checked_values);
-                    // console.log(condition);
-                    // console.log(value_index);
-                    // console.log(checked_value_index);
-
                     if (
                         ( condition.operator == 'is empty'   && checked_values.length == 0 ) ||
                         ( condition.operator == 'not empty'  && checked_values.length > 0  )
@@ -187,17 +179,12 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
             $('#'+unit_tag+' input, #'+unit_tag+' select, #'+unit_tag+' textarea').on('input paste change',{unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
                 clearTimeout(timeout);
-                timeout = setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings); }, 100);
+                timeout = setTimeout(display_fields, 100, e.data.unit_tag, e.data.conditions, e.data.settings);
             });
-
-            // $('#'+unit_tag+' input:not([type="radio"]):not([type="checkbox"]), #'+unit_tag+' textarea').on('input paste',{unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
-            //     clearTimeout(timeout);
-            //     timeout = setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings) }, 400);
-            // });
 
             // bring form in initial state if
             $('#'+unit_tag+' form').on('reset', {unit_tag:unit_tag, conditions:conditions, settings:settings}, function(e) {
-                setTimeout(function() { display_fields(e.data.unit_tag, e.data.conditions, e.data.settings); }, 200);
+                setTimeout(display_fields, 200, e.data.unit_tag, e.data.conditions, e.data.settings);
             });
 
         }
