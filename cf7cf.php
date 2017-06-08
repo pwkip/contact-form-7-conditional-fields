@@ -291,7 +291,7 @@ add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
 function wpcf7cf_form_hidden_fields($hidden_fields) {
 
     $current_form = wpcf7_get_current_contact_form();
-    $current_form_id = $current_form->id;
+    $current_form_id = $current_form->id();
 
     $options = array(
         'form_id' => $current_form_id,

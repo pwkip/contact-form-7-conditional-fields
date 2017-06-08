@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 4.7.5
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,9 @@ if [b] not equals "2" then show [x-2]`
 2. Front End
 
 == Changelog ==
+
+= 1.3.4 =
+* small fix (https://wordpress.org/support/topic/wpcf7_contactform-object-is-no-longer-accessible/)
 
 = 1.3.3 =
 * Changes tested with WP 4.7.5 and CF7 4.8
