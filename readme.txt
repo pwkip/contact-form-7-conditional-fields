@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.7.4
-Stable tag: 1.3.2
+Tested up to: 4.7.5
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,7 +97,7 @@ Before reaching out to the support forum try to determine which plugin or theme 
 <strong>Reason #2: wp_footer() isn't loaded</strong>
 Check if your theme is calling the `wp_footer()` function. Typically this function will be called in your theme's footer.php file.
 The conditional fields javascript code is loaded during wp_footer, so a call to this function is crucial. If there is no such call in your theme, go to your theme's footer.php file and add this code right before the closing `</body>` tag:
-`<?php wp_footer() ?>`
+`&lt;?php wp_footer(); ?&gt;`
 
 = How do i show fields based on multiple conditions? (AND, OR, NAND, NOR) =
 
@@ -147,6 +147,13 @@ if [b] not equals "2" then show [x-2]`
 2. Front End
 
 == Changelog ==
+
+= 1.3.3 =
+* Changes tested with WP 4.7.5 and CF7 4.8
+* Changed the inner mechanics a bit to make the plugin more edge-case proof and prepare for future ajax support
+* Fix problems introduced by CF7 4.8 update
+* Because the CF7 author, Takayuki Miyoshi, decided to get rid of the 'form-pre-serialize' javascript event, the hidden fields containing data about which groups are shown/hidden will now be updated when the form is loaded and each time a form value changes. This might make the plugin slightly slower, but it is the only solution I found so far.
+* Small bug fix (https://wordpress.org/support/topic/php-depreciated-warning/#post-9151404)
 
 = 1.3.2 =
 * Removed a piece of code that was trying to load a non existing stylesheet

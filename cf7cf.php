@@ -1,7 +1,5 @@
 <?php
 
-global $wpcf7cf_global_count;
-
 class ContactForm7ConditionalFields {
     private $hidden_fields = array();
     private $visible_groups = array();
@@ -52,8 +50,6 @@ class ContactForm7ConditionalFields {
     }
 
     public static function add_shortcodes() {
-        //wpcf7_add_shortcode('group', array(__CLASS__, 'shortcode_handler'), true);
-        //add_shortcode( 'group', array(__CLASS__, 'group_shortcode_handler') );
         if (function_exists('wpcf7_add_form_tag'))
             wpcf7_add_form_tag('group', array(__CLASS__, 'shortcode_handler'), true);
         else if (function_exists('wpcf7_add_shortcode')) {
@@ -67,7 +63,7 @@ class ContactForm7ConditionalFields {
         return $content;
     }
 
-    function shortcode_handler($tag) {
+    public static function shortcode_handler($tag) {
         //$tag = new WPCF7_Shortcode($tag);
         $tag = new WPCF7_FormTag($tag);
         //ob_start();
@@ -86,6 +82,8 @@ class ContactForm7ConditionalFields {
             'wpcf7-tg-pane-group',
             array(__CLASS__, 'tg_pane')
         );
+
+        do_action('wpcf7cf_tag_generator');
     }
 
     static function tg_pane( $contact_form, $args = '' ) {
@@ -94,34 +92,7 @@ class ContactForm7ConditionalFields {
 
         $description = __( "Generate a group tag to group form elements that can be shown conditionally.", 'cf7cf' );
 
-        ?>
-        <div class="control-box">
-            <fieldset>
-                <legend><?php echo sprintf( esc_html( $description ) ); ?></legend>
-
-                <table class="form-table">
-                    <tbody>
-
-                    <tr>
-                        <th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label></th>
-                        <td><input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /></td>
-                    </tr>
-
-                    </tbody>
-                </table>
-            </fieldset>
-        </div>
-
-        <div class="insert-box">
-            <input type="text" name="<?php echo $type; ?>" class="tag code" readonly="readonly" onfocus="this.select()" />
-
-            <div class="submitbox">
-                <input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
-            </div>
-
-            <br class="clear" />
-        </div>
-        <?php
+        include 'tg_pane_group.php';
     }
 
     /**
@@ -286,7 +257,7 @@ new ContactForm7ConditionalFields;
 add_filter( 'wpcf7_contact_form_properties', 'wpcf7cf_properties', 10, 2 );
 
 function wpcf7cf_properties($properties, $wpcf7form) {
-    if (!is_admin()) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor as well.
+    if (!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor as well.
         $form = $properties['form'];
 
         $find = array(
@@ -309,38 +280,31 @@ function wpcf7cf_properties($properties, $wpcf7form) {
     return $properties;
 }
 
-$wpcf7cf_global_count = 0;
-
 add_action('wpcf7_contact_form', 'wpcf7cf_enqueue_scripts', 10, 1);
 function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
-
     if (is_admin()) return;
-
-    global $wpcf7cf_global_count, $post;
-    $wpcf7cf_global_count++;
-
-    if ( in_the_loop() ) {
-        $post_id = empty($post->ID) ? '0' : $post->ID;
-        $unit_tag = 'wpcf7-f'.$cf7form->id().'-p'.$post_id.'-o'.$wpcf7cf_global_count;
-    } else {
-        $unit_tag = 'wpcf7-f'.$cf7form->id().'-o'.$wpcf7cf_global_count;
-    }
-
-    $options = array(
-        'form_id' => $cf7form->id(),
-        'unit_tag' => $unit_tag,
-        'conditions' => get_post_meta($cf7form->id(),'wpcf7cf_options', true),
-        'settings' => get_option(WPCF7CF_OPTIONS)
-    );
-
     wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
-    wp_localize_script('wpcf7cf-scripts', 'wpcf7cf_options_'.$wpcf7cf_global_count, $options);
 }
 
 add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
 
 function wpcf7cf_form_hidden_fields($hidden_fields) {
-    return array('_wpcf7cf_hidden_group_fields' => '', '_wpcf7cf_hidden_groups' => '', '_wpcf7cf_visible_groups' => '');
+
+    $current_form = wpcf7_get_current_contact_form();
+    $current_form_id = $current_form->id;
+
+    $options = array(
+        'form_id' => $current_form_id,
+        'conditions' => get_post_meta($current_form_id,'wpcf7cf_options', true),
+        'settings' => get_option(WPCF7CF_OPTIONS)
+    );
+
+    return array(
+        '_wpcf7cf_hidden_group_fields' => '',
+        '_wpcf7cf_hidden_groups' => '',
+        '_wpcf7cf_visible_groups' => '',
+        '_wpcf7cf_options' => ''.json_encode($options),
+    );
 }
 
 function wpcf7cf_endswith($string, $test) {

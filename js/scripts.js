@@ -4,17 +4,26 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 
     var i=0;
     var options = [];
-    while (true) {
-        i++;
-        if ('wpcf7cf_options_'+i in window) {
-            options.push(window['wpcf7cf_options_'+i]);
-            continue;
-        }
-        break;
-    }
+    // while (true) {
+    //     i++;
+    //     if ('wpcf7cf_options_'+i in window) {
+    //         options.push(window['wpcf7cf_options_'+i]);
+    //         continue;
+    //     }
+    //     break;
+    // }
+
+    $('.wpcf7').each(function(){
+        $this = $(this);
+        form_options = JSON.parse($this.find('input[name="_wpcf7cf_options"]').eq(0).val());
+        form_options.unit_tag = $this.attr('id');
+        options.push(form_options);
+    });
 
     $(document).ready(function() {
         function display_fields(unit_tag, wpcf7cf_conditions, wpcf7cf_settings) {
+
+            $current_form = $('#'+unit_tag);
 
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
@@ -165,6 +174,8 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                     $group.animate(hide_animation, animation_outtime); // hide
                 }
             });
+
+            wpcf7cf_update_hidden_fields($current_form);
         }
 
         var timeout;
@@ -188,13 +199,6 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
             });
 
         }
-
-        // before the form values are serialized to submit via ajax, we quickly add all invisible fields in the hidden
-        // _wpcf7cf_hidden_group_fields field, so the PHP code knows which fields were inside hidden groups.
-        $('form.wpcf7-form').on('form-pre-serialize', function(form,options,veto) {
-            $form = $(form.target);
-            wpcf7cf_update_hidden_fields($form);
-        });
 
         // Also add hidden fields in case a form gets submitted without any input:
         $('form.wpcf7-form').each(function(){

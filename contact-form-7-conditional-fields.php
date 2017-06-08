@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 1.3.2
+Version: 1.3.3
 Author URI: http://bdwm.be/
  */
 
@@ -24,7 +24,7 @@ Author URI: http://bdwm.be/
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '1.3.2' );
+if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '1.3.3' );
 if (!defined('WPCF7CF_REQUIRED_WP_VERSION')) define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 if (!defined('WPCF7CF_PLUGIN')) define( 'WPCF7CF_PLUGIN', __FILE__ );
 if (!defined('WPCF7CF_PLUGIN_BASENAME')) define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -43,9 +43,9 @@ function wpcf7cf_plugin_url( $path = '' ) {
 	return $url;
 }
 
-if(file_exists(WPCF7CF_PLUGIN_DIR.'/pro-functions.php')) {
+if(file_exists(WPCF7CF_PLUGIN_DIR.'/pro/pro-functions.php')) {
     if (!defined('WPCF7CF_IS_PRO')) define( 'WPCF7CF_IS_PRO', true );
-    require_once 'pro-functions.php';
+    require_once WPCF7CF_PLUGIN_DIR.'/pro/pro-functions.php';
 } else {
     if (!defined('WPCF7CF_IS_PRO')) define( 'WPCF7CF_IS_PRO', false );
 }

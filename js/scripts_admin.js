@@ -2,6 +2,8 @@
  * Created by jules on 7/17/2015.
  */
 
+if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix
+
 var old_compose = _wpcf7.taggen.compose;
 
 (function($) {
@@ -193,15 +195,6 @@ var old_compose = _wpcf7.taggen.compose;
     $('.operator').change(function() {
         update_entries();
     });
-
-    // $('.if-value').autocomplete({
-    //     source: regexes
-    // });
-    // $('.if-value').each(function() {
-    //     $(this).data("uiAutocomplete")._renderItem = function (ul, item) {
-    //         return $("<li></li>").append("pff").appendTo(ul);
-    //     }
-    // });
 
     // ------------------------------------
     //            OPTIONS PAGE
