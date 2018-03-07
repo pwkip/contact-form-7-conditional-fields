@@ -137,7 +137,7 @@ class ContactForm7ConditionalFields {
         $this->set_hidden_fields_arrays($posted_data);
 
         foreach( $this->hidden_fields as $name => $value ) {
-            unset( $posted_data[$name] );
+            unset( $posted_data[$value] );
         }
 
         return $posted_data;
