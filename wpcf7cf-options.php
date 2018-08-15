@@ -34,17 +34,13 @@ if ($wpcf7cf_options['wpcf7cf_settings_saved'] == 0) {
     $wpcf7cf_options = $wpcf7cf_default_options;
 }
 
-
-add_action('ninja_forms_display_before_field_function','wpcf7cf_wrap_input_field_before');
-add_action('ninja_forms_display_after_field_function','wpcf7cf_wrap_input_field_after');
-
-function wpcf7cf_wrap_input_field_before() { echo '<div class="resizable_input_wrapper">'; }
-function wpcf7cf_wrap_input_field_after() { echo '</div>'; }
+// LINE 37: removed some ninja_forms related code. Not sure what it was doing here. Keep this reminder here for a while in case problems pop up.
+// Remove in future update. (Jules 17/02/2018)
 
 add_action( 'admin_enqueue_scripts', 'wpcf7cf_load_page_options_wp_admin_style' );
 function wpcf7cf_load_page_options_wp_admin_style() {
-    wp_register_style( 'page_options_wp_admin_css', plugins_url('admin-style.css',__FILE__), false, WPCF7CF_VERSION );
-    wp_enqueue_style( 'page_options_wp_admin_css' );
+    wp_register_style( 'wpcf7cf_admin_css', plugins_url('admin-style.css',__FILE__), false, WPCF7CF_VERSION );
+    wp_enqueue_style( 'wpcf7cf_admin_css' );
 }
 
 
@@ -63,7 +59,7 @@ function wpcf7cf_options_page() {
 
     if (isset($_POST['reset'])) {
         echo '<div id="message" class="updated fade"><p><strong>Settings restored to defaults</strong></p></div>';
-    } else if ($_REQUEST['settings-updated']) {
+    } else if (isset($_REQUEST['settings-updated'])) {
         echo '<div id="message" class="updated fade"><p><strong>Settings updated</strong></p></div>';
     }
 
@@ -215,7 +211,7 @@ function wpcf7cf_input_field($slug, $args) {
     ?>
     <div class="option-line">
         <?php if ($label_editable) { ?>
-            <span class="label"><input type="text" data-default-value="<?php echo $label ?>" value="<?php echo $wpcf7cf_options[$slug.'_label'] ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug.'_label' ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.'_label]' ?>"></span>
+            <span class="label editable"><input type="text" data-default-value="<?php echo $label ?>" value="<?php echo $wpcf7cf_options[$slug.'_label'] ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug.'_label' ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.'_label]' ?>"></span>
         <?php } else { ?>
             <span class="label"><?php echo $label ?></span>
         <?php } ?>

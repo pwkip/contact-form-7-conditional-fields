@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.7.5
-Stable tag: 1.3.4
+Tested up to: 4.9.8
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,18 +17,13 @@ Adds conditional logic to Contact Form 7.
 This plugin adds conditional logic to [Contact Form 7](https://wordpress.org/plugins/contact-form-7/).
 
 If you edit your CF7 form, you will see an additional tag called "Conditional fields Group". Everything you put between the start and end tag will be hidden by default.
-After you added the field group(s), you should click Save.
-Then you should go to the "Conditional fields" tab to create one or more conditions that will make the group(s) appear.
+After you have added the field group(s), click Save and go to the "Conditional fields" tab to create one or more conditions that will make the group(s) appear.
 
 = How to use it =
 
-A detailed example of how to use the plugin can be found here: [http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/](http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/)
+[Follow this tutorial](https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/)
 
 == Main/ New features ==
-
-= Compatible with Contact Form 7 Multi-Step Forms =
-
-Conditional Fields for Contact Form 7 is now fully compatible with <a target="_blank" href="https://wordpress.org/plugins/contact-form-7-multi-step-module/">Contact Form 7 Multi-Step Forms</a>
 
 = Support for required fields =
 
@@ -60,17 +55,17 @@ Example email:
 
 = Advanced =
 
-Advanced users can now code up the conditions as plain text instead of using the select boxes, using the import/export feature.
+Advanced users can code up the conditions as plain text instead of using the select boxes, using the import/export feature.
 
 == Installation ==
 
 Please follow the [standard installation procedure for WordPress plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
-Follow [this tutorial](http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/) if you are not sure how to use the plugin.
+Follow [this tutorial](https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/) if you are not sure how to use the plugin.
 
 == Frequently Asked Questions ==
 
-= Email message is not showing the correct values =
+= Email message is not showing the correct values / Wrong values are submitted =
 
 <strong>All field names should be unique</strong>
 
@@ -99,54 +94,20 @@ Check if your theme is calling the `wp_footer()` function. Typically this functi
 The conditional fields javascript code is loaded during wp_footer, so a call to this function is crucial. If there is no such call in your theme, go to your theme's footer.php file and add this code right before the closing `</body>` tag:
 `&lt;?php wp_footer(); ?&gt;`
 
-= How do i show fields based on multiple conditions? (AND, OR, NAND, NOR) =
-
-<strong>if a=1 AND b=2 then, show [group x]</strong>
-
-You will need to create nested groups for the number of conditions, so your form might look like this:
-
-`[select a "1" "2" "3"]
-[select b "1" "2" "3"]
-[group x-1][group x-2]TADA![/group][/group]`
-
-and use these conditions
-
-`if [a] equals "1" then show [x-1]
-if [b] equals "2" then show [x-2]`
-
-<strong>if a=1 OR b=2 then, show [group x]</strong>
-
-This is more straightforward, as OR conditions are assumed. Giving this form:
-
-`[select a "1" "2" "3"]
-[select b "1" "2" "3"]
-[group x]TADA![/group]`
-
-You can simply use these conditions:
-
-`if [a] equals "1" then show [x]
-if [b] equals "2" then show [x]`
-
-<strong>if a=1 NAND b=2 then, show [group x]</strong>
-
-Same form as OR, but just use "not equals" instead of "equals":
-
-`if [a] not equals "1" then show [x]
-if [b] not equals "2" then show [x]`
-
-<strong>if a=1 NOR b=2 then, show [group x]</strong>
-
-Same form as AND, but just use "not equals" instead of "equals":
-
-`if [a] not equals "1" then show [x-1]
-if [b] not equals "2" then show [x-2]`
-
 == Screenshots ==
 
-1. Back End
-2. Front End
+1. Conditional fields in action
+2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.4 =
+* (08-15-18) Added basic drag and drop functionality to the back-end so conditional rules can be rearranged.
+* (08-12-18) Added possibility to create inline groups by adding the option inline. Example: `[group my-group inline] ... [/group]`
+* (08-12-18) Added property clear_on_hide to clear all fields within a group the moment the group gets hidden. Example: `[group my-group clear_on_hide] ... [/group]`
+* (08-12-18) Added AND conditions and added a bunch of other options in the PRO version (should be released very soon now)
+* (08-12-18) Bug fix thanks to Aurovrata Venet (@aurovrata) https://wordpress.org/support/topic/bug-plugin-overwrite-cf7-hidden-fields/
+* (06-28-18) Bug fix thanks to 972 creative (@toddedelman) https://wordpress.org/support/topic/conditional-fields-not-opening-using-radio-buttons/#post-10442923
 
 = 1.3.4 =
 * small fix (https://wordpress.org/support/topic/wpcf7_contactform-object-is-no-longer-accessible/)

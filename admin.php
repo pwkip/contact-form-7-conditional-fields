@@ -7,7 +7,7 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 		return; //don't load styles and scripts if this isn't a CF7 page.
 	}
 
-	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete'), WPCF7CF_VERSION,true);
+	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete', 'jquery-ui-sortable'), WPCF7CF_VERSION,true);
 	wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', get_option(WPCF7CF_OPTIONS));
 
 }
@@ -67,57 +67,40 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 	if (!is_array($wpcf7cf_entries)) $wpcf7cf_entries = array();
 
+	$wpcf7cf_entries = array_values($wpcf7cf_entries);
 
 	?>
-	<h3><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h3>
+    <div class="wpcf7cf-inner-container">
+        <h3><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h3>
 
+        <?php
+        print_entries_html($form);
+        ?>
 
-	<div id="wpcf7cf-new-entry">
-		if 
-		<select name="wpcf7cf_options[{id}][if_field]" class="if-field-select"><?php wpcf7cf_all_field_options($form); ?></select>
-		<select name="wpcf7cf_options[{id}][operator]" class="operator"><?php all_operator_options(); ?></select>
-		<input name="wpcf7cf_options[{id}][if_value]" class="if-value" type="text" placeholder="value">
-		then show
-		<select name="wpcf7cf_options[{id}][then_field]" class="then-field-select"><?php wpcf7cf_all_group_options($form); ?></select>
-	</div>
-	<a id="wpcf7cf-delete-button" class="delete-button" title="delete rule" href="#"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
-	<a id="wpcf7cf-add-button" title="add new rule" href="#"><span class="dashicons dashicons-plus-alt"></span> add new conditional rule</a>
-	
-	<div id="wpcf7cf-entries">
-		<?php
-		$i = 0;
-		foreach($wpcf7cf_entries as $id => $entry) {
-			?>
-			<div class="entry" id="entry-<?php echo $i ?>">
-				if
-				<select name="wpcf7cf_options[<?php echo $i ?>][if_field]" class="if-field-select"><?php wpcf7cf_all_field_options($form, $entry['if_field']); ?></select>
-				<select name="wpcf7cf_options[<?php echo $i ?>][operator]" class="operator"><?php all_operator_options($entry['operator']) ?></select>
-				<input name="wpcf7cf_options[<?php echo $i ?>][if_value]" class="if-value" type="text" placeholder="value" value="<?php echo $entry['if_value'] ?>">
-				then show
-				<select name="wpcf7cf_options[<?php echo $i ?>][then_field]" class="then-field-select"><?php wpcf7cf_all_group_options($form, $entry['then_field']); ?></select>
-				<a style="display: inline-block;" href="#" title="delete rule" class="delete-button"><span class="dashicons dashicons-dismiss"></span> Remove rule</a>
-			</div>
-			<?php
-			$i++;
-		}
-		?>
-	</div>
+        <div id="wpcf7cf-entries">
+    <!--        <pre>--><?php //print_r($wpcf7cf_entries) ?><!--</pre>-->
+            <?php
+            print_entries_html($form, $wpcf7cf_entries);
+            ?>
+        </div>
 
+        <span id="wpcf7cf-add-button" title="add new rule">+ add new conditional rule</span>
 
-	<div id="wpcf7cf-text-entries">
-		<p><a href="#" id="wpcf7cf-settings-to-text">import/export</a></p>
-		<div id="wpcf7cf-settings-text-wrap">
-			<textarea id="wpcf7cf-settings-text"></textarea>
-			<br>
-			Import actions (Beta feature!):
-			<input type="button" value="Add conditions" id="add-fields" >
-			<input type="button" value="Overwrite conditions" id="overwrite-fields" >
-			<span style="color:red"><b>WARNING</b>: If you screw something up, just reload the page without saving. If you click <em>save</em> after screwing up, you're screwed.</span>
+        <div id="wpcf7cf-text-entries">
+            <p><a href="#" id="wpcf7cf-settings-to-text">import/export</a></p>
+            <div id="wpcf7cf-settings-text-wrap">
+                <textarea id="wpcf7cf-settings-text"></textarea>
+                <br>
+                Import actions (Beta feature!):
+                <input type="button" value="Add conditions" id="add-fields" >
+                <input type="button" value="Overwrite conditions" id="overwrite-fields" >
+                <span style="color:red"><b>WARNING</b>: If you screw something up, just reload the page without saving. If you click <em>save</em> after screwing up, you're screwed.</span>
 
-			<p><a href="#" id="wpcf7cf-settings-text-clear">Clear</a></p>
+                <p><a href="#" id="wpcf7cf-settings-text-clear">Clear</a></p>
 
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 <?php
 }
 
@@ -142,3 +125,72 @@ function wpcf7cf_save_contact_form( $contact_form )
 
 // add the action
 add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
+
+function print_entries_html($form, $wpcf7cf_entries = false) {
+
+    $is_dummy = !$wpcf7cf_entries;
+
+    if ($is_dummy) {
+	    $wpcf7cf_entries = array(
+		    '{id}' => array(
+			    'then_field' => '-1',
+			    'and_rules' => array(
+				    0 => array(
+					    'if_field' => '-1',
+					    'operator' => 'equals',
+					    'if_value' => ''
+				    )
+			    )
+		    )
+	    );
+    }
+
+	foreach($wpcf7cf_entries as $i => $entry) {
+
+		// check for backwards compatibility ( < 2.0 )
+		if (!key_exists('and_rules', $wpcf7cf_entries[$i]) || !is_array($wpcf7cf_entries[$i]['and_rules'])) {
+			$wpcf7cf_entries[$i]['and_rules'][0] = $wpcf7cf_entries[$i];
+		}
+
+		$and_entries = array_values($wpcf7cf_entries[$i]['and_rules']);
+
+		if ($is_dummy) {
+?>
+        <div id="wpcf7cf-new-entry">
+<?php
+        } else {
+?>
+        <div class="entry" id="entry-<?php echo $i ?>">
+<?php
+        }
+		?>
+            <div class="wpcf7cf-if">
+                <span class="label">Show</span>
+                <select name="wpcf7cf_options[<?php echo $i ?>][then_field]" class="then-field-select"><?php wpcf7cf_all_group_options($form, $entry['then_field']); ?></select>
+            </div>
+            <div class="wpcf7cf-and-rules" data-next-index="<?php echo count($and_entries) ?>">
+				<?php
+
+
+
+				foreach($and_entries as $and_i => $and_entry) {
+					?>
+                    <div class="wpcf7cf-and-rule">
+                        <span class="rule-part if-txt label">if</span>
+                        <select name="wpcf7cf_options[<?php echo $i ?>][and_rules][<?php echo $and_i ?>][if_field]"
+                                class="rule-part if-field-select"><?php wpcf7cf_all_field_options( $form, $and_entry['if_field'] ); ?></select>
+                        <select name="wpcf7cf_options[<?php echo $i ?>][and_rules][<?php echo $and_i ?>][operator]"
+                                class="rule-part operator"><?php all_operator_options( $and_entry['operator'] ) ?></select>
+                        <input name="wpcf7cf_options[<?php echo $i ?>][and_rules][<?php echo $and_i ?>][if_value]" class="rule-part if-value" type="text"
+                               placeholder="value" value="<?php echo $and_entry['if_value'] ?>">
+                        <span class="and-button">And</span>
+                        <span title="delete rule" class="rule-part delete-button">remove</span>
+                    </div>
+					<?php
+				}
+				?>
+            </div>
+        </div>
+		<?php
+	}
+}

@@ -260,22 +260,39 @@ function wpcf7cf_properties($properties, $wpcf7form) {
     if (!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor as well.
         $form = $properties['form'];
 
-        $find = array(
-            '/\[group\s*\]/s', // matches [group    ] or [group]
-            '/\[group\s+([^\s\]]*)\s*([^\]]*)\]/s', // matches [group something some:thing] or [group   something  som   ]
-            // doesn't match [group-special something]
-            '/\[\/group\]/s'
-        );
+	    $form_parts = preg_split('/(\[\/?group(?:\]|\s.*?\]))/',$form, -1,PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-        $replace = array(
-            '<div data-class="wpcf7cf_group">',
-            '<div id="$1" data-class="wpcf7cf_group">',
-            '</div>'
-        );
+	    ob_start();
 
-        $form = preg_replace( $find, $replace, $form );
+	    $stack = array();
 
-        $properties['form'] = $form;
+	    foreach ($form_parts as $form_part) {
+	    	if (substr($form_part,0,7) == '[group ') {
+	    		$tag_parts = explode(' ',rtrim($form_part,']'));
+
+	    		array_shift($tag_parts);
+
+	    		$tag_id = $tag_parts[0];
+	    		$tag_html_type = 'div';
+	    		$tag_html_data = array();
+
+	    		foreach ($tag_parts as $i => $tag_part) {
+	    			if ($i==0) continue;
+					else if ($tag_part == 'inline') $tag_html_type = 'span';
+					else if ($tag_part == 'clear_on_hide') $tag_html_data[] = 'data-clear_on_hide';
+			    }
+
+			    array_push($stack,$tag_html_type);
+
+			    echo '<'.$tag_html_type.' id="'.$tag_id.'" '.implode(' ',$tag_html_data).' data-class="wpcf7cf_group">';
+		    } else if ($form_part == '[/group]') {
+	    		echo '</'.array_pop($stack).'>';
+		    } else {
+	    		echo $form_part;
+		    }
+	    }
+
+        $properties['form'] = ob_get_clean();
     }
     return $properties;
 }
@@ -299,12 +316,12 @@ function wpcf7cf_form_hidden_fields($hidden_fields) {
         'settings' => get_option(WPCF7CF_OPTIONS)
     );
 
-    return array(
+	return array_merge($hidden_fields, array(
         '_wpcf7cf_hidden_group_fields' => '',
         '_wpcf7cf_hidden_groups' => '',
         '_wpcf7cf_visible_groups' => '',
         '_wpcf7cf_options' => ''.json_encode($options),
-    );
+    ));
 }
 
 function wpcf7cf_endswith($string, $test) {
