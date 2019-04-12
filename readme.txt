@@ -5,8 +5,9 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 4.9.8
-Stable tag: 1.4
+Tested up to: 5.1.1
+Stable tag: 1.4.3
+Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -101,13 +102,31 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 
 == Changelog ==
 
-= 1.4 =
-* (08-15-18) Added basic drag and drop functionality to the back-end so conditional rules can be rearranged.
-* (08-12-18) Added possibility to create inline groups by adding the option inline. Example: `[group my-group inline] ... [/group]`
-* (08-12-18) Added property clear_on_hide to clear all fields within a group the moment the group gets hidden. Example: `[group my-group clear_on_hide] ... [/group]`
-* (08-12-18) Added AND conditions and added a bunch of other options in the PRO version (should be released very soon now)
-* (08-12-18) Bug fix thanks to Aurovrata Venet (@aurovrata) https://wordpress.org/support/topic/bug-plugin-overwrite-cf7-hidden-fields/
-* (06-28-18) Bug fix thanks to 972 creative (@toddedelman) https://wordpress.org/support/topic/conditional-fields-not-opening-using-radio-buttons/#post-10442923
+= 1.4.3 (04-12-19) =
+* Really fix clear_on_hide problem (https://wordpress.org/support/topic/clear_on_hide-still-not-working-right-after-1-4-2-update/)
+
+= 1.4.2 (04-10-19) =
+* Disabled mailbox syntax errors if there are group tags present. (this is overkill, and should be changed if the necassary hooks become available) https://wordpress.org/support/topic/filter-detect_invalid_mailbox_syntax/
+* Checked issue: https://github.com/pwkip/contact-form-7-conditional-fields/issues/26 (nothing changed, but turns out to be working fine)
+* Fixed issue where mail_2 added extra lines in the email message. https://github.com/pwkip/contact-form-7-conditional-fields/issues/30
+* Made the clear_on_hide property a bit more useful (https://github.com/pwkip/contact-form-7-conditional-fields/issues/27)
+* Got rid of warning in PHP 7 (https://wordpress.org/support/topic/compatibility-warning-message-regarding-wpcf7_admin_read_write_capability/)
+* Fixed some javascript errors that appeared on non-CF7CF subpages of CF7
+* Tested WP version 5.1.1
+
+= 1.4.1 (08-21-18) =
+* Fixed some CSS issues (https://wordpress.org/support/topic/crash-view-admin-the-list-of-posts-entry/)
+* Dropped support for PHP version 5.2, now PHP 5.3+ is required to run the plugin. Let's push things forward!
+* Added conditional group support to mail attachments field (https://github.com/pwkip/contact-form-7-conditional-fields/issues/22)
+* Added repeater field to PRO version.
+
+= 1.4 (08-15-18) =
+* Added basic drag and drop functionality to the back-end so conditional rules can be rearranged.
+* Added possibility to create inline groups by adding the option inline. Example: `[group my-group inline] ... [/group]`
+* Added property clear_on_hide to clear all fields within a group the moment the group gets hidden. Example: `[group my-group clear_on_hide] ... [/group]`
+* Added AND conditions and added a bunch of other options in the PRO version (should be released very soon now)
+* Bug fix thanks to Aurovrata Venet (@aurovrata) https://wordpress.org/support/topic/bug-plugin-overwrite-cf7-hidden-fields/
+* Bug fix thanks to 972 creative (@toddedelman) https://wordpress.org/support/topic/conditional-fields-not-opening-using-radio-buttons/#post-10442923
 
 = 1.3.4 =
 * small fix (https://wordpress.org/support/topic/wpcf7_contactform-object-is-no-longer-accessible/)

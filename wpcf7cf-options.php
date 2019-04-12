@@ -16,6 +16,10 @@ $wpcf7cf_default_options = array(
     'notice_dismissed' => WPCF7CF_DEFAULT_NOTICE_DISMISSED
 );
 
+if ( ! defined( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY' ) ) {
+	define( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY', 'publish_pages' );
+}
+
 $wpcf7cf_default_options = apply_filters('wpcf7cf_default_options', $wpcf7cf_default_options);
 
 $wpcf7cf_options = get_option(WPCF7CF_OPTIONS);
@@ -52,10 +56,10 @@ function wpcf7cf_admin_add_page() {
 function wpcf7cf_options_page() {
     global $wpcf7cf_options;
 
-    // Include in admin_enqueue_scripts action hook
-    wp_enqueue_media();
-    //wp_enqueue_script( 'custom-background' );
-    wp_enqueue_script( 'wpcf7cf-image-upload', plugins_url('framework/js/bdwm-image-upload.js',__FILE__), array('jquery'), '1.0.0', true );
+//    // Include in admin_enqueue_scripts action hook
+//    wp_enqueue_media();
+//    //wp_enqueue_script( 'custom-background' );
+//    wp_enqueue_script( 'wpcf7cf-image-upload', plugins_url('framework/js/bdwm-image-upload.js',__FILE__), array('jquery'), '1.0.0', true );
 
     if (isset($_POST['reset'])) {
         echo '<div id="message" class="updated fade"><p><strong>Settings restored to defaults</strong></p></div>';
@@ -76,7 +80,7 @@ function wpcf7cf_options_page() {
                 <li>Save the Contact Form</li>
                 <li>go to the <strong><em>Conditional Fields</em></strong> Tab</li>
             </ol>
-                <a href="http://bdwm.be/wpcf7cf/how-to-set-up-conditional-fields-for-contact-form-7/" target="_blank">Show me an example</a> | <a class="notice-dismiss-2" href="#">Dismiss notice</a>
+                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank">Show me an example</a> | <a class="notice-dismiss-2" href="#">Dismiss notice</a>
         </div></div>
         <?php } ?>
         <form action="options.php" method="post">

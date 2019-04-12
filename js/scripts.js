@@ -43,6 +43,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
         function display_fields(unit_tag, wpcf7cf_conditions, wpcf7cf_settings) {
 
             $current_form = $('#'+unit_tag);
+            $groups = $("[data-class='wpcf7cf_group']",$current_form);
 
             //for compatibility with contact-form-7-signature-addon
             if (cf7signature_resized == 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
@@ -57,168 +58,61 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
                 }
             }
 
-            $("#"+unit_tag+" [data-class='wpcf7cf_group']").addClass('wpcf7cf-hidden');
+            $groups.addClass('wpcf7cf-hidden');
 
             for (var i=0; i < wpcf7cf_conditions.length; i++) {
 
                 var condition = wpcf7cf_conditions[i];
 
-                // compatibility with conditional forms created with older versions of the plugin ( < 2.0 )
+                // compatibility with conditional forms created with older versions of the plugin ( < 1.4 )
                 if (!('and_rules' in condition)) {
                     condition.and_rules = [{'if_field':condition.if_field,'if_value':condition.if_value,'operator':condition.operator}];
                 }
 
-                var show_group = true;
+                var show_group = should_group_be_shown(condition, $current_form);
 
-                for (var and_rule_i = 0; and_rule_i < condition.and_rules.length; and_rule_i++) {
-
-                    var condition_ok = false;
-
-                    var condition_and_rule = condition.and_rules[and_rule_i];
-
-                    var regex_patt = new RegExp(condition_and_rule.if_value,'i');
-
-                    $field = $('#'+unit_tag+' [name="'+condition_and_rule.if_field+'"]').length ? $('#'+unit_tag+' [name="'+condition_and_rule.if_field+'"]') : $('#'+unit_tag+' [name="'+condition_and_rule.if_field+'[]"]');
-
-                    if ($field.length == 1) {
-
-                        // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
-
-                        if ($field.is('select')) {
-
-                            if(condition_and_rule.operator == 'not equals') {
-                                condition_ok = true;
-                            }
-
-                            $field.find('option:selected').each(function () {
-                                var $option = $(this);
-                                if (
-                                    condition_and_rule.operator == 'equals' && $option.val() == condition_and_rule.if_value ||
-                                    condition_and_rule.operator == 'equals (regex)' && regex_patt.test($option.val())
-                                ) {
-                                    condition_ok = true;
-                                } else if (
-                                    condition_and_rule.operator == 'not equals' && $option.val() == condition_and_rule.if_value ||
-                                    condition_and_rule.operator == 'not equals (regex)' && !regex_patt.test($option.val())
-                                ) {
-                                    condition_ok = false;
-                                }
-                            });
-
-                            show_group = show_group && condition_ok;
-
-                            continue;
-                        }
-
-                        if ($field.attr('type') == 'checkbox') {
-                            if (
-                                condition_and_rule.operator == 'equals'             && $field.is(':checked')  && $field.val() == condition_and_rule.if_value ||
-                                condition_and_rule.operator == 'not equals'         && !$field.is(':checked')                                       ||
-                                condition_and_rule.operator == 'is empty'           && !$field.is(':checked')                                       ||
-                                condition_and_rule.operator == 'not empty'          && $field.is(':checked')                                        ||
-                                condition_and_rule.operator == '>'                  && $field.is(':checked')  && $field.val() > condition_and_rule.if_value  ||
-                                condition_and_rule.operator == '<'                  && $field.is(':checked')  && $field.val() < condition_and_rule.if_value  ||
-                                condition_and_rule.operator == '>='                 && $field.is(':checked')  && $field.val() >= condition_and_rule.if_value ||
-                                condition_and_rule.operator == '<='                 && $field.is(':checked')  && $field.val() <= condition_and_rule.if_value ||
-                                condition_and_rule.operator == 'equals (regex)'     && $field.is(':checked')  && regex_patt.test($field.val())      ||
-                                condition_and_rule.operator == 'not equals (regex)' && !$field.is(':checked')
-                            ) {
-                                condition_ok = true;
-                            }
-                        } else if (
-                            ( condition_and_rule.operator == 'equals'             && $field.val() == condition_and_rule.if_value ) ||
-                            ( condition_and_rule.operator == 'not equals'         && $field.val() != condition_and_rule.if_value ) ||
-                            ( condition_and_rule.operator == 'equals (regex)'     && regex_patt.test($field.val())      ) ||
-                            ( condition_and_rule.operator == 'not equals (regex)' && !regex_patt.test($field.val())     ) ||
-                            ( condition_and_rule.operator == '>'                  && $field.val() > condition_and_rule.if_value  ) ||
-                            ( condition_and_rule.operator == '<'                  && $field.val() < condition_and_rule.if_value  ) ||
-                            ( condition_and_rule.operator == '>='                 && $field.val() >= condition_and_rule.if_value ) ||
-                            ( condition_and_rule.operator == '<='                 && $field.val() <= condition_and_rule.if_value ) ||
-                            ( condition_and_rule.operator == 'is empty'           && $field.val() == ''                 ) ||
-                            ( condition_and_rule.operator == 'not empty'          && $field.val() != ''                 )
-                        ) {
-                            condition_ok = true;
-                        }
-
-
-                    } else if ($field.length > 1) {
-
-                        // multiple fields (tested with checkboxes, exclusive checkboxes, dropdown with multiple values)
-
-                        var all_values = [];
-                        var checked_values = [];
-                        $field.each(function() {
-                            all_values.push($(this).val());
-                            if($(this).is(':checked')) {
-                                checked_values.push($(this).val());
-                            }
-                        });
-
-                        var checked_value_index = $.inArray(condition_and_rule.if_value, checked_values);
-                        var value_index = $.inArray(condition_and_rule.if_value, all_values);
-
-                        if (
-                            ( condition_and_rule.operator == 'is empty'   && checked_values.length == 0 ) ||
-                            ( condition_and_rule.operator == 'not empty'  && checked_values.length > 0  )
-                        ) {
-                            condition_ok = true;
-                        }
-
-
-                        for(var ind=0; ind<checked_values.length; ind++) {
-                            if (
-                                ( condition_and_rule.operator == 'equals' &&              checked_values[ind] == condition_and_rule.if_value ) ||
-                                ( condition_and_rule.operator == 'not equals' &&          checked_values[ind] != condition_and_rule.if_value ) ||
-                                ( condition_and_rule.operator == 'equals (regex)' &&      regex_patt.test(checked_values[ind])      ) ||
-                                ( condition_and_rule.operator == 'not equals (regex)' &&  !regex_patt.test(checked_values[ind])     ) ||
-                                ( condition_and_rule.operator == '>' &&                   checked_values[ind] > condition_and_rule.if_value  ) ||
-                                ( condition_and_rule.operator == '<' &&                   checked_values[ind] < condition_and_rule.if_value  ) ||
-                                ( condition_and_rule.operator == '>=' &&                  checked_values[ind] >= condition_and_rule.if_value ) ||
-                                ( condition_and_rule.operator == '<=' &&                  checked_values[ind] <= condition_and_rule.if_value )
-                            ) {
-                                condition_ok = true;
-                            }
-                        }
-                    }
-                    show_group = show_group && condition_ok;
-                }
                 if (show_group) {
-                    $('#'+unit_tag+' #'+condition.then_field).removeClass('wpcf7cf-hidden');
+                    $('[data-id='+condition.then_field+']',$current_form).eq(0).removeClass('wpcf7cf-hidden');
                 }
             }
 
             var animation_intime = parseInt(wpcf7cf_settings.animation_intime);
             var animation_outtime = parseInt(wpcf7cf_settings.animation_outtime);
 
-            if (wpcf7cf_settings.animation == 'no') {
+            if (wpcf7cf_settings.animation === 'no') {
                 animation_intime = 0;
                 animation_outtime = 0;
             }
 
-            $("#" + unit_tag + " [data-class='wpcf7cf_group']").each(function (index) {
+            $groups.each(function (index) {
                 $group = $(this);
                 if ($group.is(':animated')) $group.finish(); // stop any current animations on the group
-                if ($group.css('display') == 'none' && !$group.hasClass('wpcf7cf-hidden')) {
-                    if ($group.prop('tagName') == 'SPAN') {
-                        $group.show().trigger('wpcf7cf_show_group');
+
+                if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) { // show the group
+
+                    if ($group.prop('tagName') === 'SPAN') {
+                        $group.show().trigger('wpcf7cf_show_group'); // Never animate inline groups because it tends to look messy.
                     } else {
                         $group.animate(show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
                     }
-                } else if ($group.css('display') != 'none' && $group.hasClass('wpcf7cf-hidden')) {
-                    console.log($group.prop('tagName'));
-                    if ($group.prop('tagName') == 'SPAN') {
-                        $group.hide().trigger('wpcf7cf_show_group');
-                    } else {
-                        $group.animate(hide_animation, animation_outtime).trigger('wpcf7cf_hide_group'); // hide
-                    }
+
+                } else if ($group.css('display') !== 'none' && $group.hasClass('wpcf7cf-hidden')) { // hide the group
+
 
                     if ($group.attr('data-clear_on_hide') !== undefined) {
-                        $(':input', $group)
-                            .not(':button, :submit, :reset, :hidden')
-                            .val('')
-                            .prop('checked', false)
-                            .prop('selected', false);
+                        $inputs = $(':input', $group).not(':button, :submit, :reset, :hidden');
+                        $inputs.prop('checked', false).prop('selected', false).prop('selectedIndex', 0);
+                        $inputs.not('[type=checkbox],[type=radio],select').val('');
+                        $inputs.change();
+                        //display_fields();
                     }
+
+                    if ($group.prop('tagName') === 'SPAN') {
+                        $group.hide().trigger('wpcf7cf_hide_group'); // Never animate inline groups because it tends to look messy.
+                    } else {
+                        $group.animate(hide_animation, animation_outtime).trigger('wpcf7cf_hide_group');
+                    }
+
                 }
             });
 
@@ -257,6 +151,7 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
         $hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
         $hidden_groups = $form.find('[name="_wpcf7cf_hidden_groups"]');
         $visible_groups = $form.find('[name="_wpcf7cf_visible_groups"]');
+        $repeaters = $form.find('[name="_wpcf7cf_repeaters"]');
 
         var hidden_fields = [];
         var hidden_groups = [];
@@ -265,12 +160,12 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
         $form.find('[data-class="wpcf7cf_group"]').each(function () {
             var $this = $(this);
             if ($this.hasClass('wpcf7cf-hidden')) {
-                hidden_groups.push($this.attr('id'));
+                hidden_groups.push($this.data('id'));
                 $this.find('input,select,textarea').each(function () {
                     hidden_fields.push($(this).attr('name'));
                 });
             } else {
-                visible_groups.push($this.attr('id'));
+                visible_groups.push($this.data('id'));
             }
         });
 
@@ -301,15 +196,134 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
         });
     };
 
+
+
+
+    function should_group_be_shown(condition, $current_form) {
+
+        var show_group = true;
+
+        for (var and_rule_i = 0; and_rule_i < condition.and_rules.length; and_rule_i++) {
+
+            var condition_ok = false;
+
+            var condition_and_rule = condition.and_rules[and_rule_i];
+
+            var regex_patt = new RegExp(condition_and_rule.if_value, 'i');
+
+            $field = $('[name="' + condition_and_rule.if_field + '"], [name="' + condition_and_rule.if_field + '[]"], [data-original-name="' + condition_and_rule.if_field + '"], [data-original-name="' + condition_and_rule.if_field + '[]"]',$current_form); //, [data-original-name="' + condition_and_rule.if_field + '"]
+
+            //TODO: ignore everything outside the sub_repeater if field is inside sub_repeater
+
+            if ($field.length == 1) {
+
+                // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
+
+                if ($field.is('select')) {
+
+                    if (condition_and_rule.operator == 'not equals') {
+                        condition_ok = true;
+                    }
+
+                    $field.find('option:selected').each(function () {
+                        var $option = $(this);
+                        if (
+                            condition_and_rule.operator == 'equals' && $option.val() == condition_and_rule.if_value ||
+                            condition_and_rule.operator == 'equals (regex)' && regex_patt.test($option.val())
+                        ) {
+                            condition_ok = true;
+                        } else if (
+                            condition_and_rule.operator == 'not equals' && $option.val() == condition_and_rule.if_value ||
+                            condition_and_rule.operator == 'not equals (regex)' && !regex_patt.test($option.val())
+                        ) {
+                            condition_ok = false;
+                        }
+                    });
+
+                    show_group = show_group && condition_ok;
+
+                    return show_group;
+                }
+
+                if ($field.attr('type') == 'checkbox') {
+                    if (
+                        condition_and_rule.operator == 'equals' && $field.is(':checked') && $field.val() == condition_and_rule.if_value ||
+                        condition_and_rule.operator == 'not equals' && !$field.is(':checked') ||
+                        condition_and_rule.operator == 'is empty' && !$field.is(':checked') ||
+                        condition_and_rule.operator == 'not empty' && $field.is(':checked') ||
+                        condition_and_rule.operator == '>' && $field.is(':checked') && $field.val() > condition_and_rule.if_value ||
+                        condition_and_rule.operator == '<' && $field.is(':checked') && $field.val() < condition_and_rule.if_value ||
+                        condition_and_rule.operator == '>=' && $field.is(':checked') && $field.val() >= condition_and_rule.if_value ||
+                        condition_and_rule.operator == '<=' && $field.is(':checked') && $field.val() <= condition_and_rule.if_value ||
+                        condition_and_rule.operator == 'equals (regex)' && $field.is(':checked') && regex_patt.test($field.val()) ||
+                        condition_and_rule.operator == 'not equals (regex)' && !$field.is(':checked')
+                    ) {
+                        condition_ok = true;
+                    }
+                } else if (
+                    ( condition_and_rule.operator == 'equals' && $field.val() == condition_and_rule.if_value ) ||
+                    ( condition_and_rule.operator == 'not equals' && $field.val() != condition_and_rule.if_value ) ||
+                    ( condition_and_rule.operator == 'equals (regex)' && regex_patt.test($field.val())      ) ||
+                    ( condition_and_rule.operator == 'not equals (regex)' && !regex_patt.test($field.val())     ) ||
+                    ( condition_and_rule.operator == '>' && $field.val() > condition_and_rule.if_value  ) ||
+                    ( condition_and_rule.operator == '<' && $field.val() < condition_and_rule.if_value  ) ||
+                    ( condition_and_rule.operator == '>=' && $field.val() >= condition_and_rule.if_value ) ||
+                    ( condition_and_rule.operator == '<=' && $field.val() <= condition_and_rule.if_value ) ||
+                    ( condition_and_rule.operator == 'is empty' && $field.val() == ''                 ) ||
+                    ( condition_and_rule.operator == 'not empty' && $field.val() != ''                 )
+                ) {
+                    condition_ok = true;
+                }
+
+
+            } else if ($field.length > 1) {
+
+                // multiple fields (tested with checkboxes, exclusive checkboxes, dropdown with multiple values)
+
+                var all_values = [];
+                var checked_values = [];
+                $field.each(function () {
+                    all_values.push($(this).val());
+                    if ($(this).is(':checked')) {
+                        checked_values.push($(this).val());
+                    }
+                });
+
+                var checked_value_index = $.inArray(condition_and_rule.if_value, checked_values);
+                var value_index = $.inArray(condition_and_rule.if_value, all_values);
+
+                if (
+                    ( condition_and_rule.operator == 'is empty' && checked_values.length == 0 ) ||
+                    ( condition_and_rule.operator == 'not empty' && checked_values.length > 0  )
+                ) {
+                    condition_ok = true;
+                }
+
+
+                for (var ind = 0; ind < checked_values.length; ind++) {
+                    if (
+                        ( condition_and_rule.operator == 'equals' && checked_values[ind] == condition_and_rule.if_value ) ||
+                        ( condition_and_rule.operator == 'not equals' && checked_values[ind] != condition_and_rule.if_value ) ||
+                        ( condition_and_rule.operator == 'equals (regex)' && regex_patt.test(checked_values[ind])      ) ||
+                        ( condition_and_rule.operator == 'not equals (regex)' && !regex_patt.test(checked_values[ind])     ) ||
+                        ( condition_and_rule.operator == '>' && checked_values[ind] > condition_and_rule.if_value  ) ||
+                        ( condition_and_rule.operator == '<' && checked_values[ind] < condition_and_rule.if_value  ) ||
+                        ( condition_and_rule.operator == '>=' && checked_values[ind] >= condition_and_rule.if_value ) ||
+                        ( condition_and_rule.operator == '<=' && checked_values[ind] <= condition_and_rule.if_value )
+                    ) {
+                        condition_ok = true;
+                    }
+                }
+            }
+
+            show_group = show_group && condition_ok;
+        }
+
+        return show_group;
+
+    }
+
+
+    //removed pro functions
+
 })( jQuery );
-
-
-/* Demo Code. */
-
-/* Clear values of hidden fields */
-// jQuery('[data-class="wpcf7cf_group"]').on('wpcf7cf_hide_group', function(e) {
-//     $group = jQuery(e.target);
-//     $group.find('input').not(':checkbox, :button, :submit, :reset, :hidden').val('');
-//     $group.find('option').removeAttr('selected');
-//     $group.find(':checkbox').removeAttr('checked');
-// });

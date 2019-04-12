@@ -1,0 +1,216 @@
+#wpcf7cf-new-entry { display: inline-block; display:none; }
+#wpcf7cf-delete-button { display: none; }
+#wpcf7cf-settings-text { width: 100%; height: 280px; font-family: "Courier New", Courier, monospace; }
+
+#wpcf7cf-conditional-panel {
+
+    .wpcf7cf-admin-wrap .label, .wpcf7cf-admin-wrap .field, .wpcf7cf-admin-wrap .description {
+        padding: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        width: 10%;
+    }
+    .wpcf7cf-admin-wrap .field {
+        width: 20%;
+    }
+    .wpcf7cf-admin-wrap .description {
+        width: 40%;
+        vertical-align: top;
+
+    }
+
+    .wpcf7cf-admin-wrap .option-line {
+        border-bottom: 1px solid #dddddd;
+        background-color: #f9f9f9;
+        padding: 0 10px;
+    }
+
+    .wpcf7cf-admin-wrap .option-line:nth-child(2n) {
+        background-color: #e9e9e9;
+    }
+
+    .wpcf7cf-admin-wrap .option-line input, .wpcf7cf-admin-wrap .option-line select {
+        width: 100%;
+    }
+
+    .ui-autocomplete-term {
+        font-weight: bold;
+    }
+
+    .wpcf7cf-admin-wrap .option-line > .label.editable {
+        position: relative;
+    }
+
+    .wpcf7cf-admin-wrap .option-line > .label.editable input {
+        background-color: transparent;
+        border-width: 0;
+        outline: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .wpcf7cf-admin-wrap .option-line > .label.editable input:after {
+        content: "edit";
+        display: block;
+        width: 10px;
+        right:0;
+        position: absolute;
+    }
+
+    .wpcf7cf-admin-wrap .option-line > .label.editable input:focus {
+        background: #fff;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.07) ;
+        border: 1px solid #ddd;
+        padding: 2px;
+    }
+
+    .wpcf7cf-admin-wrap .option-line > .label.editable input:focus:after {
+        content: "";
+    }
+
+    .wpcf7cf-and {
+        display: inline-block;
+    }
+
+    .wpcf7cf-and-rules, .wpcf7cf-if {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    #wpcf7cf-entries input, #wpcf7cf-entries select, .and-button, .delete-button, #wpcf7cf-entries .if-txt, #wpcf7cf-entries .label, #wpcf7cf-add-button {
+        position:relative;
+        display: inline-block;
+        vertical-align: bottom;
+        margin:2px;
+        padding: 3px;
+        background: #fefefe;
+        border: 1px solid #bababa;
+        box-shadow: none;
+        height: 22px;
+        line-height: 22px;
+        box-sizing: content-box;
+    }
+
+    #wpcf7cf-entries .label {
+        background-color: transparent;
+        border: none;
+    }
+
+    .and-button, .delete-button, #wpcf7cf-add-button {
+        border: 1px solid #4ed521;
+        color: #007b04;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: bold;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently */
+        background-color: rgba(75, 169, 61, 0.11);
+    }
+
+    #wpcf7cf-add-button {
+        margin-top: 10px;
+        text-align: center;
+        padding-left: 20px;
+        padding-right:20px;
+    }
+
+    overflow-x: auto;
+
+    .and-button:hover {
+        background-color: rgba(75, 169, 61, 0.2);
+    }
+
+    .delete-button {
+        border: 1px solid #bababa;
+        color: #858585;
+        background-color: transparent;
+        margin-left: 42px;
+    }
+
+    .delete-button:hover {
+        background-color: rgba(133, 133, 133, 0.11);
+
+    }
+
+    .and-button {
+        display:none;
+        width: 30px;
+        text-align: center;
+    }
+    .wpcf7cf-and-rule:first-child .and-button {
+        display: inline-block;
+        vertical-align: top;
+        height: 22px;
+        position: absolute;
+        line-height: 22px;
+        right: 50px;
+        top: 0;
+    }
+
+    .wpcf7cf-and-rule {
+        margin-bottom: 4px;
+        height: 30px;
+    }
+
+    .wpcf7cf-and-rule .if-txt, .wpcf7cf-if > .label {
+        cursor: n-resize;
+    }
+
+
+
+    .wpcf7cf-and-rule .if-txt:before {
+        content: 'and';
+        position: absolute;
+        width: 30px;
+        text-align: right;
+        left: -34px;
+    }
+
+    .wpcf7cf-and-rule:first-child .if-txt:before {
+        display:none;
+    }
+
+    .wpcf7cf-inner-container {
+        min-width: 800px;
+    }
+
+    .entry {
+        box-sizing: border-box;
+        display:flex;
+    }
+
+    .entry .wpcf7cf-if {
+        width: 188px;
+    }
+
+    .then-field-select {
+        width: 130px;
+    }
+
+
+    .entry .wpcf7cf-and-rules {
+        flex:1;
+        position:relative;
+
+    }
+    .wpcf7cf-and-rule {
+        display:flex;
+    }
+    .if-txt {
+        width: 14px;
+        text-align: center;
+    }
+
+    .operator {
+        /*width:140px;*/
+    }
+
+    .if-value {
+        flex:1;
+        margin-right:3px !important;
+    }
+}
