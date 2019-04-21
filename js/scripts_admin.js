@@ -310,28 +310,33 @@ if ($wpcf7cf_new_entry.length > 0) {
             });
         }
 
-        // ------------------------------------
-        //            OPTIONS PAGE
-        // ------------------------------------
-
-        $(document).ready(function() {
-
-            $('.wpcf7cf-options-notice .notice-dismiss-2').click(function () {
-                $('.wpcf7cf-options-notice .notice-dismiss').click();
-            });
-            $('.wpcf7cf-options-notice .notice-dismiss').click(function () {
-                wpcf7cf_dismiss_notice();
-            });
-
-            function wpcf7cf_dismiss_notice() {
-                $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
-                $.post(ajaxurl, {action:'wpcf7cf_dismiss_notice'}, function(response) {
-                    // nothing to do. dismiss_notice option should be set to TRUE server side by now.
-                });
-            }
-
-        });
-
     })( jQuery );
 
 }
+
+(function($) {
+    // ------------------------------------
+    //            OPTIONS PAGE
+    // ------------------------------------
+
+    $(document).ready(function() {
+
+        $('.wpcf7cf-options-notice .notice-dismiss-2').click(function () {
+            $('.wpcf7cf-options-notice .notice-dismiss').click();
+        });
+        $('.wpcf7cf-options-notice .notice-dismiss').click(function () {
+            wpcf7cf_dismiss_notice();
+        });
+
+        function wpcf7cf_dismiss_notice() {
+            console.log(ajaxurl);
+
+            $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
+
+            $.post(ajaxurl, {action:'wpcf7cf_dismiss_notice'}, function(response) {
+                // nothing to do. dismiss_notice option should be set to TRUE server side by now.
+            });
+        }
+
+    });
+})( jQuery );

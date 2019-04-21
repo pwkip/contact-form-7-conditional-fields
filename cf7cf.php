@@ -24,10 +24,8 @@ class ContactForm7ConditionalFields {
         add_action('wp_ajax_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
         add_action('wp_ajax_nopriv_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
 
+        // check which fields are hidden during form submission and change some stuff accordingly
         add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
-        add_filter( 'wpcf7_mail_components', array($this, 'hide_hidden_mail_fields') );
-
-        //add_filter( 'wpcf7_additional_mail', array($this, 'hide_hidden_mail_fields_additional_mail'), 10, 2);
 
         add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
@@ -35,6 +33,7 @@ class ContactForm7ConditionalFields {
 	    add_action('wpcf7_config_validator_validate', array($this,'wpcf7cf_config_validator_validate'));
 
 
+	    add_action("wpcf7_before_send_mail", [$this, 'hide_hidden_mail_fields'], 10, 3);
 
         register_activation_hook(__FILE__, array($this, 'activate'));
 
@@ -88,7 +87,8 @@ class ContactForm7ConditionalFields {
     }
 
     public static function enqueue_js() {
-        // nothing here. We will only load the CF7 script if there is a CF7 form on the page.
+	    if (is_admin()) return;
+	    wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
     }
 
     public static function enqueue_css() {
@@ -182,9 +182,12 @@ class ContactForm7ConditionalFields {
     function remove_hidden_post_data($posted_data) {
         $this->set_hidden_fields_arrays($posted_data);
 
-        foreach( $this->hidden_fields as $name => $value ) {
-            unset( $posted_data[$name] );
-        }
+// TODO: activating the code below will change the behaviour of the plugin, as all hidden fields will not be POSTed.
+//       We might consider activating this based on a setting in the future. But for now, we're not gonna use it.
+
+//        foreach( $this->hidden_fields as $name => $value ) {
+//            unset( $posted_data[$value] ); // Yes, it should be $value, not $name. https://github.com/pwkip/contact-form-7-conditional-fields/pull/17
+//        }
 
         return $posted_data;
     }
@@ -225,7 +228,6 @@ class ContactForm7ConditionalFields {
         $this->set_hidden_fields_arrays($_POST);
     }
 
-
     /**
      * Finds the currently submitted form and set the hidden_fields variables accoringly
      *
@@ -250,21 +252,16 @@ class ContactForm7ConditionalFields {
         $this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
     }
 
-    function hide_hidden_mail_fields( $components ) {
-
-        foreach ($components as $key => $val) {
-	        $components[$key] = preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $val );
-        }
-
-        return $components;
-    }
-
-    // Seems like it was not needed.
-//    function hide_hidden_mail_fields_additional_mail($additional_mail, $contact_form) {
-//        if (!is_array($additional_mail) || !array_key_exists('mail_2', $additional_mail)) return $additional_mail;
-//	    $additional_mail['mail_2'] = $this->hide_hidden_mail_fields($additional_mail['mail_2']);
-//        return $additional_mail;
-//    }
+	function hide_hidden_mail_fields($form,$abort,$submission) {
+		$props = $form->get_properties();
+		$mails = ['mail','mail_2','messages'];
+		foreach ($mails as $mail) {
+			foreach ($props[$mail] as $key=>$val) {
+				$props[$mail][$key] = preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $val );
+			}
+		}
+		$form->set_properties($props);
+	}
 
     function hide_hidden_mail_fields_regex_callback ( $matches ) {
         $name = $matches[1];
@@ -328,12 +325,6 @@ function wpcf7cf_properties($properties, $wpcf7form) {
         $properties['form'] = ob_get_clean();
     }
     return $properties;
-}
-
-add_action('wpcf7_contact_form', 'wpcf7cf_enqueue_scripts', 10, 1);
-function wpcf7cf_enqueue_scripts(WPCF7_ContactForm $cf7form) {
-    if (is_admin()) return;
-    wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
 }
 
 add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);

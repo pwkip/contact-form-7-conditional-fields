@@ -15,10 +15,12 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 add_filter('wpcf7_editor_panels', 'add_conditional_panel');
 
 function add_conditional_panel($panels) {
-	$panels['wpcf7cf-conditional-panel'] = array(
-		'title' => __( 'Conditional fields', 'wpcf7cf' ),
-		'callback' => 'wpcf7cf_editor_panel_conditional'
-	);
+	if ( current_user_can( 'wpcf7_edit_contact_form' ) ) {
+		$panels['wpcf7cf-conditional-panel'] = array(
+			'title'    => __( 'Conditional fields', 'wpcf7cf' ),
+			'callback' => 'wpcf7cf_editor_panel_conditional'
+		);
+	}
 	return $panels;
 }
 
@@ -104,18 +106,49 @@ function wpcf7cf_editor_panel_conditional($form) {
 <?php
 }
 
-// define the wpcf7_save_contact_form callback
+// duplicate conditions on duplicate form part 1.
+add_filter('wpcf7_copy','wpcf7cf_copy', 10, 2);
+function wpcf7cf_copy($new_form,$current_form) {
+
+	$id = $current_form->id();
+	$props = $new_form->get_properties();
+	$props['messages']['wpcf7cf_copied'] = $id;
+	$new_form->set_properties($props);
+
+	return $new_form;
+}
+
+// duplicate conditions on duplicate form part 2.
+add_action('wpcf7_after_save','wpcf7cf_after_save',10,1);
+function wpcf7cf_after_save($contact_form) {
+	$props = $contact_form->get_properties();
+	$original_id = isset($props['messages']['wpcf7cf_copied']) ? $props['messages']['wpcf7cf_copied'] : 0;
+	if ($original_id !== 0) {
+		$post_id = $contact_form->id();
+		unset($props['messages']['wpcf7cf_copied']);
+		$contact_form->set_properties($props);
+		update_post_meta( $post_id, 'wpcf7cf_options', get_post_meta($original_id, 'wpcf7cf_options', true));
+		return;
+	}
+}
+
+// wpcf7_save_contact_form callback
+add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
 function wpcf7cf_save_contact_form( $contact_form )
 {
-	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf_options'] ) || ! is_array( $_POST['wpcf7cf_options'] ) )
+
+	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf_options'] ) || ! is_array( $_POST['wpcf7cf_options'] ) ) {
 		return;
+	}
 	$post_id = $contact_form->id();
 	if ( ! $post_id )
 		return;
 
 	unset($_POST['wpcf7cf_options']['{id}']); // remove the dummy entry
 
-    $options = array_values($_POST['wpcf7cf_options']);
+    $options = wpcf7cf_sanitize_options($_POST['wpcf7cf_options']);
+
+
 
 	update_post_meta( $post_id, 'wpcf7cf_options', $options );
 
@@ -123,8 +156,24 @@ function wpcf7cf_save_contact_form( $contact_form )
 
 };
 
-// add the action
-add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
+function wpcf7cf_sanitize_options($options) {
+    //$options = array_values($options);
+    $sanitized_options = [];
+    foreach ($options as $option_entry) {
+	    $sanitized_option = [];
+	    $sanitized_option['then_field'] = sanitize_text_field($option_entry['then_field']);
+	    foreach ($option_entry['and_rules'] as $and_rule) {
+		    $sanitized_option['and_rules'][] = [
+		            'if_field' => sanitize_text_field($and_rule['if_field']),
+		            'operator' => sanitize_text_field($and_rule['operator']),
+		            'if_value' => sanitize_text_field($and_rule['if_value']),
+            ];
+        }
+
+	    $sanitized_options[] = $sanitized_option;
+    }
+    return $sanitized_options;
+}
 
 function print_entries_html($form, $wpcf7cf_entries = false) {
 

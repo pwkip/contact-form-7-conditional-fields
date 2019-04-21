@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.1.1
-Stable tag: 1.4.3
+Stable tag: 1.5
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,17 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.5 (04-21-19) =
+* Make it possible to load forms with AJAX https://github.com/pwkip/contact-form-7-conditional-fields/issues/25 and https://conditional-fields-cf7.bdwm.be/docs/faq/how-to-initialize-the-conditional-logic-after-an-ajax-call/
+* Massive code reorganization in scripts.js
+* Fixed bug that could appear after removing an AND condition.
+* solve WPCF7_ADMIN_READ_WRITE_CAPABILITY - https://github.com/pwkip/contact-form-7-conditional-fields/pull/16
+* disable part of the faulty remove_hidden_post_data function. - https://github.com/pwkip/contact-form-7-conditional-fields/pull/17
+* Fix "Dismiss notice" on Conditional Fields for Contact Form 7 Settings page
+* use the "wpcf7_before_send_mail" hook instead of "wpcf7_mail_components" to hide mail groups. The wpcf7_before_send_mail hook is called earlier, so it allows to also hide groups in the attachment field and in messages.
+* Allow conditional group tags in success and error messages. https://github.com/pwkip/contact-form-7-conditional-fields/issues/23
+* duplicating a form will also duplicate conditions https://github.com/pwkip/contact-form-7-conditional-fields/issues/28
 
 = 1.4.3 (04-12-19) =
 * Really fix clear_on_hide problem (https://wordpress.org/support/topic/clear_on_hide-still-not-working-right-after-1-4-2-update/)
