@@ -97,11 +97,6 @@ var wpcf7cf = {
                     $group.animate(show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
                 }
             } else if ($group.css('display') !== 'none' && $group.hasClass('wpcf7cf-hidden')) {
-                if ($group.prop('tagName') === 'SPAN') {
-                    $group.hide().trigger('wpcf7cf_hide_group');
-                } else {
-                    $group.animate(hide_animation, animation_outtime).trigger('wpcf7cf_hide_group'); // hide
-                }
 
                 if ($group.attr('data-clear_on_hide') !== undefined) {
                     $inputs = $(':input', $group).not(':button, :submit, :reset, :hidden');
@@ -110,6 +105,13 @@ var wpcf7cf = {
                     $inputs.change();
                     //display_fields();
                 }
+
+                if ($group.prop('tagName') === 'SPAN') {
+                    $group.hide().trigger('wpcf7cf_hide_group');
+                } else {
+                    $group.animate(hide_animation, animation_outtime).trigger('wpcf7cf_hide_group'); // hide
+                }
+
             }
         });
 

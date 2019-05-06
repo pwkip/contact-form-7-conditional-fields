@@ -7,8 +7,11 @@ class ContactForm7ConditionalFields {
 
     function __construct() {
 
-        add_action('wpcf7_enqueue_scripts', array(__CLASS__, 'enqueue_js'));
-        add_action('wpcf7_enqueue_styles', array(__CLASS__, 'enqueue_css'));
+	    // can't use wpcf7_enqueue_scripts hook, because it's possible that people
+	    // want to disable the CF7 scripts. but in this case Conditional fields should still work.
+        // add_action('wpcf7_enqueue_scripts', array(__CLASS__, 'enqueue_js')); // <-- don't use this
+	    add_action('wp_enqueue_scripts', array(__CLASS__, 'enqueue_js'), 20);
+	    add_action('wpcf7_enqueue_styles', array(__CLASS__, 'enqueue_css'));
 
         // Register shortcodes
         add_action('wpcf7_init', array(__CLASS__, 'add_shortcodes'));
@@ -88,7 +91,9 @@ class ContactForm7ConditionalFields {
 
     public static function enqueue_js() {
 	    if (is_admin()) return;
-	    wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
+	    if (WPCF7CF_LOAD_JS) {
+	        wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
+	    }
     }
 
     public static function enqueue_css() {
@@ -339,6 +344,8 @@ function wpcf7cf_form_hidden_fields($hidden_fields) {
         'conditions' => get_post_meta($current_form_id,'wpcf7cf_options', true),
         'settings' => get_option(WPCF7CF_OPTIONS)
     );
+
+    unset($options['settings']['license_key']); // don't show license key in the source code duh.
 
 	return array_merge($hidden_fields, array(
         '_wpcf7cf_hidden_group_fields' => '',

@@ -1,12 +1,12 @@
 === Conditional Fields for Contact Form 7 ===
-Contributors: Jules Colle, stevish
+Contributors: Jules Colle
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=j_colle%40hotmail%2ecom&lc=US&item_name=Jules%20Colle%20%2d%20WP%20plugins%20%2d%20Responsive%20Gallery%20Grid&item_number=rgg&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.1.1
-Stable tag: 1.5
+Stable tag: 1.5.4
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,18 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.5.4 (05-06-19) =
+* Make sure scripts get loaded late enough (wp_enqueue_scripts priority set to 20), because there was a problem with multistep where the multistep script was changing a value after the cf script ran. https://wordpress.org/support/topic/1-5-x-not-expanding-selected-hidden-groups-with-multi-step-on-previous-page/
+
+= 1.5.3 (05-03-19) =
+* Refix the fix from version 1.4.3 that got unfixed in version 1.5 somehow 🙄
+
+= 1.5.2 (05-03-19) =
+* by reverting changes in 1.5.1, the possibility to load forms via AJAX was destroyed. So, from now on the wpcf7cf scripts will be loaded in the 'wp_enqueue_scripts' hook. Analogous with the WPCF7_LOAD_JS constant, a new constant is defined called WPCF7CF_LOAD_JS wich is set to true by default.
+
+= 1.5.1 (05-02-19) =
+* revert changes: enqueue scripts in 'wpcf7_contact_form' hook instead of 'wpcf7_enqueue_scripts', because loading it in the latter would cause problems with plugins that disable WPCF7_LOAD_JS (like for example contact-form-7-paypal-add-on).
 
 = 1.5 (04-21-19) =
 * Make it possible to load forms with AJAX https://github.com/pwkip/contact-form-7-conditional-fields/issues/25 and https://conditional-fields-cf7.bdwm.be/docs/faq/how-to-initialize-the-conditional-logic-after-an-ajax-call/
