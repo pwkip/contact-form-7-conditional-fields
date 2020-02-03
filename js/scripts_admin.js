@@ -8,8 +8,8 @@ if ($wpcf7cf_new_entry.length > 0) {
     var wpcf7cf_new_and_rule_html = $wpcf7cf_new_entry.find('.wpcf7cf-and-rule')[0].outerHTML;
     var wpcf7cf_new_entry_html = $wpcf7cf_new_entry.html();
 
-    var regex = /show \[(.*)\] if \[(.*)\] (equals|not equals|equals \(regex\)|not equals \(regex\)|>|>=|<=|<|is empty|not empty) "(.*)"/g;
-    var regex_and = /and if \[(.*)\] (equals|not equals|equals \(regex\)|not equals \(regex\)|>|>=|<=|<|is empty|not empty) "(.*)"/g;
+    var cf_rule_regex = /(?:show \[([^\]]*?)\]) if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/g;
+    var cf_rule_regex_and = /and if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/g;
 
 
     if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix
@@ -97,6 +97,7 @@ if ($wpcf7cf_new_entry.length > 0) {
             $('<div class="entry" id="entry-'+index+'">'+(wpcf7cf_new_entry_html.replace(/{id}/g, index))+'</div>').appendTo('#wpcf7cf-entries');
             index++;
             update_entries();
+            update_settings_textarea();
             return (index-1);
         }
 
@@ -107,6 +108,9 @@ if ($wpcf7cf_new_entry.length > 0) {
             return (index_and-1);
         }
 
+        /**
+         * Copy the textarea field to the entries.
+         */
         function import_condition_fields() {
 
             $if_values = $('.if-value');
@@ -119,7 +123,7 @@ if ($wpcf7cf_new_entry.length > 0) {
 
                 var str = lines[i];
 
-                var match = regex.exec(str);
+                var match = cf_rule_regex.exec(str);
 
                 if (match != null) {
 
@@ -132,13 +136,13 @@ if ($wpcf7cf_new_entry.length > 0) {
                     $('#entry-'+id+' .operator').val(match[3]);
                     $('#entry-'+id+' .if-value').val(match[4]);
 
-                    index_and = 1; // the next and condition will gave and_index[1];
+                    index_and = 1; // the next and condition will have and_index [1];
 
-                    regex.lastIndex = 0;
+                    cf_rule_regex.lastIndex = 0;
 
                 }
 
-                match = regex_and.exec(str);
+                match = cf_rule_regex_and.exec(str);
 
                 if (match != null && id != -1) {
 
@@ -148,11 +152,19 @@ if ($wpcf7cf_new_entry.length > 0) {
                     $('#entry-'+id+' .wpcf7cf-and-rule:last-child .operator').val(match[2]);
                     $('#entry-'+id+' .wpcf7cf-and-rule:last-child .if-value').val(match[3]);
 
-                    regex_and.lastIndex = 0;
+                    cf_rule_regex_and.lastIndex = 0;
 
                 }
             }
+
+            update_entries();
+
         }
+
+        $('#wpcf7-admin-form-element, #post').on('submit.wpcf7cf', function() {
+            update_settings_textarea();
+            return true;
+        });
 
         // export/import settings
 
@@ -160,49 +172,63 @@ if ($wpcf7cf_new_entry.length > 0) {
 
         $('#wpcf7cf-settings-to-text').click(function() {
             $('#wpcf7cf-settings-text-wrap').show();
+            update_settings_textarea();
+            return false;
+        });
 
+        /**
+         * Copy the entries to the textarea field.
+         */
+        function update_settings_textarea() {
             $('#wpcf7cf-settings-text').val('');
             $('#wpcf7cf-entries .entry').each(function() {
                 var $entry = $(this);
                 var line = 'show [' + $entry.find('.then-field-select').val() + ']';
                 var text_indent = line.length-3;
                 $entry.find('.wpcf7cf-and-rule').each(function(i) {
-                    $and_rule = $(this);
+                    const $and_rule = $(this);
+                    const operator = $and_rule.find('.operator').val();
                     if (i>0) {
 
                         line += '\n'+' '.repeat(text_indent)+'and';
 
                     }
-                    line += ' if [' + $and_rule.find('.if-field-select').val() + ']'
-                    + ' ' + $and_rule.find('.operator').val()
-                    + ' "' + $and_rule.find('.if-value').val() + '"';
+                    line += ' if [' + $and_rule.find('.if-field-select').val() + ']' + ' ' + operator;
+                    if (!['is empty', 'not empty'].includes(operator)) {
+                        line += ' "' + $and_rule.find('.if-value').val() + '"';
+                    }
                 });
-                $('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" ).select();
+                $('#wpcf7cf-settings-text').val($('#wpcf7cf-settings-text').val() + line + "\n" );
             });
-            return false;
-        });
+        }
 
         $if_values = $('.if-value');
 
         $('#add-fields').click(function() {
             import_condition_fields();
-            update_entries();
             return false;
         });
 
         $('#overwrite-fields').click(function() {
             clear_all_condition_fields();
             import_condition_fields();
-            update_entries();
             return false;
         });
+
+        $('#wpcf7cf-settings-text').on('change.wpcf7cf', function(){
+            clear_all_condition_fields();
+            import_condition_fields();
+            return true;
+        });
+
+        
 
         $('#wpcf7cf-settings-text-clear').click(function() {
             $('#wpcf7cf-settings-text-wrap').hide();
             $('#wpcf7cf-settings-text').val('');
             return false;
         });
-
+        
         function update_entries() {
             $if_values = $('.if-value');
             init_autocomplete();
@@ -278,6 +304,7 @@ if ($wpcf7cf_new_entry.length > 0) {
                 var and_i = next_index;
                 clone_html = $andblock.get(0).outerHTML.replace(/wpcf7cf_options\[([0-9]*)\]\[and_rules\]\[([0-9]*)\]/g, 'wpcf7cf_options[$1][and_rules]['+and_i+']');
                 $andblock.after(clone_html);
+                update_settings_textarea();
                 update_entries();
                 return false;
             });
@@ -290,6 +317,7 @@ if ($wpcf7cf_new_entry.length > 0) {
                     $and_rule[0].closest('.entry').remove();
                 }
 
+                update_settings_textarea();
                 update_entries();
 
                 return false;
@@ -298,6 +326,10 @@ if ($wpcf7cf_new_entry.length > 0) {
             $('.operator').off('change').change(function() {
                 update_entries();
                 return false;
+            });
+
+            $('input,select', '#wpcf7cf-entries').off('change.wpcf7cf_sync').on('change.wpcf7cf_sync', function() {
+                update_settings_textarea();
             });
         }
 
@@ -329,7 +361,6 @@ if ($wpcf7cf_new_entry.length > 0) {
         });
 
         function wpcf7cf_dismiss_notice() {
-            console.log(ajaxurl);
 
             $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
 
