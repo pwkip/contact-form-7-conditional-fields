@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.3
-Stable tag: 1.8
+Stable tag: 1.8.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,15 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.8.1 (02-23-20) =
+* PRO: Bring form in initial state after submit, including going back to first step of multistep and resetting the initial number of sub-repeaters in each repeater.
+* PRO: New field: [summary]. https://conditional-fields-cf7.bdwm.be/summary/
+* PRO: Make form submission trigger next step (if not on last step)
+* PRO: Multistep: automatically scroll to top of form after moving to a different step.
+* PRO: Multistep: Replace h3 tag with div as step-title.
+* PRO: Made some small changes to the default multistep styles, for basic mobile friendly behaviour.
+* PRO: Make multistep compatibility with cf7-image-captcha plugin
 
 = 1.8 (02-03-20) =
 * WPML compatibility: Force conditions to be an array. (https://wordpress.org/support/topic/wpml-conditional-fields-not-working-on-translations/#post-12390827)

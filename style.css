@@ -14,19 +14,20 @@
     margin-top: 20px;
 }
 
-.wpcf7cf_steps {
-    /* display:flex; */
-}
-
 .wpcf7cf_multistep .wpcf7cf_step {
     /* display:none; */
     width: 100%;
+}
+
+.wpcf7cf_multistep .wpcf7cf_step .step-title {
+    display: none;
 }
 
 .wpcf7cf_multistep .wpcf7cf_steps-dots {
     display: flex;
     width: 100%;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .wpcf7cf_multistep .wpcf7cf_steps-dots .dot .step-index {
@@ -45,6 +46,7 @@
     text-align: center;
     flex: 1;
     padding: 15px;
+    min-width: 120px;
 }
 .wpcf7cf_multistep .wpcf7cf_steps-dots .dot.completed {
     border-bottom: 5px solid #333;

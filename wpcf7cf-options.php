@@ -116,7 +116,8 @@ function wpcf7cf_options_page() {
                 <li>Regular expressions</li>
                 <li>Togglebuttons</li>
                 <li>Additional operators <code>&lt;</code> <code>&gt;</code> <code>&le;</code> <code>&ge;</code> <code>is empty</code></li>
-                <li>More comming soon (Multistep, Calculated Fields, ...)</li>
+                <li>Multistep (with Summary)</li>
+                <li>More comming soon (Calculated Fields, ...)</li>
             </ul>
             <p><a target="_blank" class="button button-primary" href="https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/">Get PRO</a></p>
             <?php
