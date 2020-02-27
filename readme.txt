@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.3
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,9 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.8.2 (02-27-2020) =
+* Small patch. Add a check in the ajaxComplete event, to make sure xhr.responseJSON is not null or undefined. (this caused a JS error on some websites)
 
 = 1.8.1 (02-23-20) =
 * PRO: Bring form in initial state after submit, including going back to first step of multistep and resetting the initial number of sub-repeaters in each repeater.

@@ -612,7 +612,7 @@ function Wpcf7cfMultistep($multistep, form) {
 }
 
 jQuery(document).ajaxComplete(function (e, xhr, settings) {
-  if (xhr.hasOwnProperty('responseJSON') && xhr.responseJSON.hasOwnProperty('status') && xhr.responseJSON.hasOwnProperty('into') && xhr.responseJSON.status === "mail_success") {
+  if (xhr.hasOwnProperty('responseJSON') && xhr.responseJSON != null && xhr.responseJSON.hasOwnProperty('status') && xhr.responseJSON.hasOwnProperty('into') && xhr.responseJSON.status === "mail_success") {
     jQuery(xhr.responseJSON.into).trigger('reset.wpcf7cf');
   }
 });
