@@ -80,7 +80,9 @@ var Wpcf7cfForm = function($form) {
         setTimeout(function(){
             form.displayFields();
             form.resetRepeaters();
-            form.multistep.moveToStep(1);
+            if (form.multistep != null) {
+                form.multistep.moveToStep(1); 
+            }
         },200);
     });
 
@@ -817,14 +819,14 @@ window.wpcf7cf = {
         // replace next button with submit button on last step.
         // TODO: make this depend on a setting
         var $submit_button = multistep.form.$form.find('input[type="submit"]').eq(0);
+        var $ajax_loader = multistep.form.$form.find('.ajax-loader').eq(0);
         if (multistep.currentStep == multistep.numSteps) {
-            var $submit_clone = $submit_button.clone();
-            $submit_button.hide();
             multistep.$btn_next.hide();
-            multistep.$btn_next.parent().append($submit_clone);
-        } else {
-            multistep.$btn_next.parent().find('input[type=submit]').remove();
+            $ajax_loader.detach().appendTo(multistep.$btn_next.parent());
+            $submit_button.detach().appendTo(multistep.$btn_next.parent());
             $submit_button.show();
+        } else {
+            $submit_button.hide();
             multistep.$btn_next.show();
         }
 
