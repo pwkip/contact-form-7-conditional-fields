@@ -4,7 +4,7 @@ Plugin Name: Contact Form 7 Conditional Fields
 Plugin URI: http://bdwm.be/
 Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 Author: Jules Colle
-Version: 1.8.3
+Version: 1.8.5
 Author URI: http://bdwm.be/
  */
 
@@ -37,6 +37,6 @@ if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
 		<?php
 	}
 
-    require_once 'init.php';
+    require_once __DIR__.'/init.php';
 
 }
