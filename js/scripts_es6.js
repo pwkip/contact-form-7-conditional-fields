@@ -1,14 +1,9 @@
 "use strict";
 
-import jQuery from 'jquery';
-
-
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
 var wpcf7cf_timeout;
 var wpcf7cf_change_time_ms = window.wpcf7cf_running_tests ? 0 : 100;
-
-console.log(wpcf7cf_change_time_ms);
 
 var wpcf7cf_show_animation = { "height": "show", "marginTop": "show", "marginBottom": "show", "paddingTop": "show", "paddingBottom": "show" };
 var wpcf7cf_hide_animation = { "height": "hide", "marginTop": "hide", "marginBottom": "hide", "paddingTop": "hide", "paddingBottom": "hide" };
@@ -664,7 +659,6 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                 resolve('failed');
                 //$multistep.append('<div class="wpcf7-response-output wpcf7-display-none wpcf7-validation-errors" style="display: block;" role="alert">' + json.message + '</div>');
 
-                console.log($multistep.parent().find('.wpcf7-response-output'));
                 $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
 
             } else if (json.success) {

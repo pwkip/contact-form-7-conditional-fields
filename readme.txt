@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.4
-Stable tag: 1.8.5
+Stable tag: 1.8.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,10 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.8.6 (2020-04-18) =
+* Fixed: accidentally packed the entire jQuery library in scripts.js
+* Cleaned up some console.logs that was still hanging around in the code.
 
 = 1.8.5 (2020-04-17) =
 * Tested with WP 5.4
