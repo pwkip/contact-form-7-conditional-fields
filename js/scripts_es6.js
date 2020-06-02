@@ -394,12 +394,12 @@ function Wpcf7cfRepeater($repeater, form) {
     
     this.params = params;
 
-    $button_add.click( repeater, function(e) {
+    $button_add.on('click', null, repeater, function(e) {
         var repeater = e.data;
         repeater.updateSubs(params.$repeater.num_subs+1);
     });
 
-    $button_remove.click( repeater,function(e) {
+    $button_remove.on('click', null, repeater,function(e) {
         var repeater = e.data;
         repeater.updateSubs(params.$repeater.num_subs-1);
     });
@@ -552,8 +552,8 @@ function Wpcf7cfMultistep($multistep, form) {
 
     });
 
-    // If form is submitted (by pressing retrun for example), and if we are not on the last step,
-    // then trigger click event on the $next button instead.
+    // If form is submitted (by pressing return for example), and if we are not on the last step,
+    // then trigger click event on the $btn_next button instead.
     multistep.form.$form.on('submit.wpcf7cf_step', function(e) {
 
         if (multistep.currentStep !== multistep.numSteps) {
@@ -564,7 +564,7 @@ function Wpcf7cfMultistep($multistep, form) {
         }
     });
 
-    multistep.$btn_prev.click(function() {
+    multistep.$btn_prev.on( 'click', function() {
         multistep.moveToStep(multistep.currentStep-1);
     });
 
@@ -617,17 +617,6 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
             dataType: 'json',
         }).done(function(json) {
 
-            /*
-            * Insert _form_data_id if 'json variable' has
-            */
-            // if (typeof json._cf7mls_db_form_data_id != 'undefined') {
-            //     if (!form.find('input[name="_cf7mls_db_form_data_id"]').length) {
-            //         form.append('<input type="hidden" name="_cf7mls_db_form_data_id" value="'+json._cf7mls_db_form_data_id+'" />');
-            //     }
-            // }
-
-            //reset error messages
-            //$multistep.find('.wpcf7-form-control-wrap').removeClass('cf7mls-invalid');
             $multistep.find('.wpcf7-form-control-wrap .wpcf7-not-valid-tip').remove();
             $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
             $multistep.find('.wpcf7-response-output').remove();
@@ -647,17 +636,14 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                         checkError = checkError + 1;
 
                         var controlWrap = jQuery('.wpcf7-form-control-wrap.' + index, $form);
-                        //controlWrap.addClass('cf7mls-invalid');
                         controlWrap.find('input').addClass('wpcf7-not-valid');
                         controlWrap.find('span.wpcf7-not-valid-tip').remove();
                         controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');
 
-                        //return false;
                     }
                 });
 
                 resolve('failed');
-                //$multistep.append('<div class="wpcf7-response-output wpcf7-display-none wpcf7-validation-errors" style="display: block;" role="alert">' + json.message + '</div>');
 
                 $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
 
@@ -929,17 +915,23 @@ window.wpcf7cf = {
 
         let condition_ok = false; // start by assuming that the condition is not met
 
-        if (!values || values.length == 0 || values.every((v) => !v||0)) { // no values or only empty values passed (0 is not considered empty)
+        // Considered EMPTY:       []     ['']          [null]        ['',null]    [,,'']
+        // Considered NOT EMPTY:   [0]    ['ab','c']    ['',0,null]
+        const valuesAreEmpty = values.length === 0 || values.every((v) => !v&&v!==0); // 0 is not considered empty
+
+        // special cases: [] equals '' => TRUE; [] not equals '' => FALSE
+        if (operator === 'equals' && testValue === '' && valuesAreEmpty)  {
+            return true;
+        }
+        if (operator === 'not equals' && testValue === '' && valuesAreEmpty) {
+            return false;
+        }
+
+        if (valuesAreEmpty) {
             if (operator === 'is empty') {
                 condition_ok = true;
             }
-            if (operator === 'not empty') {
-                condition_ok = false;
-            }
         } else {
-            if (operator === 'is empty') {
-                condition_ok = false;
-            }
             if (operator === 'not empty') {
                 condition_ok = true;
             }
@@ -1030,7 +1022,7 @@ jQuery('document').ready(function() {
 // fix for exclusive checkboxes in IE (this will call the change-event again after all other checkboxes are unchecked, triggering the display_fields() function)
 var old_wpcf7ExclusiveCheckbox = jQuery.fn.wpcf7ExclusiveCheckbox;
 jQuery.fn.wpcf7ExclusiveCheckbox = function() {
-    return this.find('input:checkbox').click(function() {
+    return this.find('input:checkbox').on('click', function() {
         var name = jQuery(this).attr('name');
         jQuery(this).closest('form').find('input:checkbox[name="' + name + '"]').not(this).prop('checked', false).eq(0).change();
     });
