@@ -158,4 +158,69 @@
   list-style: disc;
   margin-left: 20px; }
 
-/*# sourceMappingURL=admin-style.css.map */
+/* The switch - the box around the slider */
+.wpcf7cf-switch {
+  position: absolute;
+  display: block;
+  top: 20px;
+  right: 20px; }
+  .wpcf7cf-switch .label {
+    margin-right: 4px;
+    display: inline-block;
+    vertical-align: top; }
+  .wpcf7cf-switch .switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+    /* Hide default HTML checkbox */
+    /* The slider */
+    /* Rounded sliders */ }
+    .wpcf7cf-switch .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0; }
+    .wpcf7cf-switch .switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s; }
+    .wpcf7cf-switch .switch .slider:before {
+      position: absolute;
+      content: "";
+      height: 13px;
+      width: 13px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .3s; }
+    .wpcf7cf-switch .switch input:checked + .slider {
+      background-color: #1e8cbe; }
+    .wpcf7cf-switch .switch input:focus + .slider {
+      box-shadow: 0 0 1px #1e8cbe; }
+    .wpcf7cf-switch .switch input:checked + .slider:before {
+      -webkit-transform: translateX(13px);
+      -ms-transform: translateX(13px);
+      transform: translateX(13px); }
+    .wpcf7cf-switch .switch .slider.round {
+      border-radius: 17px; }
+    .wpcf7cf-switch .switch .slider.round:before {
+      border-radius: 50%; }
+
+#wpcf7cf-conditional-panel {
+  position: relative; }
+
+.wpcf7cf-notice {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-left-width: 4px;
+  border-left-color: #ffb900;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin: 5px 0 2px;
+  padding: 1px 12px; }

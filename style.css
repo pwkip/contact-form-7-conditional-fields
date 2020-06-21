@@ -71,21 +71,3 @@
     cursor: default;
     opacity: .5;
 }   
-
-.page-template-tpl-form-tester .wpcf7cf_repeater {
-    border: 3px solid #f0f0f0;
-    background: #d9d9d9;
-    padding: 20px 40px 20px 20px;
-}
-
-.page-template-tpl-form-tester .wpcf7cf_repeater_sub {
-    border: 3px solid #f0f0f0;
-    background: #ffffff;
-    padding: 20px 40px 20px 20px;
-}
-
-.page-template-tpl-form-tester [data-class="wpcf7cf_group"] {
-    border: 3px solid #f0f0f0;
-    background: #8efca6b9;
-    padding: 20px 40px 20px 20px;
-}

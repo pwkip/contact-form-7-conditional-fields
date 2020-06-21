@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.4.1
-Stable tag: 1.8.7
+Stable tag: 1.9
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,16 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.9 (2020-06-21) =
+* Performance improvements
+* Added extra setting: "Conditional Fields UI". If you have a lot of conditions, set this to "Text mode" for better performance in the admin interface.
+* Improved styling on Conditional Fields Settings page
+* Improved [docs](https://conditional-fields-cf7.bdwm.be/)
+* Improved the [form tester](https://conditional-fields-cf7.bdwm.be/form-tester/)
+* PRO: Multistep bug that was causing checkboxes and multiselect to not trigger validation errors
+* PRO: Summary added support for files, checkboxes and multiselect
+* Added test to ensure that normal view entries are always converted to text view correctly
 
 = 1.8.7 (2020-06-01) =
 * PRO: Change auto-update mechanism
