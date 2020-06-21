@@ -39,13 +39,14 @@ function wpcf7cf_get_settings() {
         return $wpcf7cf_settings_glob;
     }
 
-    //get options from DB
-    $wpcf7cf_settings_glob = get_option(WPCF7CF_OPTIONS);
+    $wpcf7cf_default_settings = wpcf7cf_get_default_settings();
+    $wpcf7cf_saved_settings = get_option(WPCF7CF_OPTIONS);
 
-    // if options have not been saved by the user yet, load the default options.
-    if ( !is_array($wpcf7cf_settings_glob) ) {
-        $wpcf7cf_settings_glob = wpcf7cf_get_default_settings();
+    if (!$wpcf7cf_saved_settings) {
+        $wpcf7cf_saved_settings = [];
     }
+    
+    $wpcf7cf_settings_glob = array_merge($wpcf7cf_default_settings,$wpcf7cf_saved_settings);
 
     return $wpcf7cf_settings_glob;
 }

@@ -906,6 +906,8 @@ window.wpcf7cf = {
 
             var inputField = wpcf7cf_getFieldByName(condition_and_rule.if_field);
 
+            if (!inputField) continue; // field not found
+
             var if_val = condition_and_rule.if_value;
             var operator = condition_and_rule.operator;
 

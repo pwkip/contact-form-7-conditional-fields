@@ -910,6 +910,8 @@ window.wpcf7cf = {
       var condition_ok = false;
       var condition_and_rule = condition.and_rules[and_rule_i];
       var inputField = wpcf7cf_getFieldByName(condition_and_rule.if_field);
+      if (!inputField) continue; // field not found
+
       var if_val = condition_and_rule.if_value;
       var operator = condition_and_rule.operator; //backwards compat
 
