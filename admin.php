@@ -8,7 +8,7 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 	}
 
 	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete', 'jquery-ui-sortable'), WPCF7CF_VERSION,true);
-	wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', get_option(WPCF7CF_OPTIONS));
+	wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', wpcf7cf_get_settings());
 
 }
 

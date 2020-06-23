@@ -841,7 +841,7 @@ window.wpcf7cf = {
         // skip unchecked checkboxes and radiobuttons
         if ((currentNode.type === 'checkbox' || currentNode.type === 'radio') && !currentNode.checked) continue; // if multiselect, make sure to add all the values
 
-        if (currentNode.multiple) {
+        if (currentNode.multiple && currentNode.options) {
           simplified_dom[name].val = Object.values(currentNode.options).filter(function (o) {
             return o.selected;
           }).map(function (o) {

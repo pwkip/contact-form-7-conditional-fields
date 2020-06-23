@@ -450,7 +450,7 @@ function wpcf7cf_form_hidden_fields($hidden_fields) {
     $options = array(
         'form_id' => $current_form_id,
         'conditions' => CF7CF::getConditions($current_form_id),
-        'settings' => get_option(WPCF7CF_OPTIONS)
+        'settings' => wpcf7cf_get_settings()
     );
 
     unset($options['settings']['license_key']); // don't show license key in the source code duh.
