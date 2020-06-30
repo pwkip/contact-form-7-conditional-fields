@@ -753,8 +753,17 @@ Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
 window.wpcf7cf = {
 
     // keep this for backwards compatibility
-    initForm : function($form) {
-        wpcf7cf_forms.push(new Wpcf7cfForm($form));
+    initForm : function($forms) {
+        $forms.each(function(){
+            const $form = jQuery(this);
+            // only add form is its class is "wpcf7-form" and if the form was not previously added
+            if (
+                $form.hasClass('wpcf7-form') &&
+                !wpcf7cf_forms.some((form)=>{ return form.$form.get(0) === $form.get(0); })
+            ) {
+                wpcf7cf_forms.push(new Wpcf7cfForm($form));
+            }
+        });
     },
 
     get_nested_conditions : function(conditions, $current_form) {
@@ -917,7 +926,9 @@ window.wpcf7cf = {
             operator = operator === '>' ? 'greater than' : operator;
             operator = operator === '<' ? 'less than' : operator;
 
-            condition_ok = this.isConditionTrue(inputField.val,operator,if_val);
+            const $field = operator === 'function' && jQuery(`[name="${inputField.name}"]`).eq(0);
+
+            condition_ok = this.isConditionTrue(inputField.val,operator,if_val, $field);
 
             show_group = show_group && condition_ok;
         }
