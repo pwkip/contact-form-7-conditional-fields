@@ -371,23 +371,20 @@ function Wpcf7cfRepeater($repeater, form) {
     $repeater_sub_clone.find('[name]').each(function() {
         var $this = jQuery(this);
         var prev_name = $this.attr('name');
-        var orig_name = $this.attr('data-orig_name') != null ? $this.attr('data-orig_name') : prev_name;
-        var new_name = prev_name+'__{{repeater_sub_suffix}}';
+        var new_name = repeater.getNewName(prev_name);
 
-        if(prev_name.endsWith('_count')) {
-            new_name = prev_name.replace('_count','__{{repeater_sub_suffix}}_count');
-        }
+        var orig_name = $this.attr('data-orig_name') != null ? $this.attr('data-orig_name') : prev_name;
 
         $this.attr('name', new_name);
         $this.attr('data-orig_name', orig_name);
-        $this.closest('.wpcf7-form-control-wrap').addClass(new_name);
+        $this.closest('.wpcf7-form-control-wrap').addClass(new_name.replace('[]',''));
     });
 
     $repeater_sub_clone.find('.wpcf7cf_repeater,[data-class="wpcf7cf_group"]').each(function() {
         var $this = jQuery(this);
         var prev_data_id = $this.attr('data-id');
         var orig_data_id = $this.attr('data-orig_data_id') != null ? $this.attr('data-orig_data_id') : prev_data_id;
-        var new_data_id = prev_data_id+'__{{repeater_sub_suffix}}';
+        var new_data_id = repeater.getNewName(prev_data_id);
 
         if(prev_data_id.endsWith('_count')) {
             new_data_id = prev_data_id.replace('_count','__{{repeater_sub_suffix}}_count');
@@ -395,29 +392,26 @@ function Wpcf7cfRepeater($repeater, form) {
 
         $this.attr('data-id', new_data_id);
         $this.attr('data-orig_data_id', orig_data_id);
-        $this.closest('.wpcf7-form-control-wrap').addClass(new_data_id);
     });
 
     $repeater_sub_clone.find('[id]').each(function() {
         var $this = jQuery(this);
         var prev_id = $this.attr('id');
         var orig_id =  $this.attr('data-orig_id') != null ? $this.attr('data-orig_id') : prev_id;
-        var new_id = prev_id+'__{{repeater_sub_suffix}}';
+        var new_id = repeater.getNewName(prev_id);
 
         $this.attr('id', new_id);
         $this.attr('data-orig_id', orig_id);
-        $this.closest('.wpcf7-form-control-wrap').addClass(new_id);
     });
 
     $repeater_sub_clone.find('[for]').each(function() {
         var $this = jQuery(this);
         var prev_for = $this.attr('for');
         var orig_for =  $this.attr('data-orig_for') != null ? $this.attr('data-orig_for') : prev_for;
-        var new_for = prev_for+'__{{repeater_sub_suffix}}';
+        var new_for = repeater.getNewName(prev_for);
 
         $this.attr('for', new_for);
         $this.attr('data-orig_for', orig_for);
-        $this.closest('.wpcf7-form-control-wrap').addClass(new_for);
     });
 
     var repeater_sub_html = $repeater_sub_clone[0].outerHTML;
@@ -454,6 +448,18 @@ function Wpcf7cfRepeater($repeater, form) {
 
 }
 
+Wpcf7cfRepeater.prototype.getNewName = function(previousName) {
+    var prev_parts = previousName.split('[');
+    previousName = prev_parts[0];
+    var prev_suff = prev_parts.length > 1 ? '['+prev_parts.splice(1).join('[') : '';
+    var newName = previousName+'__{{repeater_sub_suffix}}'+prev_suff;
+
+    if(previousName.endsWith('_count')) {
+        newName = previousName.replace('_count','__{{repeater_sub_suffix}}_count');
+    }
+
+    return newName;
+}
 
 
 Wpcf7cfRepeater.prototype.updateSubs = function(subs_to_show) {
@@ -681,7 +687,7 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                         checkError = checkError + 1;
 
                         var controlWrap = form.get('.wpcf7-form-control-wrap.' + index);
-                        controlWrap.find('input').addClass('wpcf7-not-valid');
+                        controlWrap.find('.wpcf7-form-control').addClass('wpcf7-not-valid');
                         controlWrap.find('span.wpcf7-not-valid-tip').remove();
                         controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');
 

@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.4.2
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,9 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.9.6 (2020-07-04) =
+* PRO: Fixed bug: checkboxes and multiselect validation not working inside repeater
 
 = 1.9.5 (2020-07-01) =
 * PRO: Fixed bug: multistep forms interference with other forms after calling wpcf7cf.initForm()
