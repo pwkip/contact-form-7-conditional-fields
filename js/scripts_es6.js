@@ -52,6 +52,9 @@ if (!String.prototype.endsWith) {
 	};
 }
 
+// Object.values polyfill
+if (!Object.values) Object.values = o=>Object.keys(o).map(k=>o[k]);
+
 var Wpcf7cfForm = function($form) {
 
     var options_element = $form.find('input[name="_wpcf7cf_options"]').eq(0);
