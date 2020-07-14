@@ -247,19 +247,29 @@ class CF7CF {
             $posted_data = WPCF7_Submission::get_instance()->get_posted_data();
         }
 
-        $hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
-        if (is_array($hidden_fields) && count($hidden_fields) > 0) {
-            foreach ($hidden_fields as $field) {
-                $this->hidden_fields[] = $field;
-                if (wpcf7cf_endswith($field, '[]')) {
-                    $this->hidden_fields[] = substr($field,0,strlen($field)-2);
-                }
-            }
-        }
-        $this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups']));
-        $this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
-        $this->repeaters = json_decode(stripslashes($posted_data['_wpcf7cf_repeaters']));
-        $this->steps = json_decode(stripslashes($posted_data['_wpcf7cf_steps']));
+        if (isset($posted_data['_wpcf7cf_hidden_group_fields'])) {
+		$hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
+		if (is_array($hidden_fields) && count($hidden_fields) > 0) {
+			foreach ($hidden_fields as $field) {
+				$this->hidden_fields[] = $field;
+				if (wpcf7cf_endswith($field, '[]')) {
+					$this->hidden_fields[] = substr($field,0,strlen($field)-2);
+				}
+			}
+		}	
+	}
+	if (isset($posted_data['_wpcf7cf_hidden_groups'])) {
+		$this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups']));
+	}
+	if (isset($posted_data['_wpcf7cf_visible_groups'])) {
+		$this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
+	}
+	if (isset($posted_data['_wpcf7cf_repeaters'])) {
+		$this->repeaters = json_decode(stripslashes($posted_data['_wpcf7cf_repeaters']));
+	}
+	if (isset($posted_data['_wpcf7cf_steps'])) {
+		$this->steps = json_decode(stripslashes($posted_data['_wpcf7cf_steps']));
+	}
     }
 
 	function hide_hidden_mail_fields($form,$abort,$submission) {
