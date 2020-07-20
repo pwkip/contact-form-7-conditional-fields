@@ -30,9 +30,6 @@ class CF7CF {
         add_action('wp_ajax_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
         add_action('wp_ajax_nopriv_cf7mls_validation', array($this,'cf7mls_validation_callback'),9);
 
-        // check which fields are hidden during form submission and change some stuff accordingly
-        add_filter( 'wpcf7_posted_data', array($this, 'remove_hidden_post_data') );
-
         add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
 	    // validation messages
@@ -179,27 +176,6 @@ class CF7CF {
 
     }
 
-
-    /**
-     * When a CF7 form is posted, check the form for hidden fields, then remove those fields from the post data
-     *
-     * @param $posted_data
-     *
-     * @return mixed
-     */
-    function remove_hidden_post_data($posted_data) {
-        $this->set_hidden_fields_arrays($posted_data);
-
-// TODO: activating the code below will change the behaviour of the plugin, as all hidden fields will not be POSTed.
-//       We might consider activating this based on a setting in the future. But for now, we're not gonna use it.
-
-//        foreach( $this->hidden_fields as $name => $value ) {
-//            unset( $posted_data[$value] ); // Yes, it should be $value, not $name. https://github.com/pwkip/contact-form-7-conditional-fields/pull/17
-//        }
-
-        return $posted_data;
-    }
-
     function cf7msm_merge_post_with_cookie($posted_data) {
 
         if (!function_exists('cf7msm_get') || !key_exists('cf7msm_posted_data',$_COOKIE)) return $posted_data;
@@ -210,7 +186,7 @@ class CF7CF {
 
         // this will temporarily set the hidden fields data to the posted_data.
         // later this function will be called again with the updated posted_data
-        $this->set_hidden_fields_arrays($posted_data);
+        $this->set_hidden_fields_arrays($_POST);
 
         // get cookie data
         $cookie_data = cf7msm_get('cf7msm_posted_data');
@@ -243,9 +219,7 @@ class CF7CF {
      */
     function set_hidden_fields_arrays($posted_data = false) {
 
-        if (!$posted_data) {
-            $posted_data = WPCF7_Submission::get_instance()->get_posted_data();
-        }
+        if (!$posted_data) $posted_data = $_POST;
 
         $hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
         if (is_array($hidden_fields) && count($hidden_fields) > 0) {
