@@ -374,8 +374,7 @@ wpcf7cf.$textOnlyCheckbox.on('change', function() {
 setUiMode(wpcf7cf.$textOnlyCheckbox.is(':checked'));
 
 wpcf7cf.$formEditorForm.on('submit', function() {
-    wpcf7cf.currentMode = 'normal';
-    if (wpcf7cf.getnumberOfFieldEntries() > 0) {
+    if (wpcf7cf.currentMode == 'normal' && wpcf7cf.getnumberOfFieldEntries() > 0) {
         wpcf7cf.copyFieldsToText();
     }
 });
