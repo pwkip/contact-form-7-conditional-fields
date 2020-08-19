@@ -733,7 +733,9 @@ Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
         });
         resolve('failed');
         $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
+        wpcf7.setStatus($form, 'invalid');
       } else if (json.success) {
+        wpcf7.setStatus($form, 'init');
         resolve('success');
         return false;
       }

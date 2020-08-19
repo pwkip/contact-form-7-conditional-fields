@@ -670,7 +670,7 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
             contentType: false,
             dataType: 'json',
         }).done(function(json) {
-
+            
             $multistep.find('.wpcf7-form-control-wrap .wpcf7-not-valid-tip').remove();
             $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
             $multistep.find('.wpcf7-response-output').remove();
@@ -701,7 +701,13 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
 
                 $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
 
+                wpcf7.setStatus( $form, 'invalid' );
+
+
             } else if (json.success) {
+
+                wpcf7.setStatus( $form, 'init' );
+
                 resolve('success');
                 return false;
             }

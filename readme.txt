@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
-Tested up to: 5.4.2
-Stable tag: 1.9.9
+Tested up to: 5.5
+Stable tag: 1.9.10
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -117,8 +117,12 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 
 == Changelog ==
 
+= 1.9.10 (2020-08-19) =
+* PRO: Fix multistep bug: general error message does not appear if step validation fails
+
 = 1.9.9 (2020-07-29) =
 * Fix bug when saving conditions from Text View
+* Tested with WP 5.5
 
 = 1.9.8 (2020-07-20) =
 * Make sure all posted data is analyzed after submitting (part of) a form. A recent update of CF7 stripped away some information, resulting in PHP Notices.
