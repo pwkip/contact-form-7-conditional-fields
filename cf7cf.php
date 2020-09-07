@@ -246,8 +246,15 @@ class CF7CF {
 
 				// $props[$mail][$key] = preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $val );
 				$props[$mail][$key] = $parser->getParsedMail();
-			}
+            }
+
+            if (isset($props[$mail]['attachments'])) {
+                $props[$mail]['attachments'] = Wpcf7cfMailParser::split_multifile_attachment_fields($props[$mail]['attachments'], $form, $submission);
+            }
+
         }
+
+
         //$props['mail']['body'] = 'xxx';
 		$form->set_properties($props);
 	}

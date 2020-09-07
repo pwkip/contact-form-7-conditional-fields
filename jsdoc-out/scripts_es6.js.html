@@ -1,4 +1,32 @@
-"use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts_es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts_es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
 
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
@@ -83,8 +111,8 @@ var Wpcf7cfForm = function($form) {
         return jQuery(selector, form.$form);
     }
 
-    // compatibility with conditional forms created with older versions of the plugin ( < 1.4 )
-    for (var i=0; i < form.conditions.length; i++) {
+    // compatibility with conditional forms created with older versions of the plugin ( &lt; 1.4 )
+    for (var i=0; i &lt; form.conditions.length; i++) {
         var condition = form.conditions[i];
         if (!('and_rules' in condition)) {
             condition.and_rules = [{'if_field':condition.if_field,'if_value':condition.if_value,'operator':condition.operator}];
@@ -161,8 +189,8 @@ Wpcf7cfForm.prototype.displayFields = function() {
     var wpcf7cf_settings = this.settings;
 
     //for compatibility with contact-form-7-signature-addon
-    if (cf7signature_resized === 0 && typeof signatures !== 'undefined' && signatures.constructor === Array && signatures.length > 0 ) {
-        for (var i = 0; i < signatures.length; i++) {
+    if (cf7signature_resized === 0 &amp;&amp; typeof signatures !== 'undefined' &amp;&amp; signatures.constructor === Array &amp;&amp; signatures.length > 0 ) {
+        for (var i = 0; i &lt; signatures.length; i++) {
             if (signatures[i].canvas.width === 0) {
 
                 var $sig_canvas = jQuery(".wpcf7-form-control-signature-body>canvas");
@@ -179,7 +207,7 @@ Wpcf7cfForm.prototype.displayFields = function() {
 
     wpcf7cf_reload_dom(form.$form);
 
-    for (var i=0; i < wpcf7cf_conditions.length; i++) {
+    for (var i=0; i &lt; wpcf7cf_conditions.length; i++) {
 
         var condition = wpcf7cf_conditions[i];
 
@@ -197,13 +225,13 @@ Wpcf7cfForm.prototype.displayFields = function() {
     form.$groups.each(function (index) {
         var $group = jQuery(this);
         if ($group.is(':animated')) $group.finish(); // stop any current animations on the group
-        if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) {
+        if ($group.css('display') === 'none' &amp;&amp; !$group.hasClass('wpcf7cf-hidden')) {
             if ($group.prop('tagName') === 'SPAN' || $group.is(':hidden')) {
                 $group.show().trigger('wpcf7cf_show_group');
             } else {
                 $group.animate(wpcf7cf_show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
             }
-        } else if ($group.css('display') !== 'none' && $group.hasClass('wpcf7cf-hidden')) {
+        } else if ($group.css('display') !== 'none' &amp;&amp; $group.hasClass('wpcf7cf-hidden')) {
 
             if ($group.attr('data-clear_on_hide') !== undefined) {
                 var $inputs = jQuery(':input', $group).not(':button, :submit, :reset, :hidden');
@@ -475,7 +503,7 @@ Wpcf7cfRepeater.prototype.updateButtons = function() {
     var showButtonRemove = false;
     var showButtonAdd = false;
 
-    if (params.$repeater.num_subs < params.$repeater.max) {
+    if (params.$repeater.num_subs &lt; params.$repeater.max) {
         showButtonAdd = true;
     }
     if (params.$repeater.num_subs > params.$repeater.min) {
@@ -503,12 +531,12 @@ Wpcf7cfRepeater.prototype.updateSubs = function(subs_to_show) {
     var params = repeater.params;
 
     // make sure subs_to_show is a valid number
-    subs_to_show = subs_to_show < params.$repeater.min ? params.$repeater.min : subs_to_show
+    subs_to_show = subs_to_show &lt; params.$repeater.min ? params.$repeater.min : subs_to_show
     subs_to_show = subs_to_show > params.$repeater.max ? params.$repeater.max : subs_to_show
 
     var subs_to_add = subs_to_show - params.$repeater.num_subs;
 
-    if (subs_to_add < 0) {
+    if (subs_to_add &lt; 0) {
         repeater.removeSubs(-subs_to_add);
     } else if (subs_to_add > 0) {
         repeater.addSubs(subs_to_add);
@@ -537,10 +565,10 @@ Wpcf7cfRepeater.prototype.addSubs = function(subs_to_add, index=null) {
     
     var html_str = '';
 
-    for(var i=1; i<=subs_to_add; i++) {
+    for(var i=1; i&lt;=subs_to_add; i++) {
         var sub_suffix = $repeater.num_subs+i;
         html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g,sub_suffix)
-        .replace(new RegExp('\{\{'+$repeater.orig_id+'_index\}\}','g'),'<span class="wpcf7cf-index wpcf7cf__'+$repeater.orig_id+'">'+sub_suffix+'</span>');
+        .replace(new RegExp('\{\{'+$repeater.orig_id+'_index\}\}','g'),'&lt;span class="wpcf7cf-index wpcf7cf__'+$repeater.orig_id+'">'+sub_suffix+'&lt;/span>');
     }
 
 
@@ -607,7 +635,7 @@ Wpcf7cfRepeater.prototype.updateSuffixes = function() {
 
     let simplifiedDomArray = Object.values(wpcf7cf.get_simplified_dom_model(form.$form[0]));
     
-    for (let i = 0; i < num_subs; i++) {
+    for (let i = 0; i &lt; num_subs; i++) {
 
         const $sub = jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(i);
 
@@ -677,7 +705,7 @@ Wpcf7cfRepeater.prototype.removeSubs = function(subs_to_remove, index=null) {
     var form = repeater.form;
     var $repeater = params.$repeater;
 
-    if ($repeater.num_subs - subs_to_remove < $repeater.min) {
+    if ($repeater.num_subs - subs_to_remove &lt; $repeater.min) {
         subs_to_remove = $repeater.num_subs - $repeater.min;
     }
 
@@ -721,12 +749,12 @@ function Wpcf7cfMultistep($multistep, form) {
 
 
     multistep.$dots.html('');
-    for (var i = 1; i <= multistep.numSteps; i++) {
+    for (var i = 1; i &lt;= multistep.numSteps; i++) {
         multistep.$dots.append(`
-            <div class="dot" data-step="${i}">
-                <div class="step-index">${i}</div>
-                <div class="step-title">${multistep.$steps.eq(i-1).attr('data-title')}</div>
-            </div>
+            &lt;div class="dot" data-step="${i}">
+                &lt;div class="step-index">${i}&lt;/div>
+                &lt;div class="step-title">${multistep.$steps.eq(i-1).attr('data-title')}&lt;/div>
+            &lt;/div>
         `);
     }
 
@@ -760,10 +788,10 @@ function Wpcf7cfMultistep($multistep, form) {
 
 jQuery(document).ajaxComplete(function(e, xhr, settings){
     if (
-        xhr.hasOwnProperty('responseJSON')          &&
-        xhr.responseJSON != null                    &&
-        xhr.responseJSON.hasOwnProperty('status')   &&
-        xhr.responseJSON.hasOwnProperty('into')     &&
+        xhr.hasOwnProperty('responseJSON')          &amp;&amp;
+        xhr.responseJSON != null                    &amp;&amp;
+        xhr.responseJSON.hasOwnProperty('status')   &amp;&amp;
+        xhr.responseJSON.hasOwnProperty('into')     &amp;&amp;
         xhr.responseJSON.status === "mail_success"
     ) {
         jQuery( xhr.responseJSON.into ).trigger('reset.wpcf7cf');
@@ -826,7 +854,7 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                         var controlWrap = form.get('.wpcf7-form-control-wrap.' + index);
                         controlWrap.find('.wpcf7-form-control').addClass('wpcf7-not-valid');
                         controlWrap.find('span.wpcf7-not-valid-tip').remove();
-                        controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');
+                        controlWrap.append('&lt;span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '&lt;/span>');
 
                     }
                 });
@@ -859,7 +887,7 @@ Wpcf7cfMultistep.prototype.moveToStep = function(step_index) {
     var previousStep = multistep.currentStep;
 
     multistep.currentStep = step_index > multistep.numSteps ? multistep.numSteps
-                                : step_index < 1 ? 1
+                                : step_index &lt; 1 ? 1
                                     : step_index;
 
     // ANIMATION DISABLED FOR NOW cause it's ugly
@@ -875,7 +903,7 @@ Wpcf7cfMultistep.prototype.moveToStep = function(step_index) {
 
     const formEl = multistep.form.$form[0];
     const topOffset = formEl.getBoundingClientRect().top;
-    if (topOffset < 0 && previousStep > 0) {
+    if (topOffset &lt; 0 &amp;&amp; previousStep > 0) {
         formEl.scrollIntoView({behavior: "smooth"});
     }
 
@@ -891,7 +919,7 @@ Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
         if(item.type == 'step') {
             inStep = item.val == step_index+'';
         }
-        return inStep && item.type == 'input';
+        return inStep &amp;&amp; item.type == 'input';
     }).map(function(item) {
         return item.name;
     });
@@ -914,8 +942,8 @@ window.wpcf7cf = {
         let returnHtml = html;
 
         if (
-            oldIndexes && newIndexes &&
-            oldIndexes.length === parentRepeaters.length &&
+            oldIndexes &amp;&amp; newIndexes &amp;&amp;
+            oldIndexes.length === parentRepeaters.length &amp;&amp;
             newIndexes.length === parentRepeaters.length
         ) {
 
@@ -933,13 +961,13 @@ window.wpcf7cf = {
             });
 
             
-            for (let i=0; i<length ; i++) {
+            for (let i=0; i&lt;length ; i++) {
                 const id = Object.keys(parentRepeatersInfo[i])[0];
                 const find = parentRepeatersInfo[i][id][0];
                 const repl = parentRepeatersInfo[i][id][1];
                 replacements.push([
-                    `<span class="wpcf7cf-index wpcf7cf__${id}">${find}<\\/span>`,
-                    `<span class="wpcf7cf-index wpcf7cf__${id}">${repl}</span>`
+                    `&lt;span class="wpcf7cf-index wpcf7cf__${id}">${find}&lt;\\/span>`,
+                    `&lt;span class="wpcf7cf-index wpcf7cf__${id}">${repl}&lt;/span>`
                 ]);
             }
             
@@ -958,7 +986,7 @@ window.wpcf7cf = {
             const $form = jQuery(this);
             // only add form is its class is "wpcf7-form" and if the form was not previously added
             if (
-                $form.hasClass('wpcf7-form') &&
+                $form.hasClass('wpcf7-form') &amp;&amp;
                 !wpcf7cf_forms.some((form)=>{ return form.$form.get(0) === $form.get(0); })
             ) {
                 wpcf7cf_forms.push(new Wpcf7cfForm($form));
@@ -987,7 +1015,7 @@ window.wpcf7cf = {
 
         var sub_conditions = [];
 
-        for(var i = 0;  i < groups.length; i++) {
+        for(var i = 0;  i &lt; groups.length; i++) {
             var g = groups[i];
             var relevant_conditions = conditions.filter(function(condition, i) {
                 return condition.then_field === g.original_name;
@@ -1057,10 +1085,10 @@ window.wpcf7cf = {
             if (type === 'input') {
     
                 // skip unchecked checkboxes and radiobuttons
-                if ( (currentNode.type === 'checkbox' || currentNode.type === 'radio') && !currentNode.checked ) return {};
+                if ( (currentNode.type === 'checkbox' || currentNode.type === 'radio') &amp;&amp; !currentNode.checked ) return {};
     
                 // if multiselect, make sure to add all the values
-                if ( currentNode.multiple && currentNode.options ) {
+                if ( currentNode.multiple &amp;&amp; currentNode.options ) {
                     simplified_dom[name].val = Object.values(currentNode.options).filter(o => o.selected).map(o => o.value)
                 } else {
                     simplified_dom[name].val.push(currentNode.value);
@@ -1115,8 +1143,8 @@ window.wpcf7cf = {
         // update dots
         var $dots = multistep.$dots.find('.dot');
         $dots.removeClass('active').removeClass('completed');
-        for(var step = 1; step <= multistep.numSteps; step++) {
-            if (step < multistep.currentStep) {
+        for(var step = 1; step &lt;= multistep.numSteps; step++) {
+            if (step &lt; multistep.currentStep) {
                 $dots.eq(step-1).addClass('completed');
             } else if (step == multistep.currentStep) {
                 $dots.eq(step-1).addClass('active');
@@ -1129,7 +1157,7 @@ window.wpcf7cf = {
 
         var show_group = true;
 
-        for (var and_rule_i = 0; and_rule_i < condition.and_rules.length; and_rule_i++) {
+        for (var and_rule_i = 0; and_rule_i &lt; condition.and_rules.length; and_rule_i++) {
 
             var condition_ok = false;
 
@@ -1146,13 +1174,13 @@ window.wpcf7cf = {
             operator = operator === '≤' ? 'less than or equals' : operator;
             operator = operator === '≥' ? 'greater than or equals' : operator;
             operator = operator === '>' ? 'greater than' : operator;
-            operator = operator === '<' ? 'less than' : operator;
+            operator = operator === '&lt;' ? 'less than' : operator;
 
-            const $field = operator === 'function' && jQuery(`[name="${inputField.name}"]`).eq(0);
+            const $field = operator === 'function' &amp;&amp; jQuery(`[name="${inputField.name}"]`).eq(0);
 
             condition_ok = this.isConditionTrue(inputField.val,operator,if_val, $field);
 
-            show_group = show_group && condition_ok;
+            show_group = show_group &amp;&amp; condition_ok;
         }
 
         return show_group;
@@ -1169,13 +1197,13 @@ window.wpcf7cf = {
 
         // Considered EMPTY:       []     ['']          [null]        ['',null]    [,,'']
         // Considered NOT EMPTY:   [0]    ['ab','c']    ['',0,null]
-        const valuesAreEmpty = values.length === 0 || values.every((v) => !v&&v!==0); // 0 is not considered empty
+        const valuesAreEmpty = values.length === 0 || values.every((v) => !v&amp;&amp;v!==0); // 0 is not considered empty
 
         // special cases: [] equals '' => TRUE; [] not equals '' => FALSE
-        if (operator === 'equals' && testValue === '' && valuesAreEmpty)  {
+        if (operator === 'equals' &amp;&amp; testValue === '' &amp;&amp; valuesAreEmpty)  {
             return true;
         }
-        if (operator === 'not equals' && testValue === '' && valuesAreEmpty) {
+        if (operator === 'not equals' &amp;&amp; testValue === '' &amp;&amp; valuesAreEmpty) {
             return false;
         }
 
@@ -1199,8 +1227,8 @@ window.wpcf7cf = {
 
         if (
             operator === 'function'
-            && typeof window[testValue] == 'function'
-            && window[testValue]($field) // here we call the actual user defined function
+            &amp;&amp; typeof window[testValue] == 'function'
+            &amp;&amp; window[testValue]($field) // here we call the actual user defined function
         ) {
             condition_ok = true;
         }
@@ -1216,21 +1244,21 @@ window.wpcf7cf = {
         }
 
 
-        for(let i = 0; i < values.length; i++) {
+        for(let i = 0; i &lt; values.length; i++) {
 
             const value = values[i];
 
             const valueNumber = isFinite(parseFloat(value)) ? parseFloat(value) : NaN;
-            const valsAreNumbers = !isNaN(valueNumber) && !isNaN(testValueNumber);
+            const valsAreNumbers = !isNaN(valueNumber) &amp;&amp; !isNaN(testValueNumber);
 
             if (
 
-                operator === 'equals' && value === testValue ||
-                operator === 'equals (regex)' && regex_patt.test(value) ||
-                operator === 'greater than' && valsAreNumbers && valueNumber > testValueNumber ||
-                operator === 'less than' && valsAreNumbers && valueNumber < testValueNumber ||
-                operator === 'greater than or equals' && valsAreNumbers && valueNumber >= testValueNumber ||
-                operator === 'less than or equals' && valsAreNumbers && valueNumber <= testValueNumber
+                operator === 'equals' &amp;&amp; value === testValue ||
+                operator === 'equals (regex)' &amp;&amp; regex_patt.test(value) ||
+                operator === 'greater than' &amp;&amp; valsAreNumbers &amp;&amp; valueNumber > testValueNumber ||
+                operator === 'less than' &amp;&amp; valsAreNumbers &amp;&amp; valueNumber &lt; testValueNumber ||
+                operator === 'greater than or equals' &amp;&amp; valsAreNumbers &amp;&amp; valueNumber >= testValueNumber ||
+                operator === 'less than or equals' &amp;&amp; valsAreNumbers &amp;&amp; valueNumber &lt;= testValueNumber
                 
             ) {
 
@@ -1239,8 +1267,8 @@ window.wpcf7cf = {
 
             } else if (
 
-                operator === 'not equals' && value === testValue ||
-                operator === 'not equals (regex)' && regex_patt.test(value)
+                operator === 'not equals' &amp;&amp; value === testValue ||
+                operator === 'not equals (regex)' &amp;&amp; regex_patt.test(value)
 
             ) {
 
@@ -1384,4 +1412,26 @@ jQuery.fn.wpcf7ExclusiveCheckbox = function() {
         var name = jQuery(this).attr('name');
         jQuery(this).closest('form').find('input:checkbox[name="' + name + '"]').not(this).prop('checked', false).eq(0).change();
     });
-};
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wpcf7cf.html">wpcf7cf</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Sep 07 2020 12:21:51 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

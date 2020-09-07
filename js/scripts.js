@@ -95,13 +95,27 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
@@ -144,7 +158,7 @@ var wpcf7cf_forms = [];
 window.wpcf7cf_dom = {};
 
 var wpcf7cf_reload_dom = function wpcf7cf_reload_dom($form) {
-  wpcf7cf_dom = wpcf7cf.get_simplified_dom_model($form);
+  wpcf7cf_dom = wpcf7cf.get_simplified_dom_model($form[0]);
 };
 
 var wpcf7cf_getFieldsByOriginalName = function wpcf7cf_getFieldsByOriginalName(originalName) {
@@ -305,7 +319,7 @@ Wpcf7cfForm.prototype.displayFields = function () {
     if ($group.is(':animated')) $group.finish(); // stop any current animations on the group
 
     if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) {
-      if ($group.prop('tagName') === 'SPAN') {
+      if ($group.prop('tagName') === 'SPAN' || $group.is(':hidden')) {
         $group.show().trigger('wpcf7cf_show_group');
       } else {
         $group.animate(wpcf7cf_show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
@@ -353,10 +367,12 @@ Wpcf7cfForm.prototype.updateSummaryFields = function () {
   }); // Make sure to add file fields to FormData
 
   jQuery.each(form.$form.find('input[type="file"]'), function (index, el) {
-    if (!el.files.length) return false;
-    var file = el.files[0];
+    if (!el.files.length) return true; // continue
+
     var fieldName = el.name;
-    fd.append(fieldName, new Blob(), file.name);
+    fd.append(fieldName, new Blob(), Array.from(el.files).map(function (file) {
+      return file.name;
+    }).join(', '));
   }); // add file fields to form-data
 
   jQuery.ajax({
@@ -381,12 +397,12 @@ Wpcf7cfForm.prototype.updateHiddenFields = function () {
     var $this = jQuery(this);
 
     if ($this.hasClass('wpcf7cf-hidden')) {
-      hidden_groups.push($this.data('id'));
+      hidden_groups.push($this.attr('data-id'));
       $this.find('input,select,textarea').each(function () {
         hidden_fields.push(jQuery(this).attr('name'));
       });
     } else {
-      visible_groups.push($this.data('id'));
+      visible_groups.push($this.attr('data-id'));
     }
   });
   form.hidden_fields = hidden_fields;
@@ -418,12 +434,12 @@ Wpcf7cfForm.prototype.updateEventListeners = function () {
   form.get('.wpcf7cf-togglebutton').off('click.toggle_wpcf7cf').on('click.toggle_wpcf7cf', function () {
     var $this = jQuery(this);
 
-    if ($this.text() === $this.data('val-1')) {
-      $this.text($this.data('val-2'));
-      $this.val($this.data('val-2'));
+    if ($this.text() === $this.attr('data-val-1')) {
+      $this.text($this.attr('data-val-2'));
+      $this.val($this.attr('data-val-2'));
     } else {
-      $this.text($this.data('val-1'));
-      $this.val($this.data('val-1'));
+      $this.text($this.attr('data-val-1'));
+      $this.val($this.attr('data-val-1'));
     }
   }); // END PRO ONLY
 }; // PRO ONLY
@@ -434,12 +450,15 @@ function Wpcf7cfRepeater($repeater, form) {
   var repeater = this;
   var wpcf7cf_settings = form.settings;
   repeater.form = form;
+  $repeater.parentRepeaters = Array.from($repeater.parents('.wpcf7cf_repeater').map(function () {
+    return this.getAttribute('data-id');
+  })).reverse();
   $repeater.num_subs = 0;
-  $repeater.id = $repeater.data('id');
-  $repeater.orig_id = $repeater.data('orig_data_id');
-  $repeater.min = typeof $repeater.data('min') !== 'undefined' ? parseInt($repeater.data('min')) : 1;
-  $repeater.max = typeof $repeater.data('max') !== 'undefined' ? parseInt($repeater.data('max')) : 200;
-  $repeater.initial_subs = typeof $repeater.data('initial') !== 'undefined' ? parseInt($repeater.data('initial')) : $repeater.min;
+  $repeater.id = $repeater.attr('data-id');
+  $repeater.orig_id = $repeater.attr('data-orig_data_id');
+  $repeater.min = typeof $repeater.attr('data-min') !== 'undefined' ? parseInt($repeater.attr('data-min')) : 1;
+  $repeater.max = typeof $repeater.attr('data-max') !== 'undefined' ? parseInt($repeater.attr('data-max')) : 200;
+  $repeater.initial_subs = typeof $repeater.attr('data-initial') !== 'undefined' ? parseInt($repeater.attr('data-initial')) : $repeater.min;
   if ($repeater.initial_subs > $repeater.max) $repeater.initial_subs = $repeater.max;
   var $repeater_sub = $repeater.children('.wpcf7cf_repeater_sub').eq(0);
   var $repeater_controls = $repeater.children('.wpcf7cf_repeater_controls').eq(0);
@@ -528,17 +547,10 @@ Wpcf7cfRepeater.prototype.getNewName = function (previousName) {
   return newName;
 };
 
-Wpcf7cfRepeater.prototype.updateSubs = function (subs_to_show) {
+Wpcf7cfRepeater.prototype.updateButtons = function () {
   var repeater = this;
   var params = repeater.params;
-  var subs_to_add = subs_to_show - params.$repeater.num_subs;
-
-  if (subs_to_add < 0) {
-    repeater.removeSubs(-subs_to_add);
-  } else if (subs_to_add > 0) {
-    repeater.addSubs(subs_to_add);
-  }
-
+  var num_subs = params.$repeater.num_subs;
   var showButtonRemove = false;
   var showButtonAdd = false;
 
@@ -562,27 +574,60 @@ Wpcf7cfRepeater.prototype.updateSubs = function (subs_to_show) {
     params.$button_remove.hide();
   }
 
-  params.$repeater_count_field.val(subs_to_show);
+  params.$repeater_count_field.val(num_subs);
 };
 
+Wpcf7cfRepeater.prototype.updateSubs = function (subs_to_show) {
+  var repeater = this;
+  var params = repeater.params; // make sure subs_to_show is a valid number
+
+  subs_to_show = subs_to_show < params.$repeater.min ? params.$repeater.min : subs_to_show;
+  subs_to_show = subs_to_show > params.$repeater.max ? params.$repeater.max : subs_to_show;
+  var subs_to_add = subs_to_show - params.$repeater.num_subs;
+
+  if (subs_to_add < 0) {
+    repeater.removeSubs(-subs_to_add);
+  } else if (subs_to_add > 0) {
+    repeater.addSubs(subs_to_add);
+  }
+};
+/**
+ * add Subs to repeater
+ * @param {Number} subs_to_add 
+ * @param {Number} index - zero-based. leave blank (or null) to append at the end
+ */
+
+
 Wpcf7cfRepeater.prototype.addSubs = function (subs_to_add) {
+  var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var $ = jQuery;
   var params = this.params;
   var repeater = this;
   var form = repeater.form;
   var $repeater = params.$repeater;
-  var $repeater_controls = params.$repeater_controls; //jQuery(params.repeater_sub_html.replace(/name="(.*?)"/g,'name="wpcf7cf_repeater['+$repeater.id+']['+$repeater.num_subs+'][$1]" data-original-name="$1"')).hide().insertBefore($repeater_controls).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime);
+  var $repeater_controls = params.$repeater_controls;
+
+  if (subs_to_add + $repeater.num_subs > $repeater.max) {
+    subs_to_add = $repeater.max - $repeater.num_subs;
+  }
 
   var html_str = '';
 
   for (var i = 1; i <= subs_to_add; i++) {
     var sub_suffix = $repeater.num_subs + i;
-    html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g, sub_suffix).replace(new RegExp('\{\{' + $repeater.orig_id + '_index\}\}', 'g'), sub_suffix);
+    html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g, sub_suffix).replace(new RegExp('\{\{' + $repeater.orig_id + '_index\}\}', 'g'), '<span class="wpcf7cf-index wpcf7cf__' + $repeater.orig_id + '">' + sub_suffix + '</span>');
   }
 
-  var $html = jQuery(html_str); // Add the newly created fields to the form
+  var $html = jQuery(html_str);
+  jQuery('> .wpcf7cf_repeater_sub', $repeater).finish(); // finish any currently running animations immediately.
+  // Add the newly created fields to the form
 
-  $html.hide().insertBefore($repeater_controls).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
+  if (index === null) {
+    $html.hide().insertBefore($repeater_controls).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
+  } else {
+    $html.hide().insertBefore(jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(index)).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
+  }
+
   jQuery('.wpcf7cf_repeater', $html).each(function () {
     form.repeaters.push(new Wpcf7cfRepeater(jQuery(this), form));
   });
@@ -590,10 +635,16 @@ Wpcf7cfRepeater.prototype.addSubs = function (subs_to_add) {
     return item.params.$repeater.id;
   })));
   $repeater.num_subs += subs_to_add;
+
+  if (index !== null) {
+    repeater.updateSuffixes();
+  }
+
   window.wpcf7cf.updateMultistepState(form.multistep);
   form.updateGroups();
   form.updateEventListeners();
-  form.displayFields(); // Exclusive Checkbox
+  form.displayFields();
+  repeater.updateButtons(); // Exclusive Checkbox
 
   $html.on('click', '.wpcf7-exclusive-checkbox input:checkbox', function () {
     var name = $(this).attr('name');
@@ -606,13 +657,91 @@ Wpcf7cfRepeater.prototype.addSubs = function (subs_to_add) {
 
   return false;
 };
+/** TODO: implement this */
 
-Wpcf7cfRepeater.prototype.removeSubs = function (num_subs) {
-  var $ = jQuery;
-  var params = this.params;
+
+Wpcf7cfRepeater.prototype.updateSuffixes = function () {
+  // Loop trough all subs
+  //  -- 1. update all fields, groups and repeaters names, id's, for's, ...
+  //  -- 2. loop trough all repeaters
+  //        -- update sub_html template for nested repeater
+  //        -- call updateSuffixes() for nested repeater
+  var $repeater = this.params.$repeater;
+  var num_subs = this.params.$repeater.num_subs;
   var form = this.form;
-  params.$repeater.num_subs -= num_subs;
-  jQuery('> .wpcf7cf_repeater_sub', params.$repeater).slice(-num_subs).animate(wpcf7cf_hide_animation, {
+  var orig_id = $repeater.attr('data-orig_data_id');
+  var repeater_id = $repeater.attr('data-id');
+  var repeater_suffix = repeater_id.replace(orig_id, '');
+  var simplifiedDomArray = Object.values(wpcf7cf.get_simplified_dom_model(form.$form[0]));
+
+  var _loop = function _loop(i) {
+    var $sub = jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(i);
+    var newIndex = i + 1;
+    var currentSuffix = $sub.attr('data-repeater_sub_suffix');
+    var newSuffix = repeater_suffix + '__' + newIndex;
+    $sub.attr('data-repeater_sub_suffix', newSuffix); // update sub attr
+
+    $sub.find('.wpcf7cf__' + orig_id).html(newIndex); // update {{r_index}} parts
+
+    simplifiedDomArray.forEach(function (el) {
+      if (el.suffix !== currentSuffix) return; // TODO: may need an extra check to verify that the element is inside the current repeater
+      // (orig_id) . Otherwise problems may occur if there are repeaters on the same level.
+
+      var newName = el.name.replace(currentSuffix, newSuffix);
+      var pureElName = el.name.replace('[]', '');
+      var pureNewName = newName.replace('[]', '');
+      jQuery('[name="' + el.name + '"]', $sub).attr('name', newName);
+      jQuery('[id="' + el.name + '"]', $sub).attr('id', newName);
+      jQuery('label[for="' + el.name + '"]', $sub).attr('for', newName);
+      var $nested_repeater = jQuery('[data-id="' + el.name + '"]', $sub);
+      $nested_repeater.attr('data-id', newName);
+      jQuery('.wpcf7-form-control-wrap.' + pureElName, $sub).removeClass(pureElName).addClass(pureNewName);
+
+      if (el.type === 'repeater') {
+        var nested_repeater = form.repeaters.find(function (repeater) {
+          return repeater.params.$repeater.get(0) === $nested_repeater.get(0);
+        });
+        if (!nested_repeater) return;
+        nested_repeater.params.repeater_sub_html = wpcf7cf.updateRepeaterSubHTML(nested_repeater.params.repeater_sub_html, currentSuffix, newSuffix, nested_repeater.params.$repeater.parentRepeaters);
+        nested_repeater.updateSuffixes();
+      }
+    });
+  };
+
+  for (var i = 0; i < num_subs; i++) {
+    _loop(i);
+  }
+};
+/**
+ * Return the parent repeaters, order is not guaranteed.
+ */
+
+
+Wpcf7cfRepeater.prototype.getParentRepeaters = function () {
+  var simplifiedDomArray = Object.values(wpcf7cf.get_simplified_dom_model(form.$form[0]));
+  form.repeaters.map(function (repeater) {});
+};
+
+Wpcf7cfRepeater.prototype.removeSubs = function (subs_to_remove) {
+  var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var $ = jQuery;
+  var repeater = this;
+  var params = repeater.params;
+  var form = repeater.form;
+  var $repeater = params.$repeater;
+
+  if ($repeater.num_subs - subs_to_remove < $repeater.min) {
+    subs_to_remove = $repeater.num_subs - $repeater.min;
+  }
+
+  if (index === null) {
+    index = $repeater.num_subs - subs_to_remove;
+  }
+
+  $repeater.num_subs -= subs_to_remove;
+  jQuery('> .wpcf7cf_repeater_sub', $repeater).finish(); // finish any currently running animations immediately.
+
+  jQuery('> .wpcf7cf_repeater_sub', $repeater).slice(index, index + subs_to_remove).animate(wpcf7cf_hide_animation, {
     duration: params.wpcf7cf_settings.animation_intime,
     done: function done() {
       var $this = jQuery(this); //remove the actual fields from the form
@@ -623,6 +752,11 @@ Wpcf7cfRepeater.prototype.removeSubs = function (num_subs) {
       form.updateGroups();
       form.updateEventListeners();
       form.displayFields();
+      repeater.updateButtons();
+
+      if (index !== null) {
+        repeater.updateSuffixes();
+      }
     }
   });
   return false;
@@ -641,12 +775,12 @@ function Wpcf7cfMultistep($multistep, form) {
   multistep.$dots.html('');
 
   for (var i = 1; i <= multistep.numSteps; i++) {
-    multistep.$dots.append("\n            <div class=\"dot\" data-step=\"".concat(i, "\">\n                <div class=\"step-index\">").concat(i, "</div>\n                <div class=\"step-title\">").concat(multistep.$steps.eq(i - 1).data('title'), "</div>\n            </div>\n        "));
+    multistep.$dots.append("\n            <div class=\"dot\" data-step=\"".concat(i, "\">\n                <div class=\"step-index\">").concat(i, "</div>\n                <div class=\"step-title\">").concat(multistep.$steps.eq(i - 1).attr('data-title'), "</div>\n            </div>\n        "));
   }
 
-  multistep.$btn_next.on('click.wpcf7cf_step', /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+  multistep.$btn_next.on('click.wpcf7cf_step', /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default.a.mark(function _callee() {
     var result;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -698,7 +832,8 @@ Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
     var fd = new FormData(); // Make sure to add file fields to FormData
 
     jQuery.each($form.find('[data-id="step-' + step_index + '"] input[type="file"]'), function (index, el) {
-      if (!el.files.length) return false;
+      if (!el.files.length) return true; // = continue
+
       var file = el.files[0];
       var fieldName = el.name;
       fd.append(fieldName, file);
@@ -783,8 +918,49 @@ Wpcf7cfMultistep.prototype.getFieldsInStep = function (step_index) {
   });
 }; // END PRO ONLY
 
+/**
+ * @global
+ * @namespace wpcf7cf
+ */
+
 
 window.wpcf7cf = {
+  updateRepeaterSubHTML: function updateRepeaterSubHTML(html, oldSuffix, newSuffix, parentRepeaters) {
+    var oldIndexes = oldSuffix.split('__');
+    oldIndexes.shift(); // remove first empty element
+
+    var newIndexes = newSuffix.split('__');
+    newIndexes.shift(); // remove first empty element
+
+    var returnHtml = html;
+
+    if (oldIndexes && newIndexes && oldIndexes.length === parentRepeaters.length && newIndexes.length === parentRepeaters.length) {
+      var parentRepeatersInfo = parentRepeaters.map(function (repeaterId, i) {
+        return _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()({}, repeaterId.split('__')[0], [oldIndexes[i], newIndexes[i]]);
+      });
+      var length = parentRepeatersInfo.length;
+      var replacements = oldIndexes.map(function (oldIndex, i) {
+        return ['__' + oldIndexes.slice(0, length - i).join('__'), '__' + newIndexes.slice(0, length - i).join('__')];
+      });
+
+      for (var i = 0; i < length; i++) {
+        var id = Object.keys(parentRepeatersInfo[i])[0];
+        var find = parentRepeatersInfo[i][id][0];
+        var repl = parentRepeatersInfo[i][id][1];
+        replacements.push(["<span class=\"wpcf7cf-index wpcf7cf__".concat(id, "\">").concat(find, "<\\/span>"), "<span class=\"wpcf7cf-index wpcf7cf__".concat(id, "\">").concat(repl, "</span>")]);
+      }
+
+      replacements.forEach(function (_ref3) {
+        var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref3, 2),
+            oldSuffix = _ref4[0],
+            newSuffix = _ref4[1];
+
+        returnHtml = returnHtml.replace(new RegExp(oldSuffix, 'g'), newSuffix);
+      });
+    }
+
+    return returnHtml;
+  },
   // keep this for backwards compatibility
   initForm: function initForm($forms) {
     $forms.each(function () {
@@ -796,6 +972,19 @@ window.wpcf7cf = {
         wpcf7cf_forms.push(new Wpcf7cfForm($form));
       }
     });
+  },
+  getWpcf7cfForm: function getWpcf7cfForm($form) {
+    var matched_forms = wpcf7cf_forms.filter(function (form) {
+      var f1 = form.$form.get(0);
+      var f2 = $form.get(0);
+      return form.$form.get(0) === $form.get(0);
+    });
+
+    if (matched_forms.length) {
+      return matched_forms[0];
+    }
+
+    return false;
   },
   get_nested_conditions: function get_nested_conditions(conditions, $current_form) {
     //loop trough conditions. Then loop trough the dom, and each repeater we pass we should update all sub_values we encounter with __index
@@ -827,26 +1016,35 @@ window.wpcf7cf = {
 
     return sub_conditions;
   },
-  get_simplified_dom_model: function get_simplified_dom_model($current_form) {
-    var currentNode;
-    var ni = document.createNodeIterator($current_form[0], NodeFilter.SHOW_ELEMENT, null, false); //, NodeFilter.SHOW_ELEMENT, function(){ return NodeFilter.FILTER_ACCEPT; }
+  get_simplified_dom_model: function get_simplified_dom_model(currentNode) {
+    var simplified_dom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var parentGroups = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    var parentRepeaters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+    var type = currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') ? 'input' : false;
 
-    var simplified_dom = {};
+    var newParentRepeaters = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(parentRepeaters);
 
-    while (currentNode = ni.nextNode()) {
-      var type = currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') ? 'input' : false;
+    var newParentGroups = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(parentGroups);
 
-      if (!type) {
-        continue;
+    if (type) {
+      var name = type === 'input' ? currentNode.getAttribute('name') : currentNode.dataset.id;
+
+      if (type === 'repeater') {
+        newParentRepeaters.push(name);
       }
 
-      var name = type === 'input' ? currentNode.getAttribute('name') : currentNode.dataset.id; // skip _wpcf7 hidden fields
+      if (type === 'group') {
+        newParentGroups.push(name);
+      } // skip _wpcf7 hidden fields
 
-      if (name.substring(0, 6) === '_wpcf7') continue;
+
+      if (name.substring(0, 6) === '_wpcf7') return {};
       var original_name = type === 'repeater' || type === 'group' ? currentNode.dataset.orig_data_id : type === 'input' ? currentNode.getAttribute('data-orig_name') || name : name;
+      var nameWithoutBrackets = name.replace('[]', '');
+      var originalNameWithoutBrackets = original_name.replace('[]', '');
       var val = type === 'step' ? [currentNode.dataset.id.substring(5)] : [];
-      var original_name_length = original_name == null ? name.length : original_name.length;
-      var suffix = name.substring(original_name_length);
+      var parentGroup = 'parent-group';
+      var suffix = nameWithoutBrackets.replace(originalNameWithoutBrackets, '');
 
       if (!simplified_dom[name]) {
         // init entry
@@ -855,13 +1053,15 @@ window.wpcf7cf = {
           type: type,
           original_name: original_name,
           suffix: suffix,
-          val: val
+          val: val,
+          parentGroups: parentGroups,
+          parentRepeaters: parentRepeaters
         };
       }
 
       if (type === 'input') {
         // skip unchecked checkboxes and radiobuttons
-        if ((currentNode.type === 'checkbox' || currentNode.type === 'radio') && !currentNode.checked) continue; // if multiselect, make sure to add all the values
+        if ((currentNode.type === 'checkbox' || currentNode.type === 'radio') && !currentNode.checked) return {}; // if multiselect, make sure to add all the values
 
         if (currentNode.multiple && currentNode.options) {
           simplified_dom[name].val = Object.values(currentNode.options).filter(function (o) {
@@ -875,6 +1075,10 @@ window.wpcf7cf = {
       }
     }
 
+    Array.from(currentNode.children).forEach(function (childNode) {
+      var dom = wpcf7cf.get_simplified_dom_model(childNode, simplified_dom, newParentGroups, newParentRepeaters);
+      simplified_dom = _objectSpread(_objectSpread({}, dom), simplified_dom);
+    });
     return simplified_dom;
   },
   updateMultistepState: function updateMultistepState(multistep) {
@@ -1022,6 +1226,130 @@ window.wpcf7cf = {
     }
 
     return condition_ok;
+  },
+  getFormObj: function getFormObj($form) {
+    if (typeof $form === 'string') {
+      $form = jQuery($form).eq(0);
+    }
+
+    return wpcf7cf.getWpcf7cfForm($form);
+  },
+  getRepeaterObj: function getRepeaterObj($form, repeaterDataId) {
+    var form = wpcf7cf.getFormObj($form);
+    var repeater = form.repeaters.find(function (repeater) {
+      return repeater.params.$repeater.attr('data-id') === repeaterDataId;
+    });
+    return repeater;
+  },
+  getMultiStepObj: function getMultiStepObj($form) {
+    var form = wpcf7cf.getFormObj($form);
+    return form.multistep;
+  },
+
+  /**
+   * Append a new sub-entry to the repeater with the name `repeaterDataId` inside the form `$form`
+   * @memberof wpcf7cf
+   * @function wpcf7cf.repeaterAddSub
+   * @link
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {String} repeaterDataId - *data-id* attribute of the repeater. Normally this is simply the name of the repeater. However, in case of a nested repeater you need to append the name with the correct suffix. For example `my-nested-repeater__1__3`. Hint (check the `data-id` attribute in the HTML code to find the correct suffix)
+   */
+  repeaterAddSub: function repeaterAddSub($form, repeaterDataId) {
+    var repeater = wpcf7cf.getRepeaterObj($form, repeaterDataId);
+    repeater.updateSubs(repeater.params.$repeater.num_subs + 1);
+  },
+
+  /**
+   * Insert a new sub-entry at the given `index` of the repeater with the name `repeaterDataId` inside the form `$form`
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {String} repeaterDataId - *data-id* attribute of the repeater.
+   * @param {Number} index - position where to insert the new sub-entry within the repeater
+   */
+  repeaterAddSubAtIndex: function repeaterAddSubAtIndex($form, repeaterDataId, index) {
+    var repeater = wpcf7cf.getRepeaterObj($form, repeaterDataId);
+    repeater.addSubs(1, index);
+  },
+
+  /**
+   * Remove the sub-entry at the given `index` of the repeater with the *data-id* attribute of `repeaterDataId` inside the form `$form`
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {String} repeaterDataId - *data-id* attribute of the repeater.
+   * @param {Number} index - position where to insert the new sub-entry within the repeater
+   */
+  repeaterRemoveSubAtIndex: function repeaterRemoveSubAtIndex($form, repeaterDataId, index) {
+    var repeater = wpcf7cf.getRepeaterObj($form, repeaterDataId);
+    repeater.removeSubs(1, index);
+  },
+
+  /**
+   * Remove the last sub-entry from the repeater with the *data-id* attribute of `repeaterDataId` inside the form `$form`
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {String} repeaterDataId - *data-id* attribute of the repeater.
+   * @param {Number} index - position where to insert the new sub-entry within the repeater
+   */
+  repeaterRemoveSub: function repeaterRemoveSub($form, repeaterDataId) {
+    var repeater = wpcf7cf.getRepeaterObj($form, repeaterDataId);
+    repeater.updateSubs(repeater.params.$repeater.num_subs - 1);
+  },
+
+  /**
+   * Set the number of subs for the repeater with the *data-id* attribute of `repeaterDataId` inside the form `$form`.
+   * Subs are either appended to or removed from the end of the repeater.
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {String} repeaterDataId - *data-id* attribute of the repeater.
+   * @param {Number} numberOfSubs - position where to insert the new sub-entry within the repeater
+   */
+  repeaterSetNumberOfSubs: function repeaterSetNumberOfSubs($form, repeaterDataId, numberOfSubs) {
+    var repeater = wpcf7cf.getRepeaterObj($form, repeaterDataId);
+    repeater.updateSubs(numberOfSubs);
+  },
+
+  /**
+   * Move to step number `step`, ignoring any validation.
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {*} step 
+   */
+  multistepMoveToStep: function multistepMoveToStep($form, step) {
+    var multistep = wpcf7cf.getMultiStepObj($form);
+    multistep.moveToStep(step);
+  },
+
+  /**
+   * Validate the current step, and move to step number `step` if validation passes.
+   * @memberof wpcf7cf
+   * @param {String|JQuery} $form - JQuery object or css-selector representing the form
+   * @param {Number} step 
+   */
+  multistepMoveToStepWithValidation: function multistepMoveToStepWithValidation($form, step) {
+    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default.a.mark(function _callee2() {
+      var multistep, result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              multistep = wpcf7cf.getMultiStepObj($form);
+              _context2.next = 3;
+              return multistep.validateStep(multistep.currentStep);
+
+            case 3:
+              result = _context2.sent;
+
+              if (result === 'success') {
+                multistep.moveToStep(step);
+              }
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
   }
 };
 jQuery('.wpcf7-form').each(function () {
@@ -1043,6 +1371,59 @@ jQuery.fn.wpcf7ExclusiveCheckbox = function () {
     jQuery(this).closest('form').find('input:checkbox[name="' + name + '"]').not(this).prop('checked', false).eq(0).change();
   });
 };
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles;
 
 /***/ }),
 
@@ -1090,6 +1471,183 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArray.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableSpread;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toConsumableArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles */ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
+
+var iterableToArray = __webpack_require__(/*! ./iterableToArray */ "./node_modules/@babel/runtime/helpers/iterableToArray.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread */ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
 
 /***/ }),
 

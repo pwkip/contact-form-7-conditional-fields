@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.5
-Stable tag: 1.9.10
+Stable tag: 1.9.11
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,17 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.9.11 (2020-08-19) =
+* PRO:Repeater: Fix bug [group inside repeater not visible when shown by default #64](https://github.com/pwkip/contact-form-7-conditional-fields/issues/64)
+* PRO:Multifile: Add new tag: [multifile]. Allows to upload multiple files at once.
+* PRO:Repeater: Fix bug that occured when removing sub-repeater before the animation of the previous removal was finished.
+* PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterAddSub](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeateraddsub/)
+* PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterAddSubAtIndex](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeateraddsubatindex/)
+* PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterRemoveSub](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeaterremovesub/)
+* PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterRemoveSubAtIndex](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeaterremovesubatindex/)
+* PRO:Multistep: Introduce global JS API function [wpcf7cf.multistepMoveToStep](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/multistepmovetostep/)
+* PRO:Multistep: Introduce global JS API function [wpcf7cf.multistepMoveToStepWithValidation](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/multistepmovetostepwithvalidation/)
 
 = 1.9.10 (2020-08-19) =
 * PRO: Fix multistep bug: general error message does not appear if step validation fails

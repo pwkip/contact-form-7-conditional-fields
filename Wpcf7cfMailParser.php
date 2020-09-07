@@ -21,6 +21,34 @@ class Wpcf7cfMailParser {
 		return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $this->mail_body );
 	}
 
+	/**
+     * Turn [my-files] into [my-files__0] [my-files__1] ..
+     *
+     * @param string $attachments
+     * @param WPCF7_Submission $submission
+     * @return void
+     */
+    public static function split_multifile_attachment_fields($attachments, $form, $submission) {
+        $tags = $form->scan_form_tags();
+        $files = array_keys($submission->uploaded_files());
+        foreach($tags as $tag) {
+            if ($tag->type == 'multifile') {
+                $tag_name = $tag->name;
+                $new_tagnames = array_filter($files, function($file) use ($tag_name) {
+                    $parts = explode('__',$file);
+                    array_pop($parts);
+                    return implode('__',$parts) == $tag_name;
+                });
+
+                $replaced_tags = '['.implode('][',$new_tagnames).']';
+
+                $attachments = str_replace('['.$tag_name.']', $replaced_tags, $attachments);
+            }
+        }
+        
+        return $attachments;
+    }
+
 	function hide_hidden_mail_fields_regex_callback ( $matches ) {
 		$name = $matches[1];
 
