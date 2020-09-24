@@ -32,7 +32,7 @@ class Wpcf7cfMailParser {
         $tags = $form->scan_form_tags();
         $files = array_keys($submission->uploaded_files());
         foreach($tags as $tag) {
-            if ($tag->type == 'multifile') {
+            if ($tag->type == 'multifile' || $tag->type == 'multifile*') {
                 $tag_name = $tag->name;
                 $new_tagnames = array_filter($files, function($file) use ($tag_name) {
                     $parts = explode('__',$file);

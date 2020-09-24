@@ -836,7 +836,9 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                 $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
 
                 wpcf7.setStatus( $form, 'invalid' );
+                multistep.$steps.trigger('wpcf7cf_step_invalid');
 
+                // wpcf7.triggerEvent( data.into, 'invalid', detail );
 
             } else if (json.success) {
 

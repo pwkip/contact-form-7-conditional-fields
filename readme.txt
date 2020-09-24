@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.5
-Stable tag: 1.9.11
+Stable tag: 1.9.12
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -117,7 +117,11 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 
 == Changelog ==
 
-= 1.9.11 (2020-08-19) =
+= 1.9.12 (2020-09-24) =
+* PRO:Multistep: add new event 'wpcf7cf_step_invalid', triggered after step validation failed. [Example usage](https://conditional-fields-cf7.bdwm.be/multistep-automatically-scroll-to-the-first-invalid-field/)
+* PRO:Multifile: Fix bug where multifle* was not sending attachments
+
+= 1.9.11 (2020-09-07) =
 * PRO:Repeater: Fix bug [group inside repeater not visible when shown by default #64](https://github.com/pwkip/contact-form-7-conditional-fields/issues/64)
 * PRO:Multifile: Add new tag: [multifile]. Allows to upload multiple files at once.
 * PRO:Repeater: Fix bug that occured when removing sub-repeater before the animation of the previous removal was finished.
