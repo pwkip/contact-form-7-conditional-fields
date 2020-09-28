@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.5
-Stable tag: 1.9.12
+Stable tag: 1.9.13
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,9 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.9.13 (2020-09-28) =
+* IE11 compatibility: Add Array.from polyfill
 
 = 1.9.12 (2020-09-24) =
 * PRO:Multistep: add new event 'wpcf7cf_step_invalid', triggered after step validation failed. [Example usage](https://conditional-fields-cf7.bdwm.be/multistep-automatically-scroll-to-the-first-invalid-field/)
