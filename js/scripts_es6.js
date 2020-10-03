@@ -528,7 +528,8 @@ function Wpcf7cfRepeater($repeater, form) {
 
     jQuery('> .wpcf7cf_repeater_sub',params.$repeater).eq(0).remove(); // remove the first sub, it's just a template.
 
-    repeater.updateSubs($repeater.initial_subs); 
+    repeater.updateSubs($repeater.initial_subs);
+    repeater.updateButtons();
 
 }
 
@@ -809,6 +810,8 @@ function Wpcf7cfMultistep($multistep, form) {
     }
 
     multistep.$btn_next.on('click.wpcf7cf_step', async function() {
+
+        multistep.$btn_next.addClass('disabled').attr('disabled', true);
         
         var result = await multistep.validateStep(multistep.currentStep);
         if (result === 'success') {
@@ -887,6 +890,8 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
             $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
             $multistep.find('.wpcf7-response-output').remove();
             $multistep.find('.wpcf7-response-output.wpcf7-validation-errors').removeClass('wpcf7-validation-errors');
+
+            multistep.$btn_next.removeClass('disabled').attr('disabled', false);
 
             if (!json.success) {
                 var checkError = 0;
@@ -1093,7 +1098,7 @@ window.wpcf7cf = {
 
     get_simplified_dom_model : function(currentNode, simplified_dom = {}, parentGroups = [], parentRepeaters = []) {
 
-        const type = currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' :
+        const type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' :
             currentNode.dataset.class == 'wpcf7cf_group' ? 'group' :
             currentNode.className == 'wpcf7cf_step' ? 'step' :
             currentNode.hasAttribute('name') ? 'input' : false;

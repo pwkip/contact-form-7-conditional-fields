@@ -623,6 +623,7 @@ function Wpcf7cfRepeater($repeater, form) {
   jQuery('> .wpcf7cf_repeater_sub', params.$repeater).eq(0).remove(); // remove the first sub, it's just a template.
 
   repeater.updateSubs($repeater.initial_subs);
+  repeater.updateButtons();
 }
 
 Wpcf7cfRepeater.prototype.getNewName = function (previousName) {
@@ -875,17 +876,18 @@ function Wpcf7cfMultistep($multistep, form) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
+            multistep.$btn_next.addClass('disabled').attr('disabled', true);
+            _context.next = 3;
             return multistep.validateStep(multistep.currentStep);
 
-          case 2:
+          case 3:
             result = _context.sent;
 
             if (result === 'success') {
               multistep.moveToStep(multistep.currentStep + 1);
             }
 
-          case 4:
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -945,6 +947,7 @@ Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
       $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
       $multistep.find('.wpcf7-response-output').remove();
       $multistep.find('.wpcf7-response-output.wpcf7-validation-errors').removeClass('wpcf7-validation-errors');
+      multistep.$btn_next.removeClass('disabled').attr('disabled', false);
 
       if (!json.success) {
         var checkError = 0;
@@ -1112,7 +1115,7 @@ window.wpcf7cf = {
     var simplified_dom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var parentGroups = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
     var parentRepeaters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-    var type = currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') ? 'input' : false;
+    var type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') ? 'input' : false;
 
     var newParentRepeaters = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(parentRepeaters);
 
