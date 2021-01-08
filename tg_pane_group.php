@@ -6,17 +6,17 @@
             <tbody>
 
             <tr>
-                <th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label></th>
+                <th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php _e( 'Name', 'cf7-conditional-fields' ); ?></label></th>
                 <td><input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /></td>
             </tr>
 
             <tr>
-                <th scope="row"><label for="clear_on_hide"><?php echo esc_html( __( 'Clear on hide', 'contact-form-7' ) ); ?></label></th>
+                <th scope="row"><label for="clear_on_hide"><?php _e( 'Clear on hide', 'cf7-conditional-fields' ); ?></label></th>
                 <td><input type="checkbox" name="clear_on_hide" class="option" id="clear_on_hide" /></td>
             </tr>
 
             <tr>
-                <th scope="row"><label for="inline"><?php echo esc_html( __( 'Inline', 'contact-form-7' ) ); ?></label></th>
+                <th scope="row"><label for="inline"><?php _e( 'Inline', 'cf7-conditional-fields' ); ?></label></th>
                 <td><input type="checkbox" name="inline" class="option" id="inline" /></td>
             </tr>
 
@@ -29,7 +29,7 @@
     <input type="text" name="<?php echo $type; ?>" class="tag code" readonly="readonly" onfocus="this.select()" />
 
     <div class="submitbox">
-        <input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
+        <input type="button" class="button button-primary insert-tag" value="<?php _e( 'Insert Tag', 'cf7-conditional-fields' ); ?>" />
     </div>
 
     <br class="clear" />
