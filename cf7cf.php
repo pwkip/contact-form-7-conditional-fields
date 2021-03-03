@@ -240,6 +240,7 @@ class CF7CF {
 		$props = $form->get_properties();
 		$mails = ['mail','mail_2','messages'];
 		foreach ($mails as $mail) {
+            if (!is_array($props[$mail])) { continue; }
 			foreach ($props[$mail] as $key=>$val) {
 
                 $parser = new Wpcf7cfMailParser($val, $this->visible_groups, $this->hidden_groups, $this->repeaters, $_POST);
@@ -404,6 +405,7 @@ function wpcf7cf_properties($properties, $wpcf7form) {
 	    			if ($i==0) continue;
 					else if ($tag_part == 'inline') $tag_html_type = 'span';
 					else if ($tag_part == 'clear_on_hide') $tag_html_data[] = 'data-clear_on_hide';
+					else if ($tag_part == 'disable_on_hide' && WPCF7CF_IS_PRO) $tag_html_data[] = 'data-disable_on_hide';
 			    }
 
 			    array_push($stack,$tag_html_type);

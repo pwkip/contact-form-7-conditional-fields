@@ -87,15 +87,20 @@ function wpcf7cf_options_page() {
     <div class="wrap wpcf7cf-admin-wrap">
         <h2><?php _e( 'Contact Form 7 - Conditional Fields Settings', 'cf7-conditional-fields'); ?></h2>
         <?php if (!$settings['notice_dismissed']) { ?>
-        <div class="wpcf7cf-options-notice notice notice-warning is-dismissible"><div style="padding: 10px 0;"><?php _e( '<strong>Notice</strong>: These are global settings for Contact Form 7 - Conditional Fields.', 'cf7-conditional-fields'); ?> <br><br><strong><?php _e( 'How to create/edit conditional fields?', 'cf7-conditional-fields'); ?></strong>
-            <ol>
-                <li><?php _e( 'Create a new Contact Form or edit an existing one', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Create at least one [group] inside the form', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Save the Contact Form', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Go to the <strong><em>Conditional Fields</em></strong> Tab', 'cf7-conditional-fields'); ?></li>
-            </ol>
-                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank"><?php _e( 'Show me an example', 'cf7-conditional-fields'); ?></a> | <a class="notice-dismiss-2" href="#"><?php _e( 'Dismiss notice', 'cf7-conditional-fields'); ?></a>
-        </div></div>
+        <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="">
+            <div style="padding: 10px 0;">
+                <?php _e( '<strong>Notice</strong>: These are global settings for Contact Form 7 - Conditional Fields.', 'cf7-conditional-fields'); ?>
+                <br><br>
+                <strong><?php _e( 'How to create/edit conditional fields?', 'cf7-conditional-fields'); ?></strong>
+                <ol>
+                    <li><?php _e( 'Create a new Contact Form or edit an existing one', 'cf7-conditional-fields'); ?></li>
+                    <li><?php _e( 'Create at least one [group] inside the form', 'cf7-conditional-fields'); ?></li>
+                    <li><?php _e( 'Save the Contact Form', 'cf7-conditional-fields'); ?></li>
+                    <li><?php _e( 'Go to the <strong><em>Conditional Fields</em></strong> Tab', 'cf7-conditional-fields'); ?></li>
+                </ol>
+                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank"><?php _e( 'Show me an example', 'cf7-conditional-fields'); ?></a> | <a class="notice-dismiss-alt" href="#"><?php _e( 'Dismiss notice', 'cf7-conditional-fields'); ?></a>
+            </div>
+        </div>
         <?php } ?>
         <form action="options.php" method="post">
             <?php settings_fields(WPCF7CF_OPTIONS); ?>
@@ -283,7 +288,10 @@ function wpcf7cf_options_sanitize($input) {
 
 add_action( 'wp_ajax_wpcf7cf_dismiss_notice', 'wpcf7cf_dismiss_notice' );
 function wpcf7cf_dismiss_notice() {
+    $notice_id = sanitize_text_field($_POST['noticeId'] ?? '');
+    $notice_suffix = $notice_id ? '_'.$notice_id : $notice_id;
+
     $settings = wpcf7cf_get_settings();
-    $settings['notice_dismissed'] = true;
+    $settings['notice_dismissed'.$notice_suffix] = true;
     wpcf7cf_set_options($settings);
 }

@@ -277,3 +277,47 @@ function print_entries_html($form, $wpcf7cf_entries = false) {
 		echo '</div>';
 	}
 }
+
+add_action('admin_notices', function () {
+
+	$settings = wpcf7cf_get_settings();
+
+	$nid = 'install-cf7';
+
+	if (!defined('WPCF7_VERSION') && empty($settings['notice_dismissed_'.$nid])) {
+		?>
+			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
+				<p>
+					<strong>Conditional Fields for Contact Form 7</strong> depends on Contact Form 7. Please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">Contact Form 7</a>.
+				</p>
+			</div>
+		<?php
+		return;
+	}
+
+	$nid = 'rollback-cf7-'.WPCF7CF_CF7_MAX_VERSION;
+	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '<' ) && empty($settings['notice_dismissed_'.$nid]) ) {
+		?>
+			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
+				<p>
+					<strong>Conditional Fields for Contact Form 7</strong> is not tested with your current version of Contact Form 7.
+					If you notice any problems with your forms, please roll back to
+					<a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>.
+				</p>
+			</div>
+		<?php
+	}
+
+	$nid = 'update-cf7-'.WPCF7CF_CF7_MAX_VERSION;
+	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '>' ) && empty($settings['notice_dismissed_'.$nid]) ) {
+		?>
+			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
+				<p>
+					<strong>Conditional Fields for Contact Form 7</strong> is fully compatible and tested with Contact Form 7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?>.
+					Compatibility with other versions of CF7 is not guaranteed, so please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>
+				</p>
+			</div>
+		<?php
+	}
+
+});

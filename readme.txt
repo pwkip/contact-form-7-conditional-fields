@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 4.1
 Tested up to: 5.5
-Stable tag: 1.9.14
+Stable tag: 1.9.15
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,15 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 2. Defining rules to show/hide groups of input elements in the backend interface
 
 == Changelog ==
+
+= 1.9.15 (2021-03-03) =
+* PRO: add [disable_on_hide](https://conditional-fields-cf7.bdwm.be/disable_on_hide/) attribute, which allows using multiple fields with the same name.
+* Make plugin translatable. Big thanks to Yordan Soares for the [PR](https://github.com/pwkip/contact-form-7-conditional-fields/pull/73) 
+* Fix [PHP Error if all mails are disabled](https://github.com/pwkip/contact-form-7-conditional-fields/issues/68)
+* PRO: Fix [rename $settings to $wpcf7cf_settings](https://github.com/pwkip/contact-form-7-conditional-fields/issues/75)
+* Compatibility with [CF7 Smart-grid layout plugin](https://wordpress.org/support/topic/rule-sets-only-saving-when-in-text-mode/)
+* Added global variable WPCF7CF_CF7_MAX_VERSION to indicate latest version of CF7 that was succesfully tested with this plugin.
+* Show notice in admin if the current CF7 version is anything other than WPCF7CF_CF7_MAX_VERSION
 
 = 1.9.14 (2020-10-03) =
 * PRO:Repeater: Hide Remove button initially when repeater has min:0

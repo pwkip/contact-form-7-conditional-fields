@@ -15,8 +15,15 @@
                 <td><input type="checkbox" name="clear_on_hide" class="option" id="clear_on_hide" /></td>
             </tr>
 
+            <?php if (WPCF7CF_IS_PRO) { ?>
             <tr>
-                <th scope="row"><label for="inline"><?php _e( 'Inline', 'cf7-conditional-fields' ); ?></label></th>
+                <th scope="row"><label for="disable_on_hide"><?php echo esc_html( __( 'Disable on hide', 'cf7-conditional-fields' ) ); ?></label></th>
+                <td><input type="checkbox" name="disable_on_hide" class="option" id="disable_on_hide" /></td>
+            </tr>
+            <?php } ?>
+
+            <tr>
+                <th scope="row"><label for="inline"><?php echo esc_html( __( 'Inline', 'cf7-conditional-fields' ) ); ?></label></th>
                 <td><input type="checkbox" name="inline" class="option" id="inline" /></td>
             </tr>
 

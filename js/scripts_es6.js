@@ -274,13 +274,20 @@ Wpcf7cfForm.prototype.displayFields = function() {
 
     form.$groups.each(function (index) {
         var $group = jQuery(this);
-        if ($group.is(':animated')) $group.finish(); // stop any current animations on the group
+        if ($group.is(':animated')) {
+            $group.finish(); // stop any current animations on the group
+        }
         if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) {
             if ($group.prop('tagName') === 'SPAN' || $group.is(':hidden')) {
                 $group.show().trigger('wpcf7cf_show_group');
             } else {
                 $group.animate(wpcf7cf_show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
             }
+
+            if($group.attr('data-disable_on_hide') !== undefined) {
+                $group.find(':input').prop('disabled', false);
+            }
+
         } else if ($group.css('display') !== 'none' && $group.hasClass('wpcf7cf-hidden')) {
 
             if ($group.attr('data-clear_on_hide') !== undefined) {
@@ -303,8 +310,7 @@ Wpcf7cfForm.prototype.displayFields = function() {
                     }
                 });
 
-                $inputs.change();
-                //display_fields();
+                $inputs.trigger('change');
             }
 
             if ($group.prop('tagName') === 'SPAN') {
@@ -312,7 +318,6 @@ Wpcf7cfForm.prototype.displayFields = function() {
             } else {
                 $group.animate(wpcf7cf_hide_animation, animation_outtime).trigger('wpcf7cf_hide_group'); // hide
             }
-
         }
     });
 
@@ -362,16 +367,21 @@ Wpcf7cfForm.prototype.updateHiddenFields = function() {
     var hidden_fields = [];
     var hidden_groups = [];
     var visible_groups = [];
+    var disabled_fields = [];
 
     form.$groups.each(function () {
-        var $this = jQuery(this);
-        if ($this.hasClass('wpcf7cf-hidden')) {
-            hidden_groups.push($this.attr('data-id'));
-            $this.find('input,select,textarea').each(function () {
+        var $group = jQuery(this);
+        if ($group.hasClass('wpcf7cf-hidden')) {
+            hidden_groups.push($group.attr('data-id'));
+            $group.find('input,select,textarea').each(function () {
                 hidden_fields.push(jQuery(this).attr('name'));
             });
+            if($group.attr('data-disable_on_hide') !== undefined) {
+                console.log('disabling');
+                $group.find(':input').prop('disabled', true);
+            }
         } else {
-            visible_groups.push($this.attr('data-id'));
+            visible_groups.push($group.attr('data-id'));
         }
     });
 
@@ -990,6 +1000,14 @@ Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
  */
 window.wpcf7cf = {
 
+    hideGroup : function($group, animate) {
+
+    },
+
+    showGroup : function($group, animate) {
+
+    },
+
     updateRepeaterSubHTML : function(html, oldSuffix, newSuffix, parentRepeaters) {
         const oldIndexes = oldSuffix.split('__');
         oldIndexes.shift(); // remove first empty element
@@ -1101,7 +1119,7 @@ window.wpcf7cf = {
         const type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' :
             currentNode.dataset.class == 'wpcf7cf_group' ? 'group' :
             currentNode.className == 'wpcf7cf_step' ? 'step' :
-            currentNode.hasAttribute('name') ? 'input' : false;
+            currentNode.hasAttribute('name') && !currentNode.disabled ? 'input' : false;
 
         let newParentRepeaters = [...parentRepeaters];
         let newParentGroups = [...parentGroups];
@@ -1456,7 +1474,7 @@ jQuery('.wpcf7-form').each(function(){
 
 // Call displayFields again on all forms
 // Necessary in case some theme or plugin changed a form value by the time the entire page is fully loaded.
-jQuery('document').ready(function() {
+jQuery('document').on('ready',function() {
     wpcf7cf_forms.forEach(function(f){
         f.displayFields();
     });

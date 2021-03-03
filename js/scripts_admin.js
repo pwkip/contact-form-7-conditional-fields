@@ -16,6 +16,9 @@ wpcf7cf.$addButton = jQuery('#wpcf7cf-add-button').eq(0);
 wpcf7cf.$maxReachedWarning = jQuery('#wpcf7cf-a-lot-of-conditions').eq(0);
 wpcf7cf.$formEditorForm = jQuery('#wpcf7-admin-form-element').eq(0);
 
+// Smart Grid compat https://wordpress.org/support/topic/rule-sets-only-saving-when-in-text-mode/
+if(jQuery('#cf7sg-editor').length>0) wpcf7cf.$formEditorForm = jQuery('form#post').eq(0);
+
 wpcf7cf.$if_values = jQuery('.if-value'); // gets updated now and then
 
 wpcf7cf.regexCondition = /(?:show \[([^\]]*?)\]) if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/g;
@@ -381,24 +384,24 @@ wpcf7cf.$formEditorForm.on('submit', function() {
 
 
 // ------------------------------------
-//            OPTIONS PAGE
+//    OPTIONS PAGE / DISMISS NOTICES
 // ------------------------------------
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function($) {
 
-    jQuery('.wpcf7cf-options-notice .notice-dismiss-2').click(function () {
-        jQuery('.wpcf7cf-options-notice .notice-dismiss').click();
+    $('.notice-dismiss,.notice-dismiss-alt', '.wpcf7cf-admin-notice').click(function () {
+        wpcf7cf_dismiss_notice(
+            $(this).closest('.wpcf7cf-admin-notice').data('noticeId')
+        );
     });
 
-    jQuery('.wpcf7cf-options-notice .notice-dismiss').click(function () {
-        wpcf7cf_dismiss_notice();
-    });
+    function wpcf7cf_dismiss_notice(noticeId) {
 
-    function wpcf7cf_dismiss_notice() {
+        if (noticeId === '') {
+            $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
+        }
 
-        jQuery('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
-
-        jQuery.post(ajaxurl, {action:'wpcf7cf_dismiss_notice'}, function(response) {
+        $.post(ajaxurl, { action:'wpcf7cf_dismiss_notice', noticeId:noticeId }, function(response) {
             // nothing to do. dismiss_notice option should be set to TRUE server side by now.
         });
 
