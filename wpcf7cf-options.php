@@ -70,31 +70,31 @@ function wpcf7cf_load_page_options_wp_admin_style() {
 
 add_action('admin_menu', 'wpcf7cf_admin_add_page');
 function wpcf7cf_admin_add_page() {
-    add_submenu_page('wpcf7', 'Conditional Fields', 'Conditional Fields', WPCF7_ADMIN_READ_WRITE_CAPABILITY, 'wpcf7cf', 'wpcf7cf_options_page' );
+    add_submenu_page('wpcf7', __( 'Conditional Fields', 'cf7-conditional-fields' ), __( 'Conditional Fields', 'cf7-conditional-fields' ), WPCF7_ADMIN_READ_WRITE_CAPABILITY, 'wpcf7cf', 'wpcf7cf_options_page' );
 }
 
 function wpcf7cf_options_page() {
     $settings = wpcf7cf_get_settings();
 
     if (isset($_POST['reset'])) {
-        echo '<div id="message" class="updated fade"><p><strong>Settings restored to defaults</strong></p></div>';
+        echo '<div id="message" class="updated fade"><p><strong>' . __( 'Settings restored to defaults', 'cf7-conditional-fields' ) . '</strong></p></div>';
     } else if (isset($_REQUEST['settings-updated'])) {
-        echo '<div id="message" class="updated fade"><p><strong>Settings updated</strong></p></div>';
+        echo '<div id="message" class="updated fade"><p><strong>' . __( 'Settings updated', 'cf7-conditional-fields' ) . '</strong></p></div>';
     }
 
     ?>
 
     <div class="wrap wpcf7cf-admin-wrap">
-        <h2>Contact Form 7 - Conditional Fields Settings</h2>
+        <h2><?php _e( 'Contact Form 7 - Conditional Fields Settings', 'cf7-conditional-fields'); ?></h2>
         <?php if (!$settings['notice_dismissed']) { ?>
-        <div class="wpcf7cf-options-notice notice notice-warning is-dismissible"><div style="padding: 10px 0;"><strong>Notice</strong>: These are global settings for Contact Form 7 - Conditional Fields. <br><br><strong>How to create/edit conditional fields?</strong>
+        <div class="wpcf7cf-options-notice notice notice-warning is-dismissible"><div style="padding: 10px 0;"><?php _e( '<strong>Notice</strong>: These are global settings for Contact Form 7 - Conditional Fields.', 'cf7-conditional-fields'); ?> <br><br><strong><?php _e( 'How to create/edit conditional fields?', 'cf7-conditional-fields'); ?></strong>
             <ol>
-                <li>Create a new Contact Form or edit an existing one</li>
-                <li>Create at least one [group] inside the form</li>
-                <li>Save the Contact Form</li>
-                <li>go to the <strong><em>Conditional Fields</em></strong> Tab</li>
+                <li><?php _e( 'Create a new Contact Form or edit an existing one', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Create at least one [group] inside the form', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Save the Contact Form', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Go to the <strong><em>Conditional Fields</em></strong> Tab', 'cf7-conditional-fields'); ?></li>
             </ol>
-                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank">Show me an example</a> | <a class="notice-dismiss-2" href="#">Dismiss notice</a>
+                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank"><?php _e( 'Show me an example', 'cf7-conditional-fields'); ?></a> | <a class="notice-dismiss-2" href="#"><?php _e( 'Dismiss notice', 'cf7-conditional-fields'); ?></a>
         </div></div>
         <?php } ?>
         <form action="options.php" method="post">
@@ -104,23 +104,23 @@ function wpcf7cf_options_page() {
 
             <?php
 
-            echo '<h3>Default animation Settings</h3>';
+            echo '<h3>' . __( 'Default animation Settings', 'cf7-conditional-fields') . '</h3>';
             wpcf7cf_input_fields_wrapper_start();
 
             wpcf7cf_input_select('animation', array(
-                'label' => 'Animation',
-                'description' => 'Use animations while showing/hiding groups',
-                'select_options' => array('yes' => 'Enabled', 'no'=> 'Disabled')
+                'label' => __( 'Animation', 'cf7-conditional-fields'),
+                'description' => __( 'Use animations while showing/hiding groups', 'cf7-conditional-fields'),
+                'select_options' => array('yes' => __( 'Enabled', 'cf7-conditional-fields'), 'no'=> __( 'Disabled', 'cf7-conditional-fields'))
             ));
 
             wpcf7cf_input_field('animation_intime', array(
-                'label' => 'Animation In time',
-                'description' => 'A positive integer value indicating the time, in milliseconds, it will take for each group to show.',
+                'label' => __( 'Animation In time', 'cf7-conditional-fields'),
+                'description' => __( 'A positive integer value indicating the time, in milliseconds, it will take for each group to show.', 'cf7-conditional-fields'),
             ));
 
             wpcf7cf_input_field('animation_outtime', array(
-                'label' => 'Animation Out Time',
-                'description' => 'A positive integer value indicating the time, in milliseconds, it will take for each group to hide.',
+                'label' => __( 'Animation Out Time', 'cf7-conditional-fields'),
+                'description' => __( 'A positive integer value indicating the time, in milliseconds, it will take for each group to hide.', 'cf7-conditional-fields'),
             ));
 
             wpcf7cf_input_fields_wrapper_end();
@@ -128,28 +128,30 @@ function wpcf7cf_options_page() {
 
             if (!WPCF7CF_IS_PRO) {
             ?>
-            <h3>Conditional Fields PRO</h3>
-            Get conditional Fields PRO to unlock the full potential of CF7
+            <h3><?php _e( 'Conditional Fields PRO', 'cf7-conditional-fields'); ?></h3>
+            <?php _e( 'Get Conditional Fields PRO to unlock the full potential of CF7', 'cf7-conditional-fields'); ?>
             <ul class="wpcf7cf-list">
-                <li>Repeaters</li>
-                <li>Regular expressions</li>
-                <li>Togglebuttons</li>
-                <li>Additional operators <code>&lt;</code> <code>&gt;</code> <code>&le;</code> <code>&ge;</code> <code>is empty</code></li>
-                <li>Multistep (with Summary)</li>
-                <li>More comming soon (Calculated Fields, ...)</li>
+                <li><?php _e( 'Repeaters', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Regular expressions', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Toggle buttons', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'Additional operators', 'cf7-conditional-fields'); ?>< <code>&lt;</code> <code>&gt;</code> <code>&le;</code> <code>&ge;</code> <code><?php _e( 'is empty', 'cf7-conditional-fields'); ?></code></li>
+                <li><?php _e( 'Multistep (with Summary)', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
             </ul>
-            <p><a target="_blank" class="button button-primary" href="https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/">Get PRO</a></p>
+            <p><a target="_blank" class="button button-primary" href="https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
             <?php
             }
             do_action('wpcf7cf_after_animation_settings');
 
-            echo '<h3>Advanced Settings</h3>';
+            echo '<h3>' . __( 'Advanced Settings', 'cf7-conditional-fields') . '</h3>';
             wpcf7cf_input_fields_wrapper_start();
 
             wpcf7cf_input_select('conditions_ui', array(
-                'label' => 'Conditonal Fields UI',
-                'description' => 'If you want to add more than '.WPCF7CF_MAX_RECOMMENDED_CONDITIONS.' conditions, it\'s recommended to switch to <strong>Text mode</strong> mode for better performance.',
-                'select_options' => array('normal'=> 'Normal', 'text_only' => 'Text mode')
+                'label' => __( 'Conditional Fields UI', 'cf7-conditional-fields'),
+                'description' => sprintf( 
+                    // translators: max recommended conditions
+                    __( 'If you want to add more than %s conditions, it\'s recommended to switch to <strong>Text mode</strong> mode for better performance.', 'cf7-conditional-fields' ), WPCF7CF_MAX_RECOMMENDED_CONDITIONS ),
+                'select_options' => array('normal'=> __( 'Normal', 'cf7-conditional-fields'), 'text_only' => __( 'Text mode', 'cf7-conditional-fields'))
             ));
             
             wpcf7cf_input_fields_wrapper_end();
@@ -160,17 +162,17 @@ function wpcf7cf_options_page() {
 
         </form></div>
 
-    <h3>Restore Default Settings</h3>
+    <h3><?php _e( 'Restore Default Settings', 'cf7-conditional-fields' ); ?></h3>
     <form method="post" id="reset-form" action="">
         <p class="submit">
-            <input name="reset" class="button button-secondary" type="submit" value="Restore defaults" >
+            <input name="reset" class="button button-secondary" type="submit" value="<?php _e( 'Restore defaults', 'cf7-conditional-fields' ); ?>" >
             <input type="hidden" name="action" value="reset" />
         </p>
     </form>
     <script>
         (function($){
             $('#reset-form').submit(function() {
-                return confirm('Are you sure you want to reset the plugin settings to the default values? All changes you have previously made will be lost.');
+                return confirm( __( 'Are you sure you want to reset the plugin settings to the default values? All changes you have previously made will be lost.', 'cf7-conditional-fields' ) );
             });
         }(jQuery))
     </script>
@@ -220,7 +222,7 @@ function wpcf7cf_input_field($slug, $args) {
         <td>
             <input type="text" data-default-value="<?php echo $default ?>" value="<?php echo $settings[$slug] ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
             <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">
-                <?php echo $description ?><?php if (!empty($default)) echo ' (Default: '.$default.')' ?>
+                <?php echo $description ?><?php if (!empty($default)) echo ' (' . __( 'Default:', 'cf7-conditional-fields' ) . ' '.$default.')' ?>
             </p>
         </td>
     </tr>
@@ -258,7 +260,7 @@ function wpcf7cf_input_select($slug, $args) {
                     <?php } ?>
                 </select>
                 <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">
-                    <?php echo $description ?><?php if (!empty($default)) echo ' (Default: '.$select_options[$default].')' ?>
+                    <?php echo $description ?><?php if (!empty($default)) echo ' (' . __( 'Default:', 'cf7-conditional-fields' ) . ' '.$select_options[$default].')' ?>
                 </p>
             </td>
         </tr>

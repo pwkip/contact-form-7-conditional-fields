@@ -125,7 +125,7 @@ class CF7CF {
             return;
 
         wpcf7_add_tag_generator('group',
-            __('Conditional Fields Group', 'wpcf7cf'),
+            __('Conditional Fields Group', 'cf7-conditional-fields'),
             'wpcf7-tg-pane-group',
             array(__CLASS__, 'tg_pane')
         );
@@ -137,7 +137,7 @@ class CF7CF {
         $args = wp_parse_args( $args, array() );
         $type = 'group';
 
-        $description = __( "Generate a group tag to group form elements that can be shown conditionally.", 'cf7cf' );
+        $description = __( "Generate a group tag to group form elements that can be shown conditionally.", 'cf7-conditional-fields' );
 
         include 'tg_pane_group.php';
     }
