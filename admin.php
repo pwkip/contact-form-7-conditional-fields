@@ -3,6 +3,10 @@
 add_action( 'admin_enqueue_scripts', 'wpcf7cf_admin_enqueue_scripts', 11 ); // set priority so scripts and styles get loaded later.
 
 function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
+
+	wp_enqueue_script('cf7cf-scripts-admin-all-pages', wpcf7cf_plugin_url( 'js/scripts_admin_all_pages.js' ),array( 'jquery' ), WPCF7CF_VERSION,true);
+
+
 	if ( false === strpos( $hook_suffix, 'wpcf7' ) ) {
 		return; //don't load styles and scripts if this isn't a CF7 page.
 	}
@@ -300,9 +304,9 @@ add_action('admin_notices', function () {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is not tested with your current version of Contact Form 7.
-					If you notice any problems with your forms, please roll back to
-					<a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>.
+					<strong>Conditional Fields for Contact Form 7</strong> is not yet compatible with your current version of Contact Form 7.
+					<br>If you notice any problems with your forms, please roll back to Contact Form 7 <strong>version <?php echo WPCF7CF_CF7_MAX_VERSION ?></strong>.
+					<br>For a quick and safe rollback, we recommend <a href="https://wordpress.org/plugins/wp-rollback/" target="_blank">WP Rollback</a>.
 				</p>
 			</div>
 		<?php
@@ -314,7 +318,7 @@ add_action('admin_notices', function () {
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>
 					<strong>Conditional Fields for Contact Form 7</strong> is fully compatible and tested with Contact Form 7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?>.
-					Compatibility with other versions of CF7 is not guaranteed, so please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>
+					<br>Compatibility with other versions of CF7 is not guaranteed, so please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>
 				</p>
 			</div>
 		<?php
