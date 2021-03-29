@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 5.7
-Stable tag: 1.9.16
+Stable tag: 2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -115,9 +115,22 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 1. Conditional fields in action
 2. Defining rules to show/hide groups of input elements in the backend interface
 
+== Upgrade Notice ==
+
+= 2.0 =
+
+Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
+
 == Changelog ==
 
+= 2.0 (2021-03-29) =
+* WARNING! 2.0 requires at least Contact Form 7 version 5.4 to work!
+* Make plugin compatible with CF7 5.4
+* Modify wpcf7cf_generate_summary function, so it can be used without $_POST
+* fix animaton when showing group
 
+= 1.9.16 (2021-03-09) =
+* Make notice dismissable
 
 = 1.9.15 (2021-03-03) =
 * PRO: add [disable_on_hide](https://conditional-fields-cf7.bdwm.be/disable_on_hide/) attribute, which allows using multiple fields with the same name.

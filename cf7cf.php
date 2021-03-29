@@ -249,9 +249,6 @@ class CF7CF {
 				$props[$mail][$key] = $parser->getParsedMail();
             }
 
-            if (isset($props[$mail]['attachments'])) {
-                $props[$mail]['attachments'] = Wpcf7cfMailParser::split_multifile_attachment_fields($props[$mail]['attachments'], $form, $submission);
-            }
 
         }
 

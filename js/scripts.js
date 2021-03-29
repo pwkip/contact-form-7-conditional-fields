@@ -122,6 +122,36 @@ var cf7signature_resized = 0; // for compatibility with contact-form-7-signature
 var wpcf7cf_timeout;
 var wpcf7cf_change_time_ms = 100;
 
+if (window.wpcf7 && !wpcf7.setStatus) {
+  wpcf7.setStatus = function (form, status) {
+    form = form.length ? form[0] : form; // if form is a jQuery object, only grab te html-element
+
+    var defaultStatuses = new Map([// 0: Status in API response, 1: Status in HTML class
+    ['init', 'init'], ['validation_failed', 'invalid'], ['acceptance_missing', 'unaccepted'], ['spam', 'spam'], ['aborted', 'aborted'], ['mail_sent', 'sent'], ['mail_failed', 'failed'], ['submitting', 'submitting'], ['resetting', 'resetting']]);
+
+    if (defaultStatuses.has(status)) {
+      status = defaultStatuses.get(status);
+    }
+
+    if (!Array.from(defaultStatuses.values()).includes(status)) {
+      status = status.replace(/[^0-9a-z]+/i, ' ').trim();
+      status = status.replace(/\s+/, '-');
+      status = "custom-".concat(status);
+    }
+
+    var prevStatus = form.getAttribute('data-status');
+    form.wpcf7.status = status;
+    form.setAttribute('data-status', status);
+    form.classList.add(status);
+
+    if (prevStatus && prevStatus !== status) {
+      form.classList.remove(prevStatus);
+    }
+
+    return status;
+  };
+}
+
 if (window.wpcf7cf_running_tests) {
   jQuery('input[name="_wpcf7cf_options"]').each(function (e) {
     var $input = jQuery(this);
@@ -413,10 +443,10 @@ Wpcf7cfForm.prototype.displayFields = function () {
     }
 
     if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) {
-      if ($group.prop('tagName') === 'SPAN' || $group.is(':hidden')) {
-        $group.show().trigger('wpcf7cf_show_group');
+      if ($group.prop('tagName') === 'SPAN') {
+        $group.show().trigger('wpcf7cf_show_group'); // show instantly
       } else {
-        $group.animate(wpcf7cf_show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show
+        $group.animate(wpcf7cf_show_animation, animation_intime).trigger('wpcf7cf_show_group'); // show with animation
       }
 
       if ($group.attr('data-disable_on_hide') !== undefined) {
