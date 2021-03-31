@@ -438,7 +438,7 @@ Wpcf7cfForm.prototype.updateHiddenFields = function() {
 Wpcf7cfForm.prototype.updateGroups = function() {
     var form = this;
     form.$groups = form.$form.find('[data-class="wpcf7cf_group"]');
-
+    form.$groups.height('auto');
     form.conditions = window.wpcf7cf.get_nested_conditions(form.initial_conditions, form.$form);
 
 };

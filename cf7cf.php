@@ -32,6 +32,9 @@ class CF7CF {
 
         add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
 
+        add_filter( 'wpcf7_validate_file*', array($this, 'skip_validation_for_hidden_file_field'), 30, 3);
+        add_filter( 'wpcf7_validate_multifile*', array($this, 'skip_validation_for_hidden_file_field'), 30, 3);
+
 	    // validation messages
 	    add_action('wpcf7_config_validator_validate', array($this,'wpcf7cf_config_validator_validate'));
 
@@ -144,6 +147,7 @@ class CF7CF {
 
     /**
      * Remove validation requirements for fields that are hidden at the time of form submission.
+     * Required/invalid fields should never trigger validation errors if they are inside a hidden group during submission.
      * Called using add_filter( 'wpcf7_validate_[tag_type]', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
      * where the priority of 2 causes this to kill any validations with a priority higher than 2
      *
@@ -152,7 +156,7 @@ class CF7CF {
      *
      * @return mixed
      */
-    function skip_validation_for_hidden_fields($result, $tags) {
+    function skip_validation_for_hidden_fields($result, $tags, $args = []) {
 
         if(isset($_POST)) {
             $this->set_hidden_fields_arrays($_POST);
@@ -174,6 +178,15 @@ class CF7CF {
 
         return apply_filters('wpcf7cf_validate', $return_result, $tags);
 
+    }
+
+    /**
+     * Does the same thing as skip_validation_for_hidden_fields, but CF7 will check files again later
+     * via the wpcf7_unship_uploaded_files function
+     * so we need to skip validation a second time for individual file fields
+     */
+    function skip_validation_for_hidden_file_field($result, $tag, $args=[]) {
+        return $this->skip_validation_for_hidden_fields( $result, [ $tag ] );
     }
 
     function cf7msm_merge_post_with_cookie($posted_data) {

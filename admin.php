@@ -181,14 +181,15 @@ function wpcf7cf_save_contact_form( $contact_form )
 		return;
 	}
 	$post_id = $contact_form->id();
-	if ( ! $post_id )
+	if ( ! $post_id ) {
 		return;
+	}
 
-	// unset($_POST['wpcf7cf_options']['{id}']); // remove the dummy entry
 
-	// TODO: only save the one import/export field.
-	$conditions_string = stripslashes(sanitize_textarea_field($_POST['wpcf7cf-settings-text']));
-
+	// we intentionally don't use sanitize_textarea_field here,
+	// because basically any character is a valid character.
+	// To arm agains SQL injections and other funky junky, the CF7CF::parse_conditions function is used.
+	$conditions_string = stripslashes($_POST['wpcf7cf-settings-text']);
 	$conditions = CF7CF::parse_conditions($conditions_string);
 
 	CF7CF::setConditions($post_id, $conditions);

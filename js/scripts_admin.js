@@ -166,7 +166,7 @@ wpcf7cf.transformConditionsFromFieldsToArrayOfObjects = function($entries) {
     $entries.each(function() {
         
         var $entry = jQuery(this);
-        var then_field = $entry.find('.then-field-select').val();
+        var then_field = $entry.find('.then-field-select').val() ?? '';
         
         var conditionObject = {
             then_field: then_field,
@@ -176,9 +176,9 @@ wpcf7cf.transformConditionsFromFieldsToArrayOfObjects = function($entries) {
         $entry.find('.wpcf7cf-and-rule').each(function(i) {
             const $and_rule = jQuery(this);
             conditionObject.and_rules.push({
-                operator : $and_rule.find('.operator').val(),
-                if_field : $and_rule.find('.if-field-select').val(),
-                if_value : $and_rule.find('.if-value').val(),
+                operator : $and_rule.find('.operator').val() ?? '',
+                if_field : $and_rule.find('.if-field-select').val() ?? '',
+                if_value : $and_rule.find('.if-value').val() ?? '',
             });
         });
 

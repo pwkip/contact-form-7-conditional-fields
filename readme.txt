@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 5.7
-Stable tag: 2.0
+Stable tag: 2.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,12 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.0.1 (2021-03-31) =
+* Force height:auto on groups. (Fixes regression errors with groups inside repeaters)
+* Allow more funky characters as conditional fields values (there was a problem with less than sign <)
+* Fix bug with hidden required file and multifile fields causing validation errors
+* Implemented extra tests so these errors cannot reoccur in future updates.
 
 = 2.0 (2021-03-29) =
 * WARNING! 2.0 requires at least Contact Form 7 version 5.4 to work!
