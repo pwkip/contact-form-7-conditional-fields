@@ -171,7 +171,12 @@ class CF7CF {
             foreach ($invalid_fields as $invalid_field_key => $invalid_field_data) {
                 if (!in_array($invalid_field_key, $this->hidden_fields)) {
                     // the invalid field is not a hidden field, so we'll add it to the final validation result
-                    $return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
+                    //$return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
+                    foreach ($tags as $tag) {
+                        if ($tag->name === $invalid_field_key) {
+                            $return_result->invalidate($tag, $invalid_field_data['reason']);
+                        }
+                    }
                 }
             }
         }
