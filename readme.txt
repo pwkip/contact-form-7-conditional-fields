@@ -1,12 +1,12 @@
-=== Contact Form 7 - Conditional Fields ===
+=== Conditional Fields for Contact Form 7 ===
 Contributors: Jules Colle
 Donate link: https://shop.bdwm.be/contact-form-7-conditional-fields-pro/
 Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 5.7.1
-Stable tag: 2.0.3
+Tested up to: 5.7.2
+Stable tag: 2.0.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -71,7 +71,7 @@ Pro features include:
 * Custom conditions with JavaScript functions
 * Additional operators ( greater than, less than, .. )
 
-[Get Conditional Fields PRO!](https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/)
+[Get the PRO version of Conditional Fields for Contact Form 7!](https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/)
 
 == Installation ==
 
@@ -122,6 +122,10 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.0.4 (2021-07-19) =
+* Fix issue with required file fields
+* Fully tested with Contact Form 7 version 5.4.2
 
 = 2.0.3 (2021-05-02) =
 * Fully tested with Contact Form 7 version 5.4.1

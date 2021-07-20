@@ -85,11 +85,11 @@ function wpcf7cf_options_page() {
     ?>
 
     <div class="wrap wpcf7cf-admin-wrap">
-        <h2><?php _e( 'Contact Form 7 - Conditional Fields Settings', 'cf7-conditional-fields'); ?></h2>
+        <h2><?php _e( 'Conditional Fields for Contact Form 7 Settings', 'cf7-conditional-fields'); ?></h2>
         <?php if (!$settings['notice_dismissed']) { ?>
         <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="">
             <div style="padding: 10px 0;">
-                <?php _e( '<strong>Notice</strong>: These are global settings for Contact Form 7 - Conditional Fields.', 'cf7-conditional-fields'); ?>
+                <?php _e( '<strong>Notice</strong>: These are global settings for Conditional Fields for Contact Form 7.', 'cf7-conditional-fields'); ?>
                 <br><br>
                 <strong><?php _e( 'How to create/edit conditional fields?', 'cf7-conditional-fields'); ?></strong>
                 <ol>
@@ -133,8 +133,8 @@ function wpcf7cf_options_page() {
 
             if (!WPCF7CF_IS_PRO) {
             ?>
-            <h3><?php _e( 'Conditional Fields PRO', 'cf7-conditional-fields'); ?></h3>
-            <?php _e( 'Get Conditional Fields PRO to unlock the full potential of CF7', 'cf7-conditional-fields'); ?>
+            <h3><?php _e( 'Conditional Fields  PRO', 'cf7-conditional-fields'); ?></h3>
+            <?php _e( 'Get Conditional Fields  PRO to unlock the full potential of CF7', 'cf7-conditional-fields'); ?>
             <ul class="wpcf7cf-list">
                 <li><?php _e( 'Repeaters', 'cf7-conditional-fields'); ?></li>
                 <li><?php _e( 'Regular expressions', 'cf7-conditional-fields'); ?></li>
