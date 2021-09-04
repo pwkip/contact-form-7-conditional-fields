@@ -93,7 +93,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 	$wpcf7cf_entries = CF7CF::getConditions($form_id);
 
-	if (!is_array($wpcf7cf_entries)) $wpcf7cf_entries = array();
 
 	$wpcf7cf_entries = array_values($wpcf7cf_entries);
 
