@@ -177,7 +177,7 @@ add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
 function wpcf7cf_save_contact_form( $contact_form )
 {
 
-	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
+	if (  ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
 		return;
 	}
 	$post_id = $contact_form->id();
