@@ -63,7 +63,7 @@ function wpcf7cf_reset_options() {
 
 add_action( 'admin_enqueue_scripts', 'wpcf7cf_load_page_options_wp_admin_style' );
 function wpcf7cf_load_page_options_wp_admin_style() {
-    wp_register_style( 'wpcf7cf_admin_css', plugins_url('admin-style.css',__FILE__), false, WPCF7CF_VERSION );
+    wp_register_style( 'wpcf7cf_admin_css', plugins_url('admin-style.css',__FILE__), array(), WPCF7CF_VERSION );
     wp_enqueue_style( 'wpcf7cf_admin_css' );
 }
 
