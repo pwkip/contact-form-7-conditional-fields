@@ -205,8 +205,6 @@ function wpcf7cf_input_field($slug, $args) {
     $args = wp_parse_args( $args, $defaults );
     extract($args);
 
-    $label; $description; $default; $label_editable;
-
     if (!key_exists($slug, $settings)) {
         $settings[$slug] = $default;
         $settings[$slug.'_label'] = $label;
