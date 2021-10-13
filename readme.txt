@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 5.7.2
-Stable tag: 2.0.4
+Tested up to: 5.8.1
+Stable tag: 2.0.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -28,7 +28,7 @@ After you have added the field group(s), click Save and go to the "Conditional f
 
 = Support for required fields =
 
-Required fields can be used inside hidden groups without causing validation problems.
+Required fields inside hidden groups will never trigger validation errors.
 
 = Hide/show info in emails based on what groups are visible =
 
@@ -122,6 +122,9 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.0.5 (2021-10-13) =
+* Fully tested with Contact Form 7 version 5.5.1
 
 = 2.0.4 (2021-07-19) =
 * Fix issue with required file fields
