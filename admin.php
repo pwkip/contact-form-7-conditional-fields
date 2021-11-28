@@ -288,7 +288,6 @@ add_action('admin_notices', function () {
 	$settings = wpcf7cf_get_settings();
 
 	$nid = 'install-cf7';
-
 	if (!defined('WPCF7_VERSION') && empty($settings['notice_dismissed_'.$nid])) {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
@@ -301,7 +300,7 @@ add_action('admin_notices', function () {
 	}
 
 	$nid = 'rollback-cf7-'.WPCF7CF_CF7_MAX_VERSION;
-	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '<' ) && empty($settings['notice_dismissed_'.$nid]) ) {
+	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '<' ) && empty($settings['notice_dismissed_'.$nid]) && current_user_can('update_plugins') ) {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>
@@ -314,7 +313,7 @@ add_action('admin_notices', function () {
 	}
 
 	$nid = 'update-cf7-'.WPCF7CF_CF7_MAX_VERSION;
-	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '>' ) && empty($settings['notice_dismissed_'.$nid]) ) {
+	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '>' ) && empty($settings['notice_dismissed_'.$nid]) && current_user_can('update_plugins') ) {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>

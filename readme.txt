@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 5.8.1
-Stable tag: 2.0.7
+Tested up to: 5.8.2
+Stable tag: 2.0.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,12 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.0.8 (2021-11-28) =
+* Check how code changes in CF7 related to `wpcf7_contact_form_properties` impact the plugin, and update TODO comments accordingly.
+* Fully tested with Contact Form 7 version 5.5.3
+* Write additional tests for forms loaded via AJAX
+* only show compatibility notices to users with the update_plugins capabilities
 
 = 2.0.7 (2021-10-26) =
 * Fully tested with Contact Form 7 version 5.5.2 (and also make the warning message disappear if all plugins are up to date)

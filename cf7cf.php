@@ -389,8 +389,7 @@ new CF7CF;
 add_filter( 'wpcf7_contact_form_properties', 'wpcf7cf_properties', 10, 2 );
 
 function wpcf7cf_properties($properties, $wpcf7form) {
-	// TODO: This function is called serveral times. The problem is that the filter is called each time we call get_properties() on a contact form.
-	// TODO: I haven't found a better way to solve this problem yet, any suggestions or push requests are welcome. (same problem in PRO/repeater.php)
+	// Before CF7 5.5.3, this function was called each time we call get_properties() on a contact form. Since CF7 5.5.3 this function is called only once in the WPCF7_ContactForm
 	if (!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) { // TODO: kind of hacky. maybe find a better solution. Needed because otherwise the group tags will be replaced in the editor as well.
         $form = $properties['form'];
 

@@ -1,8 +1,8 @@
 <?php
 
-if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.0.7' );
+if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.0.8' );
 if (!defined('WPCF7CF_CF7_MIN_VERSION')) define( 'WPCF7CF_CF7_MIN_VERSION', '5.4' );
-if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '5.5.2' );
+if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '5.5.3' );
 if (!defined('WPCF7CF_REQUIRED_WP_VERSION')) define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
 if (!defined('WPCF7CF_PLUGIN')) define( 'WPCF7CF_PLUGIN', __FILE__ );
 if (!defined('WPCF7CF_PLUGIN_BASENAME')) define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
