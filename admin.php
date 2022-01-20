@@ -304,7 +304,7 @@ add_action('admin_notices', function () {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is not yet compatible with your current version of Contact Form 7.
+					<strong>Conditional Fields for Contact Form 7</strong> is not yet tested with your current version of Contact Form 7.
 					<br>If you notice any problems with your forms, please roll back to Contact Form 7 <strong>version <?php echo WPCF7CF_CF7_MAX_VERSION ?></strong>.
 					<br>For a quick and safe rollback, we recommend <a href="https://wordpress.org/plugins/wp-rollback/" target="_blank">WP Rollback</a>.
 				</p>
