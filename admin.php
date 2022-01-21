@@ -93,7 +93,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 	$wpcf7cf_entries = CF7CF::getConditions($form_id);
 
-	if (!is_array($wpcf7cf_entries)) $wpcf7cf_entries = array();
 
 	$wpcf7cf_entries = array_values($wpcf7cf_entries);
 
@@ -177,7 +176,7 @@ add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
 function wpcf7cf_save_contact_form( $contact_form )
 {
 
-	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
+	if (  ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
 		return;
 	}
 	$post_id = $contact_form->id();
