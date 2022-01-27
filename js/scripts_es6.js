@@ -230,14 +230,18 @@ var Wpcf7cfForm = function($form) {
     form.displayFields();
 
     // bring form in initial state if the reset event is fired on it.
+    // (CF7 triggers the 'reset' event by default on each successfully submitted form)
     form.$form.on('reset.wpcf7cf', form, function(e) {
         var form = e.data;
         setTimeout(function(){
             form.displayFields();
             form.resetRepeaters();
             if (form.multistep != null) {
-                form.multistep.moveToStep(1); 
+                form.multistep.moveToStep(1, false);
             }
+            setTimeout(function(){
+                jQuery('.wpcf7-response-output', form.$form)[0].scrollIntoView({behavior: "smooth"});
+            }, 400);
         },200);
     });
 
@@ -350,7 +354,7 @@ Wpcf7cfForm.prototype.displayFields = function() {
                     }
                 });
 
-                $inputs.trigger('change');
+                $inputs.each(function(){this.dispatchEvent(new Event("change",{"bubbles":true}))});
             }
 
             if ($group.prop('tagName') === 'SPAN') {
@@ -417,7 +421,6 @@ Wpcf7cfForm.prototype.updateHiddenFields = function() {
                 hidden_fields.push(jQuery(this).attr('name'));
             });
             if($group.attr('data-disable_on_hide') !== undefined) {
-                console.log('disabling');
                 $group.find(':input').prop('disabled', true);
             }
         } else {
@@ -889,18 +892,6 @@ function Wpcf7cfMultistep($multistep, form) {
     multistep.moveToStep(1);
 }
 
-jQuery(document).ajaxComplete(function(e, xhr, settings){
-    if (
-        xhr.hasOwnProperty('responseJSON')          &&
-        xhr.responseJSON != null                    &&
-        xhr.responseJSON.hasOwnProperty('status')   &&
-        xhr.responseJSON.hasOwnProperty('into')     &&
-        xhr.responseJSON.status === "mail_success"
-    ) {
-        jQuery( xhr.responseJSON.into ).trigger('reset.wpcf7cf');
-    }
-});
-
 Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
 
     var multistep = this;
@@ -989,7 +980,7 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
     });
 
 };
-Wpcf7cfMultistep.prototype.moveToStep = function(step_index) {
+Wpcf7cfMultistep.prototype.moveToStep = function(step_index, scrollToTop = true) {
     var multistep = this;
     var previousStep = multistep.currentStep;
 
@@ -1008,10 +999,12 @@ Wpcf7cfMultistep.prototype.moveToStep = function(step_index) {
         .show()
         .trigger('wpcf7cf_change_step', [previousStep, multistep.currentStep]);
 
-    const formEl = multistep.form.$form[0];
-    const topOffset = formEl.getBoundingClientRect().top;
-    if (topOffset < 0 && previousStep > 0) {
-        formEl.scrollIntoView({behavior: "smooth"});
+    if (scrollToTop) {
+        const formEl = multistep.form.$form[0];
+        const topOffset = formEl.getBoundingClientRect().top;
+        if (topOffset < 0 && previousStep > 0) {
+            formEl.scrollIntoView({behavior: "smooth"});
+        }
     }
 
     multistep.form.updateSummaryFields();

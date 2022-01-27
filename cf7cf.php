@@ -331,7 +331,7 @@ class CF7CF {
      * load the conditions from the form's post_meta
      *
      * @param string $form_id
-     * @return void
+     * @return array
      */
     public static function getConditions($form_id) {
         // make sure conditions are an array.

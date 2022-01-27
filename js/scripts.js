@@ -365,6 +365,7 @@ var Wpcf7cfForm = function Wpcf7cfForm($form) {
   form.updateGroups();
   form.updateEventListeners();
   form.displayFields(); // bring form in initial state if the reset event is fired on it.
+  // (CF7 triggers the 'reset' event by default on each successfully submitted form)
 
   form.$form.on('reset.wpcf7cf', form, function (e) {
     var form = e.data;
@@ -373,8 +374,14 @@ var Wpcf7cfForm = function Wpcf7cfForm($form) {
       form.resetRepeaters();
 
       if (form.multistep != null) {
-        form.multistep.moveToStep(1);
+        form.multistep.moveToStep(1, false);
       }
+
+      setTimeout(function () {
+        jQuery('.wpcf7-response-output', form.$form)[0].scrollIntoView({
+          behavior: "smooth"
+        });
+      }, 400);
     }, 200);
   }); // PRO ONLY
 
@@ -470,7 +477,11 @@ Wpcf7cfForm.prototype.displayFields = function () {
             $select.val(jQuery("option:first", $select).val());
           }
         });
-        $inputs.trigger('change');
+        $inputs.each(function () {
+          this.dispatchEvent(new Event("change", {
+            "bubbles": true
+          }));
+        });
       }
 
       if ($group.prop('tagName') === 'SPAN') {
@@ -532,7 +543,6 @@ Wpcf7cfForm.prototype.updateHiddenFields = function () {
       });
 
       if ($group.attr('data-disable_on_hide') !== undefined) {
-        console.log('disabling');
         $group.find(':input').prop('disabled', true);
       }
     } else {
@@ -953,12 +963,6 @@ function Wpcf7cfMultistep($multistep, form) {
   multistep.moveToStep(1);
 }
 
-jQuery(document).ajaxComplete(function (e, xhr, settings) {
-  if (xhr.hasOwnProperty('responseJSON') && xhr.responseJSON != null && xhr.responseJSON.hasOwnProperty('status') && xhr.responseJSON.hasOwnProperty('into') && xhr.responseJSON.status === "mail_success") {
-    jQuery(xhr.responseJSON.into).trigger('reset.wpcf7cf');
-  }
-});
-
 Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
   var multistep = this;
   var $multistep = multistep.$multistep;
@@ -1021,6 +1025,7 @@ Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
 };
 
 Wpcf7cfMultistep.prototype.moveToStep = function (step_index) {
+  var scrollToTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var multistep = this;
   var previousStep = multistep.currentStep;
   multistep.currentStep = step_index > multistep.numSteps ? multistep.numSteps : step_index < 1 ? 1 : step_index; // ANIMATION DISABLED FOR NOW cause it's ugly
@@ -1030,13 +1035,16 @@ Wpcf7cfMultistep.prototype.moveToStep = function (step_index) {
   multistep.$multistep.attr('data-current_step', multistep.currentStep);
   multistep.$steps.hide();
   multistep.$steps.eq(multistep.currentStep - 1).show().trigger('wpcf7cf_change_step', [previousStep, multistep.currentStep]);
-  var formEl = multistep.form.$form[0];
-  var topOffset = formEl.getBoundingClientRect().top;
 
-  if (topOffset < 0 && previousStep > 0) {
-    formEl.scrollIntoView({
-      behavior: "smooth"
-    });
+  if (scrollToTop) {
+    var formEl = multistep.form.$form[0];
+    var topOffset = formEl.getBoundingClientRect().top;
+
+    if (topOffset < 0 && previousStep > 0) {
+      formEl.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
   }
 
   multistep.form.updateSummaryFields();
