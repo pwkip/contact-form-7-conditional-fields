@@ -507,3 +507,12 @@ function wpcf7cf_enqueue_styles() {
 	if (is_admin()) return;
 	wp_enqueue_style('cf7cf-style', plugins_url('style.css', __FILE__), array(), WPCF7CF_VERSION);
 }
+
+// Make sure CF7 doesn't target any disabled fields for validation
+// (HTML standard: "disabled fields don't get submitted", so no need to validate them)
+add_filter( 'wpcf7_feedback_response', function($response, $result) {
+    foreach ($response['invalid_fields'] as $i => $inv) {
+        $response['invalid_fields'][$i]['into'] .= ':not(.wpcf7cf-disabled)';
+    }
+    return $response;
+}, 2, 10 );

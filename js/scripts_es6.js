@@ -62,7 +62,7 @@ var wpcf7cf_hide_animation = { "height": "hide", "marginTop": "hide", "marginBot
 var wpcf7cf_show_step_animation = { "opacity": "show" };
 var wpcf7cf_hide_step_animation = { "opacity": "hide" };
 
-var wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.wpcf7cf propertychange.wpcf7cf';
+var wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.wpcf7cf propertychange.wpcf7cf changedisabledprop.wpcf7cf';
 
 var wpcf7cf_forms = [];
 
@@ -240,7 +240,9 @@ var Wpcf7cfForm = function($form) {
                 form.multistep.moveToStep(1, false);
             }
             setTimeout(function(){
-                jQuery('.wpcf7-response-output', form.$form)[0].scrollIntoView({behavior: "smooth"});
+                if (form.$form.hasClass('sent')) {
+                    jQuery('.wpcf7-response-output', form.$form)[0].scrollIntoView({behavior: "smooth", block:"nearest", inline:"nearest"});
+                }
             }, 400);
         },200);
     });
@@ -329,7 +331,8 @@ Wpcf7cfForm.prototype.displayFields = function() {
             }
 
             if($group.attr('data-disable_on_hide') !== undefined) {
-                $group.find(':input').prop('disabled', false);
+                $group.find(':input').prop('disabled', false).trigger('changedisabledprop.wpcf7cf');
+                $group.find('.wpcf7-form-control-wrap').removeClass('wpcf7cf-disabled');
             }
 
         } else if ($group.css('display') !== 'none' && $group.hasClass('wpcf7cf-hidden')) {
@@ -417,11 +420,26 @@ Wpcf7cfForm.prototype.updateHiddenFields = function() {
         var $group = jQuery(this);
         if ($group.hasClass('wpcf7cf-hidden')) {
             hidden_groups.push($group.attr('data-id'));
-            $group.find('input,select,textarea').each(function () {
-                hidden_fields.push(jQuery(this).attr('name'));
-            });
             if($group.attr('data-disable_on_hide') !== undefined) {
-                $group.find(':input').prop('disabled', true);
+                // fields inside hidden disable_on_hide group
+                $group.find('input,select,textarea').each(function(){
+                    const $this = jQuery(this);
+                    if (!$this.prop('disabled')) {
+                        $this.prop('disabled', true).trigger('changedisabledprop.wpcf7cf');
+                    }
+
+                    // if there's no other field with the same name visible in the form
+                    // then push this field to hidden_fields
+                    if (form.$form.find(`[data-class="wpcf7cf_group"]:not(.wpcf7cf-hidden) [name='${$this.attr('name')}']`).length === 0) {
+                        hidden_fields.push($this.attr('name'));
+                    }
+                })
+                $group.find('.wpcf7-form-control-wrap').addClass('wpcf7cf-disabled');
+            } else {
+                // fields inside regular hidden group are all pushed to hidden_fields
+                $group.find('input,select,textarea').each(function () {
+                    hidden_fields.push(jQuery(this).attr('name'));
+                });
             }
         } else {
             visible_groups.push($group.attr('data-id'));
@@ -687,6 +705,9 @@ Wpcf7cfRepeater.prototype.addSubs = function(subs_to_add, index=null) {
         $html.hide().insertBefore(jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(index)).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
     }
 
+    // enable all new fields
+    $html.find('.wpcf7cf-disabled :input').prop('disabled', false).trigger('changedisabledprop.wpcf7cf');
+    $html.find('.wpcf7-form-control-wrap').removeClass('wpcf7cf-disabled');
 
     jQuery('.wpcf7cf_repeater', $html).each(function(){
         form.repeaters.push(new Wpcf7cfRepeater(jQuery(this),form));
@@ -1159,7 +1180,6 @@ window.wpcf7cf = {
 
         if (type) {
 
-            
             const name = type === 'input' ? currentNode.getAttribute('name') : currentNode.dataset.id;
             
             if (type === 'repeater') {
@@ -1170,7 +1190,7 @@ window.wpcf7cf = {
             }
 
             // skip _wpcf7 hidden fields
-            if (name.substring(0,6) === '_wpcf7') return {}; 
+            if (name.substring(0,6) === '_wpcf7') return {};
     
             const original_name = type === 'repeater' || type === 'group' ? currentNode.dataset.orig_data_id
                                     : type === 'input' ? (currentNode.getAttribute('data-orig_name') || name)

@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 5.9
-Stable tag: 2.1
+Stable tag: 2.1.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,12 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.1.1 (2022-02-14) =
+* Fully tested with Contact Form 7 version 5.5.5
+* Make scroll to success message less annoying. [GH Issue 90](https://github.com/pwkip/contact-form-7-conditional-fields/issues/90)
+* Add extra check to make sure that scroll to success message only happens when the e-mail is sent. [GH Issue 90](https://github.com/pwkip/contact-form-7-conditional-fields/issues/90)
+* PRO: fix disable_on_hide bugs. [GH sssue 87](https://github.com/pwkip/contact-form-7-conditional-fields/issues/87) 
 
 = 2.1 (2022-01-27) =
 * Tested up to wp 5.9
