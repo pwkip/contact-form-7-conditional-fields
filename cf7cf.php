@@ -447,9 +447,9 @@ function wpcf7cf_form_hidden_fields($hidden_fields) {
     unset($options['settings']['license_key']); // don't show license key in the source code duh.
 
 	return array_merge($hidden_fields, array(
-        '_wpcf7cf_hidden_group_fields' => '',
-        '_wpcf7cf_hidden_groups' => '',
-        '_wpcf7cf_visible_groups' => '',
+        '_wpcf7cf_hidden_group_fields' => '[]',
+        '_wpcf7cf_hidden_groups' => '[]',
+        '_wpcf7cf_visible_groups' => '[]',
         '_wpcf7cf_repeaters' => '[]',
         '_wpcf7cf_steps' => '{}',
         '_wpcf7cf_options' => ''.json_encode($options),

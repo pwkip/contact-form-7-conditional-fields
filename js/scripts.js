@@ -593,6 +593,7 @@ Wpcf7cfForm.prototype.updateEventListeners = function () {
     var form = e.data;
     clearTimeout(wpcf7cf_timeout);
     wpcf7cf_timeout = setTimeout(function () {
+      window.wpcf7cf.updateMultistepState(form.multistep);
       form.displayFields();
     }, wpcf7cf_change_time_ms);
   }); // PRO ONLY
@@ -955,17 +956,19 @@ function Wpcf7cfMultistep($multistep, form) {
         switch (_context.prev = _context.next) {
           case 0:
             multistep.$btn_next.addClass('disabled').attr('disabled', true);
-            _context.next = 3;
+            multistep.form.$form.addClass('submitting');
+            _context.next = 4;
             return multistep.validateStep(multistep.currentStep);
 
-          case 3:
+          case 4:
             result = _context.sent;
+            multistep.form.$form.removeClass('submitting');
 
             if (result === 'success') {
               multistep.moveToStep(multistep.currentStep + 1);
             }
 
-          case 5:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -1216,7 +1219,6 @@ window.wpcf7cf = {
       var nameWithoutBrackets = name.replace('[]', '');
       var originalNameWithoutBrackets = original_name.replace('[]', '');
       var val = type === 'step' ? [currentNode.dataset.id.substring(5)] : [];
-      var parentGroup = 'parent-group';
       var suffix = nameWithoutBrackets.replace(originalNameWithoutBrackets, '');
 
       if (!simplified_dom[name]) {
@@ -1277,13 +1279,13 @@ window.wpcf7cf = {
     // TODO: make this depend on a setting
 
 
-    var $submit_button = multistep.form.$form.find('input[type="submit"]').eq(0);
-    var $ajax_loader = multistep.form.$form.find('.ajax-loader').eq(0);
+    var $submit_button = multistep.form.$form.find('input[type="submit"]:last').eq(0);
+    var $ajax_loader = multistep.form.$form.find('.wpcf7-spinner').eq(0);
+    $submit_button.detach().prependTo(multistep.$btn_next.parent());
+    $ajax_loader.detach().prependTo(multistep.$btn_next.parent());
 
     if (multistep.currentStep == multistep.numSteps) {
       multistep.$btn_next.hide();
-      $ajax_loader.detach().appendTo(multistep.$btn_next.parent());
-      $submit_button.detach().appendTo(multistep.$btn_next.parent());
       $submit_button.show();
     } else {
       $submit_button.hide();

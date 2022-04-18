@@ -30,6 +30,7 @@ class Wpcf7cfMailParser {
         $name_suffix = implode('__',$name_parts);
 
 		$content = $matches[2];
+
 		if ( in_array( $name, $this->hidden_groups ) ) {
 
 		    // The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing

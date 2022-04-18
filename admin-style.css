@@ -69,6 +69,7 @@
     box-shadow: none;
     height: 22px;
     line-height: 22px;
+    min-height: 22px;
     box-sizing: content-box; }
   #wpcf7cf-conditional-panel #wpcf7cf-entries .label {
     background-color: transparent;
@@ -116,7 +117,7 @@
     height: 22px;
     position: absolute;
     line-height: 22px;
-    right: 50px;
+    right: 53px;
     top: 0; }
   #wpcf7cf-conditional-panel .wpcf7cf-and-rule {
     margin-bottom: 4px;
@@ -137,7 +138,7 @@
     box-sizing: border-box;
     display: flex; }
   #wpcf7cf-conditional-panel .entry .wpcf7cf-if {
-    width: 188px; }
+    width: 189px; }
   #wpcf7cf-conditional-panel .then-field-select {
     width: 130px; }
   #wpcf7cf-conditional-panel .entry .wpcf7cf-and-rules {

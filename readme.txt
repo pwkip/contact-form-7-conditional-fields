@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 2.1.2
+Tested up to: 5.9.3
+Stable tag: 2.1.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,13 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.1.3 (2022-04-18) =
+* check for user_cap 'wpcf7_edit_contact_forms' instead of 'wpcf7_edit_contact_form' in several places. Thanks, [@paybox](https://wordpress.org/support/topic/some-notices-appearing-fix-suggested/)!
+* PRO multistep: make "Next step" and "Previous step" buttons translatable by third party plugins like wpml and loco translate.
+* PRO multistep: show spinner while validating a step.
+* PRO Fix additional disable_on_hide bug with multistep [GH issue 87-4](https://github.com/pwkip/contact-form-7-conditional-fields/issues/87)
+* Replace all occurences of text domain 'contact-form-7' with 'cf7-conditional-fields'
 
 = 2.1.2 (2022-02-23) =
 * Fully tested with Contact Form 7 version 5.5.6

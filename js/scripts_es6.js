@@ -472,6 +472,7 @@ Wpcf7cfForm.prototype.updateEventListeners = function() {
         var form = e.data;
         clearTimeout(wpcf7cf_timeout);
         wpcf7cf_timeout = setTimeout(function() {
+            window.wpcf7cf.updateMultistepState(form.multistep);
             form.displayFields();
         }, wpcf7cf_change_time_ms);
     });
@@ -886,8 +887,10 @@ function Wpcf7cfMultistep($multistep, form) {
     multistep.$btn_next.on('click.wpcf7cf_step', async function() {
 
         multistep.$btn_next.addClass('disabled').attr('disabled', true);
-        
+        multistep.form.$form.addClass('submitting');
         var result = await multistep.validateStep(multistep.currentStep);
+        multistep.form.$form.removeClass('submitting');
+
         if (result === 'success') {
             multistep.moveToStep(multistep.currentStep+1); 
         }
@@ -1201,8 +1204,6 @@ window.wpcf7cf = {
     
             const val = type === 'step' ? [currentNode.dataset.id.substring(5)] : [];
     
-            const parentGroup = 'parent-group';
-    
             const suffix = nameWithoutBrackets.replace(originalNameWithoutBrackets, '');
     
             if (!simplified_dom[name]) {
@@ -1256,12 +1257,14 @@ window.wpcf7cf = {
 
         // replace next button with submit button on last step.
         // TODO: make this depend on a setting
-        var $submit_button = multistep.form.$form.find('input[type="submit"]').eq(0);
-        var $ajax_loader = multistep.form.$form.find('.ajax-loader').eq(0);
+        var $submit_button = multistep.form.$form.find('input[type="submit"]:last').eq(0);
+        var $ajax_loader = multistep.form.$form.find('.wpcf7-spinner').eq(0);
+
+        $submit_button.detach().prependTo(multistep.$btn_next.parent());
+        $ajax_loader.detach().prependTo(multistep.$btn_next.parent());
+
         if (multistep.currentStep == multistep.numSteps) {
             multistep.$btn_next.hide();
-            $ajax_loader.detach().appendTo(multistep.$btn_next.parent());
-            $submit_button.detach().appendTo(multistep.$btn_next.parent());
             $submit_button.show();
         } else {
             $submit_button.hide();

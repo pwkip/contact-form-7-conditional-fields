@@ -88,6 +88,7 @@
         box-shadow: none;
         height: 22px;
         line-height: 22px;
+        min-height: 22px;
         box-sizing: content-box;
     }
 
@@ -147,7 +148,7 @@
         height: 22px;
         position: absolute;
         line-height: 22px;
-        right: 50px;
+        right: 53px;
         top: 0;
     }
 
@@ -184,7 +185,7 @@
     }
 
     .entry .wpcf7cf-if {
-        width: 188px;
+        width: 189px;
     }
 
     .then-field-select {

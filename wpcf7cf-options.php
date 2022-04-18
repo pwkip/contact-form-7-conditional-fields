@@ -275,7 +275,7 @@ function wpcf7cf_input_select($slug, $args) {
 add_action('admin_init', 'wpcf7cf_admin_init');
 function wpcf7cf_admin_init(){
 
-    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_form' ) ) {
+    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_forms' ) ) {
         wpcf7cf_reset_options();
     }
 

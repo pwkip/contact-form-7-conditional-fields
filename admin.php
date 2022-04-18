@@ -19,7 +19,7 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 add_filter('wpcf7_editor_panels', 'add_conditional_panel');
 
 function add_conditional_panel($panels) {
-	if ( current_user_can( 'wpcf7_edit_contact_form' ) ) {
+	if ( current_user_can( 'wpcf7_edit_contact_forms' ) ) {
 		$panels['wpcf7cf-conditional-panel'] = array(
 			'title'    => __( 'Conditional fields', 'cf7-conditional-fields' ),
 			'callback' => 'wpcf7cf_editor_panel_conditional'
@@ -113,9 +113,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 			print_entries_html($form);
 			?>
 			<div id="wpcf7cf-entries">
-				<?php
-				//print_entries_html($form, $wpcf7cf_entries);
-				?>
 			</div>
 			
 			<span id="wpcf7cf-add-button" title="<?php _e( 'add new rule', 'cf7-conditional-fields' ); ?>"><?php _e( '+ add new conditional rule', 'cf7-conditional-fields'); ?></span>
