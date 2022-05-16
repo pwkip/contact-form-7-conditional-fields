@@ -1248,9 +1248,12 @@ window.wpcf7cf = {
           simplified_dom[name].val.push(currentNode.value);
         }
       }
-    }
+    } // can't use currentNode.children (because then field name cannot be "children")
 
-    Array.from(currentNode.children).forEach(function (childNode) {
+
+    var getter = Object.getOwnPropertyDescriptor(Element.prototype, "children").get;
+    var children = getter.call(currentNode);
+    Array.from(children).forEach(function (childNode) {
       var dom = wpcf7cf.get_simplified_dom_model(childNode, simplified_dom, newParentGroups, newParentRepeaters);
       simplified_dom = _objectSpread(_objectSpread({}, dom), simplified_dom);
     });

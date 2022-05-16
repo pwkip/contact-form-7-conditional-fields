@@ -302,6 +302,7 @@
 
 #wpcf7cf-conditional-panel {
     position: relative;
+    //display: block !important;
 }
 
 .wpcf7cf-notice {
@@ -312,4 +313,8 @@
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
     margin: 5px 0 2px;
     padding: 1px 12px;
+}
+
+.wpcf7cf-switch-to-txt-link {
+    
 }

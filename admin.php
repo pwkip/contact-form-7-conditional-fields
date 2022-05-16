@@ -7,12 +7,13 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 	wp_enqueue_script('cf7cf-scripts-admin-all-pages', wpcf7cf_plugin_url( 'js/scripts_admin_all_pages.js' ),array( 'jquery' ), WPCF7CF_VERSION,true);
 
 
-	if ( false === strpos( $hook_suffix, 'wpcf7' ) ) {
-		return; //don't load styles and scripts if this isn't a CF7 page.
-	}
+	if ( isset($_GET['page']) && ( $_GET['page'] == 'wpcf7' && isset($_GET['post']) || $_GET['page'] == 'wpcf7-new' ) ) {
+		 //only load styles and scripts if this is a CF7 detail page.
 
-	wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete', 'jquery-ui-sortable'), WPCF7CF_VERSION,true);
-	wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', wpcf7cf_get_settings());
+		wp_enqueue_script('cf7cf-scripts-admin', wpcf7cf_plugin_url( 'js/scripts_admin.js' ),array('jquery-ui-autocomplete', 'jquery-ui-sortable'), WPCF7CF_VERSION,true);
+		wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_options_0', wpcf7cf_get_settings());
+		//wp_localize_script('cf7cf-scripts-admin', 'wpcf7cf_newEntryHTML', );
+	}
 
 }
 
@@ -81,19 +82,12 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 	$form_id = isset($_GET['post']) ? $_GET['post'] : false;
 
-	if ($form_id === false) {
-		?>
-		    <div class="wpcf7cf-inner-container">
-				<h2><?php _e( 'Conditional fields', 'cf7-conditional-fields' ); ?></h2>
-				<p><?php _e( 'You need to save your form, before you can start adding conditions.', 'cf7-conditional-fields' ); ?></p>
-			</div>
-		<?php
-		return;
+	if ($form_id !== false) {
+		$wpcf7cf_entries = CF7CF::getConditions($form_id);
+		$wpcf7cf_entries = array_values($wpcf7cf_entries);
+	} else {
+		$wpcf7cf_entries = [];
 	}
-
-	$wpcf7cf_entries = CF7CF::getConditions($form_id);
-
-	$wpcf7cf_entries = array_values($wpcf7cf_entries);
 
 	?>
     <div class="wpcf7cf-inner-container">
@@ -109,9 +103,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 		<h2><?php _e( 'Conditional fields', 'cf7-conditional-fields' ); ?></h2>
 
 		<div id="wpcf7cf-entries-ui" style="display:none">
-			<?php
-			print_entries_html($form);
-			?>
 			<div id="wpcf7cf-entries">
 			</div>
 			
@@ -124,7 +115,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 					// translators: 1. max recommended conditions
 					echo sprintf( __( 'You can only add up to %d conditions using this interface.', 'cf7-conditional-fields' ), WPCF7CF_MAX_RECOMMENDED_CONDITIONS ) . ' ';
 					// translators: 1,2: strong tags, 3. max recommended conditions
-					printf( __( 'Please switch to %1$sText mode%2$s if you want to add more than %3$d conditions.', 'cf7-conditional-fields' ), '<strong>', '</strong>', WPCF7CF_MAX_RECOMMENDED_CONDITIONS ); ?>
+					printf( __( 'Please switch to %1$sText mode%2$s if you want to add more than %3$d conditions.', 'cf7-conditional-fields' ), '<a href="#" class="wpcf7cf-switch-to-txt-link">', '</a>', WPCF7CF_MAX_RECOMMENDED_CONDITIONS ); ?>
 				</p>
 			</div>
 
@@ -132,7 +123,6 @@ function wpcf7cf_editor_panel_conditional($form) {
 
         <div id="wpcf7cf-text-entries">
             <div id="wpcf7cf-settings-text-wrap">
-
                 <textarea id="wpcf7cf-settings-text" name="wpcf7cf-settings-text"><?php echo CF7CF::serializeConditions($wpcf7cf_entries) ?></textarea>
                 <br>
             </div>
@@ -140,6 +130,31 @@ function wpcf7cf_editor_panel_conditional($form) {
     </div>
 <?php
 }
+
+// Save conditions and summary field
+add_action( 'wpcf7_after_save', function($contact_form) {
+
+	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
+		return;
+	}
+	$post_id = $contact_form->id();
+	if ( ! $post_id ) {
+		return;
+	}
+
+	// we intentionally don't use sanitize_textarea_field here,
+	// because basically any character is a valid character.
+	// To arm agains SQL injections and other funky junky, the CF7CF::parse_conditions function is used.
+	$conditions_string = stripslashes($_POST['wpcf7cf-settings-text']);
+	$conditions = CF7CF::parse_conditions($conditions_string);
+
+	CF7CF::setConditions($post_id, $conditions);
+
+	if (isset($_POST['wpcf7cf-summary-template'])) {
+		WPCF7CF_Summary::saveSummaryTemplate($_POST['wpcf7cf-summary-template'],$post_id);
+	}
+	
+}, 8, 1 );
 
 // duplicate conditions on duplicate form part 1.
 add_filter('wpcf7_copy','wpcf7cf_copy', 10, 2);
@@ -167,36 +182,6 @@ function wpcf7cf_after_save($contact_form) {
 	}
 }
 
-// wpcf7_save_contact_form callback
-add_action( 'wpcf7_save_contact_form', 'wpcf7cf_save_contact_form', 10, 1 );
-function wpcf7cf_save_contact_form( $contact_form )
-{
-
-	if ( ! isset( $_POST ) || empty( $_POST ) || ! isset( $_POST['wpcf7cf-settings-text'] ) ) {
-		return;
-	}
-	$post_id = $contact_form->id();
-	if ( ! $post_id ) {
-		return;
-	}
-
-
-	// we intentionally don't use sanitize_textarea_field here,
-	// because basically any character is a valid character.
-	// To arm agains SQL injections and other funky junky, the CF7CF::parse_conditions function is used.
-	$conditions_string = stripslashes($_POST['wpcf7cf-settings-text']);
-	$conditions = CF7CF::parse_conditions($conditions_string);
-
-	CF7CF::setConditions($post_id, $conditions);
-
-	if (isset($_POST['wpcf7cf-summary-template'])) {
-		WPCF7CF_Summary::saveSummaryTemplate($_POST['wpcf7cf-summary-template'],$post_id);
-	}
-
-    return;
-
-};
-
 function wpcf7cf_sanitize_options($options) {
     //$options = array_values($options);
     $sanitized_options = [];
@@ -214,68 +199,6 @@ function wpcf7cf_sanitize_options($options) {
 	    $sanitized_options[] = $sanitized_option;
     }
     return $sanitized_options;
-}
-
-function print_entries_html($form, $wpcf7cf_entries = false) {
-
-    $is_dummy = !$wpcf7cf_entries;
-
-    if ($is_dummy) {
-	    $wpcf7cf_entries = array(
-		    '{id}' => array(
-			    'then_field' => '-1',
-			    'and_rules' => array(
-				    0 => array(
-					    'if_field' => '-1',
-					    'operator' => 'equals',
-					    'if_value' => ''
-				    )
-			    )
-		    )
-	    );
-	}
-	
-	foreach($wpcf7cf_entries as $i => $entry) {
-
-		// check for backwards compatibility ( < 2.0 )
-		if (!key_exists('and_rules', $wpcf7cf_entries[$i]) || !is_array($wpcf7cf_entries[$i]['and_rules'])) {
-			$wpcf7cf_entries[$i]['and_rules'][0] = $wpcf7cf_entries[$i];
-		}
-
-		$and_entries = array_values($wpcf7cf_entries[$i]['and_rules']);
-
-		if ($is_dummy) {
-			echo '<div id="wpcf7cf-new-entry">';
-        } else {
-        	echo '<div class="entry">';
-        }
-		?>
-            <div class="wpcf7cf-if">
-                <span class="label"><?php _e( 'Show', 'cf7-conditional-fields' ); ?></span>
-                <select class="then-field-select"><?php wpcf7cf_all_group_options($form, $entry['then_field']); ?></select>
-            </div>
-            <div class="wpcf7cf-and-rules" data-next-index="<?php echo count($and_entries) ?>">
-				<?php
-
-
-
-				foreach($and_entries as $and_i => $and_entry) {
-					?>
-                    <div class="wpcf7cf-and-rule">
-                        <span class="rule-part if-txt label"><?php _e( 'if', 'cf7-conditional-fields' ); ?></span>
-                        <select class="rule-part if-field-select"><?php wpcf7cf_all_field_options( $form, $and_entry['if_field'] ); ?></select>
-                        <select class="rule-part operator"><?php all_operator_options( $and_entry['operator'] ) ?></select>
-                        <input class="rule-part if-value" type="text" placeholder="<?php _e( 'value', 'cf7-conditional-fields' ); ?>" value="<?php echo $and_entry['if_value'] ?>">
-                        <span class="and-button"><?php _e( 'And', 'cf7-conditional-fields' ); ?></span>
-                        <span title="<?php _e( 'delete rule', 'cf7-conditional-fields' ); ?>" class="rule-part delete-button"><?php _e( 'remove', 'cf7-conditional-fields' ); ?></span>
-                    </div>
-					<?php
-				}
-				?>
-            </div>
-		<?php
-		echo '</div>';
-	}
 }
 
 add_action('admin_notices', function () {

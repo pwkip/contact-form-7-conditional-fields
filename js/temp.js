@@ -3,48 +3,11 @@
  * Should only be loaded when editing a form in the WP backend.
  */
 
-let wpcf7cf_formcode = null; // used to detect if the form code has changed
-
-var regexes = [
-    { label: wpcf7cf_options_0.regex_email_label, desc: wpcf7cf_options_0.regex_email },
-    { label: wpcf7cf_options_0.regex_numeric_label, desc: wpcf7cf_options_0.regex_numeric },
-    { label: wpcf7cf_options_0.regex_alphanumeric_label, desc: wpcf7cf_options_0.regex_alphanumeric },
-    { label: wpcf7cf_options_0.regex_alphabetic_label, desc: wpcf7cf_options_0.regex_alphabetic },
-    { label: wpcf7cf_options_0.regex_date_label, desc: wpcf7cf_options_0.regex_date },
-    { label: wpcf7cf_options_0.regex_custom_1_label, desc: wpcf7cf_options_0.regex_custom_1 },
-    { label: wpcf7cf_options_0.regex_custom_2_label, desc: wpcf7cf_options_0.regex_custom_2 },
-    { label: wpcf7cf_options_0.regex_custom_3_label, desc: wpcf7cf_options_0.regex_custom_3 },
-    { label: wpcf7cf_options_0.regex_custom_4_label, desc: wpcf7cf_options_0.regex_custom_4 },
-    { label: wpcf7cf_options_0.regex_custom_5_label, desc: wpcf7cf_options_0.regex_custom_5 },
-];
-
-var i = regexes.length;
-while (i--) {
-    if (null == regexes[i].label || null == regexes[i].desc || regexes[i].label == '' || regexes[i].desc == '') {
-        regexes.splice(i,1);
-    }
-}
-
-
-if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
+ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
 
     var wpcf7cf = {};
     
     wpcf7cf.MAX_CONDITIONS = 50;
-
-    wpcf7cf.operators = [
-        'equals',
-        'not equals',
-        'equals (regex)',
-        'not equals (regex)',
-        'greater than',
-        'greater than or equals',
-        'less than',
-        'less than or equals',
-        'is empty',
-        'not empty',
-        'function',
-     ];
     
     wpcf7cf.$newEntry = jQuery(`<div class="entry">
             <div class="wpcf7cf-if">
@@ -55,7 +18,19 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
                 <div class="wpcf7cf-and-rule ui-sortable-handle">
                     <span class="rule-part if-txt label">if</span>
                     <select class="rule-part if-field-select"></select>
-                    <select class="rule-part operator">${ wpcf7cf.operators.map(o => `<option value="${o}">${o}</option>`) }</select>
+                    <select class="rule-part operator">
+                        <option value="equals" selected="">equals</option>
+                        <option value="not equals">not equals</option>
+                        <option value="equals (regex)">equals (regex)</option>
+                        <option value="not equals (regex)">not equals (regex)</option>
+                        <option value="greater than">greater than</option>
+                        <option value="greater than or equals">greater than or equals</option>
+                        <option value="less than">less than</option>
+                        <option value="less than or equals">less than or equals</option>
+                        <option value="is empty">is empty</option>
+                        <option value="not empty">not empty</option>
+                        <option value="function">function</option>
+                    </select>
                     <input class="rule-part if-value" type="text" placeholder="value" value="" style="visibility: visible;">
                     <span class="and-button" style="height: 22px; line-height: 22px;">And</span>
                     <span title="delete rule" class="rule-part delete-button">remove</span>
@@ -64,7 +39,6 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         </div>`);
     wpcf7cf.$textView = jQuery('#wpcf7cf-settings-text').eq(0);
     wpcf7cf.$textOnlyCheckbox = jQuery('#wpcf7cf-text-only-checkbox').eq(0);
-    wpcf7cf.$textOnlyLinks = jQuery('.wpcf7cf-switch-to-txt-link');
     wpcf7cf.$entriesUi = jQuery('#wpcf7cf-entries-ui').eq(0);
     wpcf7cf.$addButton = jQuery('#wpcf7cf-add-button').eq(0);
     wpcf7cf.$maxReachedWarning = jQuery('#wpcf7cf-a-lot-of-conditions').eq(0);
@@ -162,16 +136,16 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     
             // setup then_field
             var $entry = jQuery(wpcf7cf.template_for_condition_fields_without_and_rules);
-            jQuery('.then-field-select', $entry).val(condition.then_field);
+            jQuery('.then-field-select', $entry).val(condition.then_field).attr('value', condition.then_field );
     
             for (var a_i = 0; a_i < condition.and_rules.length; a_i++) {
                 var and_rule = condition.and_rules[a_i];
     
                 $rule = jQuery(wpcf7cf.template_for_and_rule);
     
-                jQuery('.if-field-select', $rule).val(and_rule.if_field);
-                jQuery('.operator', $rule).val(and_rule.operator);
-                jQuery('.if-value', $rule).val(and_rule.if_value);
+                jQuery('.if-field-select', $rule).val(and_rule.if_field).attr('value', and_rule.if_field );
+                jQuery('.operator', $rule).val(and_rule.operator).attr('value', and_rule.operator );
+                jQuery('.if-value', $rule).val(and_rule.if_value).attr('value', and_rule.if_value );
     
                 jQuery('.wpcf7cf-and-rules', $entry).eq(0).append($rule);
                 
@@ -182,7 +156,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     
         jQuery('#wpcf7cf-entries').html(entries);
     
-        updateDisplayOfEntries();
+        update_entries();
     
     }
     
@@ -237,7 +211,6 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         var str = wpcf7cf.$textView.val();
         var obj = wpcf7cf.transformConditionsFromStringToArrayOfObjects(str);
         wpcf7cf.transformConditionsFromArrayOfObjectsToFieldElements(obj);
-        wpcf7cf.setDefaultValues();
     }
     
     wpcf7cf.copyFieldsToText = function() {
@@ -249,13 +222,10 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     function add_condition_fields() {
         $c = jQuery(wpcf7cf.template_for_condition_fields_with_one_and_rule)
         $c.appendTo('#wpcf7cf-entries');
-        updateDisplayOfEntries();
+        update_entries();
     }
     
-    /**
-     * Update visibility / autocomplete and some other visual properties based on the selected conditions.
-     */
-    function updateDisplayOfEntries() {
+    function update_entries() {
         wpcf7cf.$if_values = jQuery('.if-value');
         init_autocomplete();
         wpcf7cf.$if_values.css({'visibility':'visible'});
@@ -299,7 +269,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
             },
             open: function(e,ui) {
                 $el = jQuery(e.target);
-                var styledTerm = `<span class='ui-autocomplete-term'>${$el.val()}</span>`;
+                var styledTerm = `<span class='ui-autocomplete-term'>${$el.val}</span>`;
     
                 jQuery('.ui-autocomplete').find('em').each(function() {
                     var me = jQuery(this);
@@ -319,7 +289,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         });
     }
     
-    function set_events() { // called at the end of updateDisplayOfEntries
+    function set_events() { // called at the end of update_entries
     
         jQuery('.wpcf7cf-and-rules').sortable();
     
@@ -332,8 +302,8 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
             var and_i = next_index;
             clone_html = $andblock.get(0).outerHTML.replace(/wpcf7cf_options\[([0-9]*)\]\[and_rules\]\[([0-9]*)\]/g, 'wpcf7cf_options[$1][and_rules]['+and_i+']');
             $andblock.after(clone_html);
-            updateDisplayOfEntries();
-            wpcf7cf.copyFieldsToText();
+            //update_settings_textarea();
+            update_entries();
             return false;
         });
     
@@ -344,16 +314,17 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
             } else {
                 $and_rule[0].closest('.entry').remove();
             }
-            updateDisplayOfEntries();
-            wpcf7cf.copyFieldsToText();
+    
+            //update_settings_textarea();
+            update_entries();
+    
             return false;
         });
     
-        jQuery('.operator').on('change', (function() {
-            updateDisplayOfEntries();
-            wpcf7cf.copyFieldsToText();
+        jQuery('.operator').off('change').change(function() {
+            update_entries();
             return false;
-        }));
+        });
     }
     
     function scale_and_button() {
@@ -369,12 +340,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     //          TOOGGLE UI MODE
     // ------------------------------------
     
-    /**
-     * Make either Text-only view or field view visible.
-     * 
-     * @param {boolean} is_text_only `true` to show text-only view. `false` for fields view
-     */
-    wpcf7cf.setViewMode = function(is_text_only) {
+    function setUiMode(is_text_only) {
         if (is_text_only) {
             wpcf7cf.currentMode = 'text';
             wpcf7cf.$entriesUi.hide();
@@ -390,23 +356,14 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         }
     }
     
-    wpcf7cf.$textOnlyLinks.on( 'click', function() {
-        wpcf7cf.$textOnlyCheckbox.prop('checked', true).trigger('change');
-        return false;
-    } )
-
     wpcf7cf.$textOnlyCheckbox.on('change', function() {
-        wpcf7cf.setViewMode(wpcf7cf.$textOnlyCheckbox.is(':checked'));
+        setUiMode(wpcf7cf.$textOnlyCheckbox.is(':checked'));
     });
     
     wpcf7cf.$formEditorForm.on('submit', function() {
         if (wpcf7cf.currentMode == 'normal' && wpcf7cf.getnumberOfFieldEntries() > 0) {
             wpcf7cf.copyFieldsToText();
         }
-    });
-
-    wpcf7cf.$entriesUi.on('change', function(){
-        wpcf7cf.copyFieldsToText();
     });
     
     
@@ -468,20 +425,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     function updateAvailableGroupsAndFields() {
         const formCode = wpcf7cf.$formEditor.val();
         const [ fields, groups ] = scanFormTags(formCode);
-    
-        $temp = jQuery(wpcf7cf.template_for_condition_fields_with_one_and_rule);
-        $temp.find('.then-field-select').eq(0).html(createOptionsHTML(groups, 'group'));
-        $temp.find('.if-field-select').eq(0).html(createOptionsHTML(fields, 'field'));
-        // $temp.find('.operator').eq(0).html(createOptionsHTML(wpcf7cf.operators, null));
-        wpcf7cf.template_for_condition_fields_with_one_and_rule = $temp[0].outerHTML;
         
-        $temp.find('.wpcf7cf-and-rules').eq(0).html('');
-        wpcf7cf.template_for_condition_fields_without_and_rules = $temp[0].outerHTML;
-    
-        $temp = jQuery(wpcf7cf.template_for_and_rule);
-        $temp.find('.if-field-select').eq(0).html(createOptionsHTML(fields, 'field'));
-        wpcf7cf.template_for_and_rule = $temp[0].outerHTML;
-
         jQuery('.then-field-select').each(function(){
             const $this = jQuery(this);
             updateSelectWithValues($this, groups, 'group');
@@ -490,51 +434,58 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
             const $this = jQuery(this);
             updateSelectWithValues($this, fields, 'field');
         });
+    
+        $temp = jQuery(wpcf7cf.template_for_condition_fields_with_one_and_rule);
+        $temp.find('.then-field-select').eq(0).html(createOptionsHTML(groups, 'group'));
+        $temp.find('.if-field-select').eq(0).html(createOptionsHTML(fields, 'field'));
+        wpcf7cf.template_for_condition_fields_with_one_and_rule = $temp[0].outerHTML;
+        
+        $temp.find('.wpcf7cf-and-rules').eq(0).html('');
+        wpcf7cf.template_for_condition_fields_without_and_rules = $temp[0].outerHTML;
+    
+        $temp = jQuery(wpcf7cf.template_for_and_rule);
+        $temp.find('.if-field-select').eq(0).html(createOptionsHTML(fields, 'field'));
+        wpcf7cf.template_for_and_rule = $temp[0].outerHTML;
+    
+        //wpcf7cf.template_for_and_rule = wpcf7cf.$newEntry.find('.wpcf7cf-and-rule')[0] ? wpcf7cf.$newEntry.find('.wpcf7cf-and-rule')[0].outerHTML : '';
     }
     
     function updateSelectWithValues($select, values, type) {
-        $select.html(createOptionsHTML(values, type));
+        const originalValue = $select.val();
+        $select.html(createOptionsHTML(values, type, originalValue));
     }
     
-    function createOptionsHTML(values, type) {
-        return (type?`<option value="-1">-- Select ${type} --</option>`:'')+values.map(value => `<option value="${value}">${value}</option>`).join('');
-    }
-
-    /**
-     * Set the default value of all fields to their current value.
-     * This prevents CF7 to show an unsaved-changes warning on these fields.
-     * (The single source of truth is the value in the text view.)
-     */
-    wpcf7cf.setDefaultValues = function() {
-        jQuery('#wpcf7cf-entries select').each(function() {
-            const $select = jQuery(this);
-            let selectedIndex = $select.prop('selectedIndex');
-            if (selectedIndex == -1) {
-                selectedIndex = 0;
-            }
-            $select.find('option').removeAttr('selected');
-            $select.find(`option:eq(${selectedIndex})`).prop('selected', 'selected').attr('selected', 'selected');
-        })
-
-        jQuery('#wpcf7cf-entries .if-value').each(function(){
-            const $input = jQuery(this);
-            $input.attr('value',$input.val());
-        });
+    function createOptionsHTML(values, type, originalValue = '-1') {
+        return `<option value="-1" ${'-1' == originalValue ? 'selected' : ''}>-- Select ${type} --</option>`+values.map(value => `<option value="${value}" ${value == originalValue ? 'selected' : ''}>${value}</option>`).join('');
     }
     
     // update available groups and fields each time there is a change in the form code.
-    wpcf7cf.$formEditor.on('change focusout', function() {
-        if( !wpcf7cf_formcode || wpcf7cf_formcode !== this.value ) {
-            wpcf7cf_formcode = this.value;
-            updateAvailableGroupsAndFields();
-            wpcf7cf.copyTextToFields();
-            wpcf7cf.copyFieldsToText();
-        }
+    wpcf7cf.$formEditor.on('change', function() {
+        updateAvailableGroupsAndFields();
     });
+    
+    var regexes = [
+        { label: wpcf7cf_options_0.regex_email_label, desc: wpcf7cf_options_0.regex_email },
+        { label: wpcf7cf_options_0.regex_numeric_label, desc: wpcf7cf_options_0.regex_numeric },
+        { label: wpcf7cf_options_0.regex_alphanumeric_label, desc: wpcf7cf_options_0.regex_alphanumeric },
+        { label: wpcf7cf_options_0.regex_alphabetic_label, desc: wpcf7cf_options_0.regex_alphabetic },
+        { label: wpcf7cf_options_0.regex_date_label, desc: wpcf7cf_options_0.regex_date },
+        { label: wpcf7cf_options_0.regex_custom_1_label, desc: wpcf7cf_options_0.regex_custom_1 },
+        { label: wpcf7cf_options_0.regex_custom_2_label, desc: wpcf7cf_options_0.regex_custom_2 },
+        { label: wpcf7cf_options_0.regex_custom_3_label, desc: wpcf7cf_options_0.regex_custom_3 },
+        { label: wpcf7cf_options_0.regex_custom_4_label, desc: wpcf7cf_options_0.regex_custom_4 },
+        { label: wpcf7cf_options_0.regex_custom_5_label, desc: wpcf7cf_options_0.regex_custom_5 },
+    ];
+    
+    var i = regexes.length;
+    while (i--) {
+        if (null == regexes[i].label || null == regexes[i].desc || regexes[i].label == '' || regexes[i].desc == '') {
+            regexes.splice(i,1);
+        }
+    }
     
     wpcf7cf.$addButton.click(function(){
         add_condition_fields();
-        wpcf7cf.copyFieldsToText();
     });
     
     jQuery(document).on('ready', function() {
@@ -552,8 +503,8 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     
         jQuery('#wpcf7cf-entries').sortable();
     
-        wpcf7cf.setViewMode(wpcf7cf.$textOnlyCheckbox.is(':checked'));
+        setUiMode(wpcf7cf.$textOnlyCheckbox.is(':checked'));
     
     })
     
-}
+    }

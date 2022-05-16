@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 5.9.3
-Stable tag: 2.1.3
+Tested up to: 6.0
+Stable tag: 2.1.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,12 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.1.4 (2022-05-16) =
+* It's no longer needed to save the form before adding conditions. Available groups are updated instantaneously after adding/changing them in the form editor.
+* Fix problems when group is named "children" [GH issue 74](https://github.com/pwkip/contact-form-7-conditional-fields/issues/74)
+* Fix problems with unsaved changes notice [GH issue 91](https://github.com/pwkip/contact-form-7-conditional-fields/issues/91)
+* Tested up to WP 6.0
 
 = 2.1.3 (2022-04-18) =
 * check for user_cap 'wpcf7_edit_contact_forms' instead of 'wpcf7_edit_contact_form' in several places. Thanks, [@paybox](https://wordpress.org/support/topic/some-notices-appearing-fix-suggested/)!
