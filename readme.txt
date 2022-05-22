@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,9 @@ The conditional fields javascript code is loaded during wp_footer, so a call to 
 Make sure to also update CF7 to the latest version! (Version 2.0 is only compatible with CF7 versions 5.4 and up. Version 1.9.16 is only compatible with CF7 version 5.3.*)
 
 == Changelog ==
+
+= 2.1.5 (2022-05-22) =
+* Fully tested with Contact Form 7 version 5.5.6.1
 
 = 2.1.4 (2022-05-16) =
 * It's no longer needed to save the form before adding conditions. Available groups are updated instantaneously after adding/changing them in the form editor.
