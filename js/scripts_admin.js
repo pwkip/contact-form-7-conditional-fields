@@ -185,11 +185,15 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         updateDisplayOfEntries();
     
     }
+
+    wpcf7cf.isMaxConditionsReached = function() {
+        return wpcf7cf.getnumberOfTextEntries() >= wpcf7cf.MAX_CONDITIONS && wpcf7cf.getnumberOfFieldEntries() == 0 ||
+            wpcf7cf.getnumberOfFieldEntries() >= wpcf7cf.MAX_CONDITIONS;
+        
+    }
     
     wpcf7cf.maybeDisableAddButton = function() {
-        if (wpcf7cf.getnumberOfTextEntries() >= wpcf7cf.MAX_CONDITIONS && wpcf7cf.getnumberOfFieldEntries() == 0 ||
-            wpcf7cf.getnumberOfFieldEntries() >= wpcf7cf.MAX_CONDITIONS
-        ) {
+        if (wpcf7cf.isMaxConditionsReached()) {
             wpcf7cf.$addButton.hide();
             wpcf7cf.$maxReachedWarning.show();
         } else {
@@ -527,8 +531,10 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         if( !wpcf7cf_formcode || wpcf7cf_formcode !== this.value ) {
             wpcf7cf_formcode = this.value;
             updateAvailableGroupsAndFields();
-            wpcf7cf.copyTextToFields();
-            wpcf7cf.copyFieldsToText();
+            if (!wpcf7cf.isMaxConditionsReached()) {
+                wpcf7cf.copyTextToFields();
+                wpcf7cf.copyFieldsToText();
+            }
         }
     });
     
