@@ -105,7 +105,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__);
-
+ // disable client side validation introduced in CF7 5.6 for now
 
 
 
@@ -116,6 +116,12 @@ __webpack_require__.r(__webpack_exports__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+if (typeof wpcf7 !== 'undefined') {
+  wpcf7.validate = function (a, b) {
+    return null;
+  };
+}
 
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
@@ -643,7 +649,7 @@ function Wpcf7cfRepeater($repeater, form) {
     var orig_name = $this.attr('data-orig_name') != null ? $this.attr('data-orig_name') : prev_name;
     $this.attr('name', new_name);
     $this.attr('data-orig_name', orig_name);
-    $this.closest('.wpcf7-form-control-wrap').addClass(new_name.replace('[]', ''));
+    $this.closest('.wpcf7-form-control-wrap').attr('data-name', new_name.replace('[]', ''));
   });
   $repeater_sub_clone.find('.wpcf7cf_repeater,[data-class="wpcf7cf_group"]').each(function () {
     var $this = jQuery(this);
@@ -866,7 +872,7 @@ Wpcf7cfRepeater.prototype.updateSuffixes = function () {
       jQuery('label[for="' + el.name + '"]', $sub).attr('for', newName);
       var $nested_repeater = jQuery('[data-id="' + el.name + '"]', $sub);
       $nested_repeater.attr('data-id', newName);
-      jQuery('.wpcf7-form-control-wrap.' + pureElName, $sub).removeClass(pureElName).addClass(pureNewName);
+      jQuery(".wpcf7-form-control-wrap[data-name=\"".concat(pureElName, "\"]"), $sub).attr('data-name', pureNewName);
 
       if (el.type === 'repeater') {
         var nested_repeater = form.repeaters.find(function (repeater) {
@@ -1029,7 +1035,7 @@ Wpcf7cfMultistep.prototype.validateStep = function (step_index) {
         jQuery.each(json.invalid_fields, function (index, el) {
           if ($multistep.find('input[name="' + index + '"]').length || $multistep.find('input[name="' + index + '[]"]').length || $multistep.find('select[name="' + index + '"]').length || $multistep.find('select[name="' + index + '[]"]').length || $multistep.find('textarea[name="' + index + '"]').length || $multistep.find('textarea[name="' + index + '[]"]').length) {
             checkError = checkError + 1;
-            var controlWrap = form.get('.wpcf7-form-control-wrap.' + index);
+            var controlWrap = form.get(".wpcf7-form-control-wrap[data-name=\"".concat(index, "\"]"));
             controlWrap.find('.wpcf7-form-control').addClass('wpcf7-not-valid');
             controlWrap.find('span.wpcf7-not-valid-tip').remove();
             controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');

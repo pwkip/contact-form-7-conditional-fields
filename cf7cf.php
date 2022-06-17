@@ -148,8 +148,13 @@ class CF7CF {
     /**
      * Remove validation requirements for fields that are hidden at the time of form submission.
      * Required/invalid fields should never trigger validation errors if they are inside a hidden group during submission.
-     * Called using add_filter( 'wpcf7_validate_[tag_type]', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
+     * Called using add_filter( 'wpcf7_validate', array($this, 'skip_validation_for_hidden_fields'), 2, 2 );
      * where the priority of 2 causes this to kill any validations with a priority higher than 2
+     * 
+     * NOTE: CF7 is weirdly designed when it comes to validating a form with files.
+     *       Only the non-file fields are considered during the wpcf7_validate filter.
+     *       When validation passes for all fields (except the file fields), the files fields are validated individually.
+     *       ( see skip_validation_for_hidden_file_field )
      *
      * @param $result
      * @param $tag
@@ -170,7 +175,11 @@ class CF7CF {
         } else {
             foreach ($invalid_fields as $invalid_field_key => $invalid_field_data) {
                 if (!in_array($invalid_field_key, $this->hidden_fields)) {
-                    $return_result->invalidate($invalid_field_key, $invalid_field_data['reason']);
+                    foreach ($tags as $tag) {
+                        if ($tag['name'] === $invalid_field_key) {
+                           $return_result->invalidate($tag, $invalid_field_data['reason']);
+                        }
+                    }
                 }
             }
         }
@@ -185,7 +194,24 @@ class CF7CF {
      * so we need to skip validation a second time for individual file fields
      */
     function skip_validation_for_hidden_file_field($result, $tag, $args=[]) {
-        return $this->skip_validation_for_hidden_fields( $result, [ $tag ] );
+
+        if (!count($result->get_invalid_fields())) {
+            return $result;
+        }
+        if(isset($_POST)) {
+            $this->set_hidden_fields_arrays($_POST);
+        }
+
+        $invalid_field_keys = array_keys($result->get_invalid_fields());
+
+        // if the current file is the only invalid tag in the result AND if the file is hidden: return a valid (blank) object
+        if (isset($this->hidden_fields) && is_array($this->hidden_fields) && in_array($tag->name, $this->hidden_fields) && count($invalid_field_keys) == 1) {
+            return new WPCF7_Validation();
+        }
+
+        // if the current file is not hidden, we'll just return the result (keep it invalid).
+        // (Note that this might also return the hidden files as invalid, but that shouldn't matter because the form is invalid, and the notification will be inside a hidden group)
+        return $result;
     }
 
     function cf7msm_merge_post_with_cookie($posted_data) {
@@ -512,7 +538,9 @@ function wpcf7cf_enqueue_styles() {
 // (HTML standard: "disabled fields don't get submitted", so no need to validate them)
 add_filter( 'wpcf7_feedback_response', function($response, $result) {
     foreach ($response['invalid_fields'] as $i => $inv) {
-        $response['invalid_fields'][$i]['into'] .= ':not(.wpcf7cf-disabled)';
+        if (isset($response['invalid_fields'][$i]['into'])) {
+            $response['invalid_fields'][$i]['into'] .= ':not(.wpcf7cf-disabled)';
+        }
     }
     return $response;
 }, 2, 10 );

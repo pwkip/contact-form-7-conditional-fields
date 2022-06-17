@@ -1,5 +1,10 @@
 "use strict";
 
+// disable client side validation introduced in CF7 5.6 for now
+if (typeof wpcf7 !== 'undefined') {
+    wpcf7.validate = (a,b) => null;
+}
+
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
 var wpcf7cf_timeout;
@@ -533,7 +538,7 @@ function Wpcf7cfRepeater($repeater, form) {
 
         $this.attr('name', new_name);
         $this.attr('data-orig_name', orig_name);
-        $this.closest('.wpcf7-form-control-wrap').addClass(new_name.replace('[]',''));
+        $this.closest('.wpcf7-form-control-wrap').attr('data-name', new_name.replace('[]',''));
     });
 
     $repeater_sub_clone.find('.wpcf7cf_repeater,[data-class="wpcf7cf_group"]').each(function() {
@@ -789,7 +794,7 @@ Wpcf7cfRepeater.prototype.updateSuffixes = function() {
             jQuery('label[for="'+el.name+'"]', $sub).attr('for', newName);
             const $nested_repeater = jQuery('[data-id="'+el.name+'"]', $sub);
             $nested_repeater.attr('data-id', newName);
-            jQuery('.wpcf7-form-control-wrap.'+pureElName,$sub).removeClass(pureElName).addClass(pureNewName);
+            jQuery(`.wpcf7-form-control-wrap[data-name="${pureElName}"]`,$sub).attr('data-name', pureNewName);
 
             if (el.type === 'repeater') {
                 const nested_repeater = form.repeaters.find( function(repeater) {
@@ -971,7 +976,7 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                     ) {
                         checkError = checkError + 1;
 
-                        var controlWrap = form.get('.wpcf7-form-control-wrap.' + index);
+                        var controlWrap = form.get(`.wpcf7-form-control-wrap[data-name="${index}"]`);
                         controlWrap.find('.wpcf7-form-control').addClass('wpcf7-not-valid');
                         controlWrap.find('span.wpcf7-not-valid-tip').remove();
                         controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');
