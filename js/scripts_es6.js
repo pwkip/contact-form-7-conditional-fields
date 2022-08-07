@@ -8,7 +8,7 @@ if (typeof wpcf7 !== 'undefined') {
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
 var wpcf7cf_timeout;
-var wpcf7cf_change_time_ms = 100;
+var wpcf7cf_change_time_ms = 100; // the timeout after a change in the form is detected
 
 if (window.wpcf7 && !wpcf7.setStatus) {
     wpcf7.setStatus = ( form, status ) => {
@@ -70,22 +70,6 @@ var wpcf7cf_hide_step_animation = { "opacity": "hide" };
 var wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.wpcf7cf propertychange.wpcf7cf changedisabledprop.wpcf7cf';
 
 var wpcf7cf_forms = [];
-
-window.wpcf7cf_dom = {};
-
-const wpcf7cf_reload_dom = function($form) {
-    wpcf7cf_dom = wpcf7cf.get_simplified_dom_model($form[0]);
-}
-
-const wpcf7cf_getFieldsByOriginalName = function(originalName) {
-    return Object.values(wpcf7cf_dom).filter(function (inputField) {
-        return inputField.original_name === originalName || inputField.original_name === originalName+'[]';
-    });
-}
-
-const wpcf7cf_getFieldByName = function(name) {
-    return wpcf7cf_dom[name] || wpcf7cf_dom[name+'[]'];
-}
 
 // endsWith polyfill
 if (!String.prototype.endsWith) {
@@ -200,10 +184,59 @@ var Wpcf7cfForm = function($form) {
     form.unit_tag = $form.closest('.wpcf7').attr('id');
     form.conditions = form_options['conditions'];
 
+    form.simpleDom = null;
+
+    form.reloadSimpleDom = function() {
+        form.simpleDom = wpcf7cf.get_simplified_dom_model(form.$form[0]);
+    }
+
+    // quicker than reloading the simpleDom completely with reloadSimpleDom
+    form.updateSimpleDom = function() {
+        if (!form.simpleDom) {
+            form.reloadSimpleDom();
+        }
+        const inputs = Object.values(form.simpleDom).filter(item => item.type === 'input');
+        const formdata = new FormData(form.$form[0]);
+        const formdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
+        // const changedInputs = inputs.filter(item => !form.isDomMatch(item, formdataEntries));
+
+        inputs.forEach(simpleDomItem => {
+            const newValue = form.getNewDomValueIfChanged(simpleDomItem, formdataEntries);
+            if (newValue !== null) {
+                form.simpleDom[simpleDomItem.name].val = newValue;
+            }
+        });
+
+    }
+
+    form.isDomMatch = function(simpleDomItem, formDataEntries) {
+        const simpleDomItemName = simpleDomItem.name;
+        const simpleDomItemValues = simpleDomItem.val;
+        const currentValues = formDataEntries.filter(entry => entry[0] === simpleDomItemName).map(entry => entry[1]);
+        return currentValues.join('|') === simpleDomItemValues.join('|');
+    }
+
+    /**
+     * 
+     * @param {*} simpleDomItem 
+     * @param {*} formDataEntries 
+     * @returns the new value, or NULL if no change
+     */
+    form.getNewDomValueIfChanged = function(simpleDomItem, formDataEntries) {
+        const simpleDomItemName = simpleDomItem.name;
+        const simpleDomItemValues = simpleDomItem.val;
+        const currentValues = formDataEntries.filter(entry => entry[0] === simpleDomItemName).map(entry => entry[1]);
+        return currentValues.join('|') === simpleDomItemValues.join('|') ? null : currentValues;
+    }
+
     // Wrapper around jQuery(selector, form.$form)
     form.get = function (selector) {
         // TODO: implement some caching here.
         return jQuery(selector, form.$form);
+    }
+
+    form.getFieldByName = function(name) {
+        return form.simpleDom[name] || form.simpleDom[name+'[]'];
     }
 
     // compatibility with conditional forms created with older versions of the plugin ( < 1.4 )
@@ -239,6 +272,7 @@ var Wpcf7cfForm = function($form) {
     form.$form.on('reset.wpcf7cf', form, function(e) {
         var form = e.data;
         setTimeout(function(){
+            form.reloadSimpleDom();
             form.displayFields();
             form.resetRepeaters();
             if (form.multistep != null) {
@@ -306,7 +340,7 @@ Wpcf7cfForm.prototype.displayFields = function() {
 
     form.$groups.addClass('wpcf7cf-hidden');
 
-    wpcf7cf_reload_dom(form.$form);
+    //form.reloadSimpleDom();
 
     for (var i=0; i < wpcf7cf_conditions.length; i++) {
 
@@ -465,7 +499,7 @@ Wpcf7cfForm.prototype.updateGroups = function() {
     var form = this;
     form.$groups = form.$form.find('[data-class="wpcf7cf_group"]');
     form.$groups.height('auto');
-    form.conditions = window.wpcf7cf.get_nested_conditions(form.initial_conditions, form.$form);
+    form.conditions = window.wpcf7cf.get_nested_conditions(form);
 
 };
 Wpcf7cfForm.prototype.updateEventListeners = function() {
@@ -478,6 +512,7 @@ Wpcf7cfForm.prototype.updateEventListeners = function() {
         clearTimeout(wpcf7cf_timeout);
         wpcf7cf_timeout = setTimeout(function() {
             window.wpcf7cf.updateMultistepState(form.multistep);
+            form.updateSimpleDom();
             form.displayFields();
         }, wpcf7cf_change_time_ms);
     });
@@ -748,7 +783,6 @@ Wpcf7cfRepeater.prototype.addSubs = function(subs_to_add, index=null) {
     return false;
 };
 
-/** TODO: implement this */
 Wpcf7cfRepeater.prototype.updateSuffixes = function() {
 
     // Loop trough all subs
@@ -765,7 +799,7 @@ Wpcf7cfRepeater.prototype.updateSuffixes = function() {
     const repeater_suffix = repeater_id.replace(orig_id,'');
 
     let simplifiedDomArray = Object.values(wpcf7cf.get_simplified_dom_model(form.$form[0]));
-    
+
     for (let i = 0; i < num_subs; i++) {
 
         const $sub = jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(i);
@@ -1042,9 +1076,9 @@ Wpcf7cfMultistep.prototype.moveToStep = function(step_index, scrollToTop = true)
 };
 
 Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
-    wpcf7cf_reload_dom(this.form.$form);
+    this.form.reloadSimpleDom();
     var inStep = false;
-    return Object.values(wpcf7cf_dom).filter(function(item, i) {
+    return Object.values(this.form.simpleDom).filter(function(item, i) {
         if(item.type == 'step') {
             inStep = item.val == step_index+'';
         }
@@ -1133,8 +1167,6 @@ window.wpcf7cf = {
 
     getWpcf7cfForm : function ($form) {
         const matched_forms = wpcf7cf_forms.filter((form)=>{
-            const f1 =  form.$form.get(0);
-            const f2 =  $form.get(0);
             return form.$form.get(0) === $form.get(0);
         });
         if (matched_forms.length) {
@@ -1143,10 +1175,11 @@ window.wpcf7cf = {
         return false;
     },
 
-    get_nested_conditions : function(conditions, $current_form) {
+    get_nested_conditions : function(form) {
+        const conditions = form.initial_conditions;
         //loop trough conditions. Then loop trough the dom, and each repeater we pass we should update all sub_values we encounter with __index
-        wpcf7cf_reload_dom($current_form);
-        var groups = Object.values(wpcf7cf_dom).filter(function(item, i) {
+        form.reloadSimpleDom();
+        var groups = Object.values(form.simpleDom).filter(function(item, i) {
             return item.type==='group';
         });
 
@@ -1293,7 +1326,7 @@ window.wpcf7cf = {
 
     },
 
-    should_group_be_shown : function(condition) {
+    should_group_be_shown : function(condition, form) {
 
         var show_group = true;
 
@@ -1303,7 +1336,7 @@ window.wpcf7cf = {
 
             var condition_and_rule = condition.and_rules[and_rule_i];
 
-            var inputField = wpcf7cf_getFieldByName(condition_and_rule.if_field);
+            var inputField = form.getFieldByName(condition_and_rule.if_field);
 
             if (!inputField) continue; // field not found
 

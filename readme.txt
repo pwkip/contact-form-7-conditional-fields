@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -127,6 +127,9 @@ Make sure to also update CF7 to the latest version! (Version 2.2 is only compati
 
 
 == Changelog ==
+
+= 2.2.2 (2022-08-07) =
+* Performance improvements
 
 = 2.2.1 (2022-07-21) =
 * Fully tested with Contact Form 7 version 5.6.1
