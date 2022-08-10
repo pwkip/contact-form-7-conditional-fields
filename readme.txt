@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -127,6 +127,11 @@ Make sure to also update CF7 to the latest version! (Version 2.2 is only compati
 
 
 == Changelog ==
+
+= 2.2.3 (2022-08-10) =
+* Fully tested with Contact Form 7 version 5.6.2
+* [Fix](https://wordpress.org/support/topic/only-textmode-with-smartgrid-plugin/#post-15895061) for smartgrid plugin
+* Some code refactoring
 
 = 2.2.2 (2022-08-07) =
 * Performance improvements

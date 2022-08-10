@@ -8,11 +8,12 @@ function wpcf7cf_admin_enqueue_scripts( $hook_suffix ) {
 
 
 	if ( isset($_GET['page']) && ( $_GET['page'] == 'wpcf7' && isset($_GET['post']) || $_GET['page'] == 'wpcf7-new' ) ) {
-		 //only load styles and scripts if this is a CF7 detail page.
+		//only load styles and scripts if this is a CF7 detail page.
 		wpcf7cf_admin_enqueue_form_edit_scripts($hook_suffix);
 	}
 
 }
+
 /* fix for std post editor used in Smart Grid */
 add_action('cf7sg_enqueue_admin_editor_scripts', 'wpcf7cf_admin_enqueue_form_edit_scripts');
 

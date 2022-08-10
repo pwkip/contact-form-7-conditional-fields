@@ -5,10 +5,10 @@ if (typeof wpcf7 !== 'undefined') {
     wpcf7.validate = (a,b) => null;
 }
 
-var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
+let cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
-var wpcf7cf_timeout;
-var wpcf7cf_change_time_ms = 100; // the timeout after a change in the form is detected
+let wpcf7cf_timeout;
+let wpcf7cf_change_time_ms = 100; // the timeout after a change in the form is detected
 
 if (window.wpcf7 && !wpcf7.setStatus) {
     wpcf7.setStatus = ( form, status ) => {
@@ -52,8 +52,8 @@ if (window.wpcf7 && !wpcf7.setStatus) {
 
 if (window.wpcf7cf_running_tests) {
     jQuery('input[name="_wpcf7cf_options"]').each(function(e) {
-        var $input = jQuery(this);
-        var opt = JSON.parse($input.val());
+        const $input = jQuery(this);
+        const opt = JSON.parse($input.val());
         opt.settings.animation_intime = 0;
         opt.settings.animation_outtime = 0;
         $input.val(JSON.stringify(opt));
@@ -61,118 +61,27 @@ if (window.wpcf7cf_running_tests) {
     wpcf7cf_change_time_ms = 0;
 }
 
-var wpcf7cf_show_animation = { "height": "show", "marginTop": "show", "marginBottom": "show", "paddingTop": "show", "paddingBottom": "show" };
-var wpcf7cf_hide_animation = { "height": "hide", "marginTop": "hide", "marginBottom": "hide", "paddingTop": "hide", "paddingBottom": "hide" };
+const wpcf7cf_show_animation = { "height": "show", "marginTop": "show", "marginBottom": "show", "paddingTop": "show", "paddingBottom": "show" };
+const wpcf7cf_hide_animation = { "height": "hide", "marginTop": "hide", "marginBottom": "hide", "paddingTop": "hide", "paddingBottom": "hide" };
 
-var wpcf7cf_show_step_animation = { "opacity": "show" };
-var wpcf7cf_hide_step_animation = { "opacity": "hide" };
+const wpcf7cf_show_step_animation = { "opacity": "show" };
+const wpcf7cf_hide_step_animation = { "opacity": "hide" };
 
-var wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.wpcf7cf propertychange.wpcf7cf changedisabledprop.wpcf7cf';
+const wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.wpcf7cf propertychange.wpcf7cf changedisabledprop.wpcf7cf';
 
-var wpcf7cf_forms = [];
+const wpcf7cf_forms = [];
 
-// endsWith polyfill
-if (!String.prototype.endsWith) {
-	String.prototype.endsWith = function(search, this_len) {
-		if (this_len === undefined || this_len > this.length) {
-			this_len = this.length;
-		}
-		return this.substring(this_len - search.length, this_len) === search;
-	};
-}
+const Wpcf7cfForm = function($form) {
 
-// Object.values polyfill
-if (!Object.values) Object.values = o=>Object.keys(o).map(k=>o[k]);
-
-// Array.from polyfill
-if (!Array.from) {
-    Array.from = (function () {
-      var toStr = Object.prototype.toString;
-      var isCallable = function (fn) {
-        return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
-      };
-      var toInteger = function (value) {
-        var number = Number(value);
-        if (isNaN(number)) { return 0; }
-        if (number === 0 || !isFinite(number)) { return number; }
-        return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-      };
-      var maxSafeInteger = Math.pow(2, 53) - 1;
-      var toLength = function (value) {
-        var len = toInteger(value);
-        return Math.min(Math.max(len, 0), maxSafeInteger);
-      };
-  
-      // The length property of the from method is 1.
-      return function from(arrayLike/*, mapFn, thisArg */) {
-        // 1. Let C be the this value.
-        var C = this;
-  
-        // 2. Let items be ToObject(arrayLike).
-        var items = Object(arrayLike);
-  
-        // 3. ReturnIfAbrupt(items).
-        if (arrayLike == null) {
-          throw new TypeError("Array.from requires an array-like object - not null or undefined");
-        }
-  
-        // 4. If mapfn is undefined, then let mapping be false.
-        var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-        var T;
-        if (typeof mapFn !== 'undefined') {
-          // 5. else
-          // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
-          if (!isCallable(mapFn)) {
-            throw new TypeError('Array.from: when provided, the second argument must be a function');
-          }
-  
-          // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
-          if (arguments.length > 2) {
-            T = arguments[2];
-          }
-        }
-  
-        // 10. Let lenValue be Get(items, "length").
-        // 11. Let len be ToLength(lenValue).
-        var len = toLength(items.length);
-  
-        // 13. If IsConstructor(C) is true, then
-        // 13. a. Let A be the result of calling the [[Construct]] internal method of C with an argument list containing the single item len.
-        // 14. a. Else, Let A be ArrayCreate(len).
-        var A = isCallable(C) ? Object(new C(len)) : new Array(len);
-  
-        // 16. Let k be 0.
-        var k = 0;
-        // 17. Repeat, while k < len… (also steps a - h)
-        var kValue;
-        while (k < len) {
-          kValue = items[k];
-          if (mapFn) {
-            A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
-          } else {
-            A[k] = kValue;
-          }
-          k += 1;
-        }
-        // 18. Let putStatus be Put(A, "length", len, true).
-        A.length = len;
-        // 20. Return A.
-        return A;
-      };
-    }());
-  }
-
-var Wpcf7cfForm = function($form) {
-
-    var options_element = $form.find('input[name="_wpcf7cf_options"]').eq(0);
+    const options_element = $form.find('input[name="_wpcf7cf_options"]').eq(0);
     if (!options_element.length || !options_element.val()) {
         // doesn't look like a CF7 form created with conditional fields plugin enabled.
         return false;
     }
 
-    var form = this;
+    const form = this;
 
-    var form_options = JSON.parse(options_element.val());
+    const form_options = JSON.parse(options_element.val());
 
     form.$form = $form;
     form.$input_hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
