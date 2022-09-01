@@ -436,10 +436,12 @@ function wpcf7cf_properties($properties, $wpcf7form) {
 	    		$tag_html_data = array();
 
 	    		foreach ($tag_parts as $i => $tag_part) {
-	    			if ($i==0) continue;
-					else if ($tag_part == 'inline') $tag_html_type = 'span';
-					else if ($tag_part == 'clear_on_hide') $tag_html_data[] = 'data-clear_on_hide';
-					else if ($tag_part == 'disable_on_hide' && WPCF7CF_IS_PRO) $tag_html_data[] = 'data-disable_on_hide';
+                    if ($i==0) continue;
+                    $tag_part = explode(':',$tag_part);
+					if ($tag_part[0] == 'inline') $tag_html_type = 'span';
+					else if ($tag_part[0] == 'clear_on_hide') $tag_html_data[] = 'data-clear_on_hide';
+					else if ($tag_part[0] == 'disable_on_hide' && WPCF7CF_IS_PRO) $tag_html_data[] = 'data-disable_on_hide';
+                    else if ($tag_part[0] == 'class') $tag_html_data[] = 'class="'.($tag_part[1]??'').'"';
 			    }
 
 			    array_push($stack,$tag_html_type);

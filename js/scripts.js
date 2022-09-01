@@ -499,10 +499,10 @@ Wpcf7cfForm.prototype.displayFields = function () {
     }
   }
 
-  form.$groups.addClass('wpcf7cf-hidden'); //form.reloadSimpleDom();
+  form.$groups.addClass('wpcf7cf-hidden');
 
-  for (var i = 0; i < wpcf7cf_conditions.length; i++) {
-    var condition = wpcf7cf_conditions[i];
+  for (var _i = 0; _i < wpcf7cf_conditions.length; _i++) {
+    var condition = wpcf7cf_conditions[_i];
     var show_group = window.wpcf7cf.should_group_be_shown(condition, form);
 
     if (show_group) {
@@ -569,7 +569,11 @@ Wpcf7cfForm.prototype.displayFields = function () {
 Wpcf7cfForm.prototype.updateSummaryFields = function () {
   var form = this;
   var $summary = form.get('.wpcf7cf-summary');
-  if ($summary.length == 0 || !$summary.is(':visible')) return;
+
+  if ($summary.length == 0 || !$summary.is(':visible')) {
+    return;
+  }
+
   var fd = new FormData();
   var formdata = form.$form.serializeArray();
   jQuery.each(formdata, function (key, input) {
@@ -603,7 +607,6 @@ Wpcf7cfForm.prototype.updateHiddenFields = function () {
   var hidden_fields = [];
   var hidden_groups = [];
   var visible_groups = [];
-  var disabled_fields = [];
   form.$groups.each(function () {
     var $group = jQuery(this);
 
@@ -681,9 +684,9 @@ Wpcf7cfForm.prototype.updateEventListeners = function () {
 
 function Wpcf7cfRepeater($repeater, form) {
   var $ = jQuery;
-  var repeater = this;
+  var thisRepeater = this;
   var wpcf7cf_settings = form.settings;
-  repeater.form = form;
+  thisRepeater.form = form;
   $repeater.parentRepeaters = Array.from($repeater.parents('.wpcf7cf_repeater').map(function () {
     return this.getAttribute('data-id');
   })).reverse();
@@ -693,7 +696,11 @@ function Wpcf7cfRepeater($repeater, form) {
   $repeater.min = typeof $repeater.attr('data-min') !== 'undefined' ? parseInt($repeater.attr('data-min')) : 1;
   $repeater.max = typeof $repeater.attr('data-max') !== 'undefined' ? parseInt($repeater.attr('data-max')) : 200;
   $repeater.initial_subs = typeof $repeater.attr('data-initial') !== 'undefined' ? parseInt($repeater.attr('data-initial')) : $repeater.min;
-  if ($repeater.initial_subs > $repeater.max) $repeater.initial_subs = $repeater.max;
+
+  if ($repeater.initial_subs > $repeater.max) {
+    $repeater.initial_subs = $repeater.max;
+  }
+
   var $repeater_sub = $repeater.children('.wpcf7cf_repeater_sub').eq(0);
   var $repeater_controls = $repeater.children('.wpcf7cf_repeater_controls').eq(0);
   var $repeater_sub_clone = $repeater_sub.clone();
@@ -706,7 +713,7 @@ function Wpcf7cfRepeater($repeater, form) {
   $repeater_sub_clone.find('[name]').each(function () {
     var $this = jQuery(this);
     var prev_name = $this.attr('name');
-    var new_name = repeater.getNewName(prev_name);
+    var new_name = thisRepeater.getNewName(prev_name);
     var orig_name = $this.attr('data-orig_name') != null ? $this.attr('data-orig_name') : prev_name;
     $this.attr('name', new_name);
     $this.attr('data-orig_name', orig_name);
@@ -716,7 +723,7 @@ function Wpcf7cfRepeater($repeater, form) {
     var $this = jQuery(this);
     var prev_data_id = $this.attr('data-id');
     var orig_data_id = $this.attr('data-orig_data_id') != null ? $this.attr('data-orig_data_id') : prev_data_id;
-    var new_data_id = repeater.getNewName(prev_data_id);
+    var new_data_id = thisRepeater.getNewName(prev_data_id);
 
     if (prev_data_id.endsWith('_count')) {
       new_data_id = prev_data_id.replace('_count', '__{{repeater_sub_suffix}}_count');
@@ -729,7 +736,7 @@ function Wpcf7cfRepeater($repeater, form) {
     var $this = jQuery(this);
     var prev_id = $this.attr('id');
     var orig_id = $this.attr('data-orig_id') != null ? $this.attr('data-orig_id') : prev_id;
-    var new_id = repeater.getNewName(prev_id);
+    var new_id = thisRepeater.getNewName(prev_id);
     $this.attr('id', new_id);
     $this.attr('data-orig_id', orig_id);
   });
@@ -737,7 +744,7 @@ function Wpcf7cfRepeater($repeater, form) {
     var $this = jQuery(this);
     var prev_for = $this.attr('for');
     var orig_for = $this.attr('data-orig_for') != null ? $this.attr('data-orig_for') : prev_for;
-    var new_for = repeater.getNewName(prev_for);
+    var new_for = thisRepeater.getNewName(prev_for);
     $this.attr('for', new_for);
     $this.attr('data-orig_for', orig_for);
   });
@@ -754,19 +761,19 @@ function Wpcf7cfRepeater($repeater, form) {
     $button_remove: $button_remove,
     wpcf7cf_settings: wpcf7cf_settings
   };
-  this.params = params;
-  $button_add.on('click', null, repeater, function (e) {
-    var repeater = e.data;
-    repeater.updateSubs(params.$repeater.num_subs + 1);
+  thisRepeater.params = params;
+  $button_add.on('click', null, thisRepeater, function (e) {
+    thisRepeater = e.data;
+    thisRepeater.updateSubs(params.$repeater.num_subs + 1);
   });
-  $button_remove.on('click', null, repeater, function (e) {
-    var repeater = e.data;
-    repeater.updateSubs(params.$repeater.num_subs - 1);
+  $button_remove.on('click', null, thisRepeater, function (e) {
+    thisRepeater = e.data;
+    thisRepeater.updateSubs(params.$repeater.num_subs - 1);
   });
   jQuery('> .wpcf7cf_repeater_sub', params.$repeater).eq(0).remove(); // remove the first sub, it's just a template.
 
-  repeater.updateSubs($repeater.initial_subs);
-  repeater.updateButtons();
+  thisRepeater.updateSubs($repeater.initial_subs);
+  thisRepeater.updateButtons();
 }
 
 Wpcf7cfRepeater.prototype.getNewName = function (previousName) {
@@ -853,21 +860,21 @@ Wpcf7cfRepeater.prototype.addSubs = function (subs_to_add) {
     html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g, sub_suffix).replace(new RegExp('\{\{' + $repeater.orig_id + '_index\}\}', 'g'), '<span class="wpcf7cf-index wpcf7cf__' + $repeater.orig_id + '">' + sub_suffix + '</span>');
   }
 
-  var $html = jQuery(html_str);
-  jQuery('> .wpcf7cf_repeater_sub', $repeater).finish(); // finish any currently running animations immediately.
+  var $html = $(html_str);
+  $('> .wpcf7cf_repeater_sub', $repeater).finish(); // finish any currently running animations immediately.
   // Add the newly created fields to the form
 
   if (index === null) {
     $html.hide().insertBefore($repeater_controls).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
   } else {
-    $html.hide().insertBefore(jQuery('> .wpcf7cf_repeater_sub', $repeater).eq(index)).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
+    $html.hide().insertBefore($('> .wpcf7cf_repeater_sub', $repeater).eq(index)).animate(wpcf7cf_show_animation, params.wpcf7cf_settings.animation_intime).trigger('wpcf7cf_repeater_added');
   } // enable all new fields
 
 
   $html.find('.wpcf7cf-disabled :input').prop('disabled', false).trigger('changedisabledprop.wpcf7cf');
   $html.find('.wpcf7-form-control-wrap').removeClass('wpcf7cf-disabled');
-  jQuery('.wpcf7cf_repeater', $html).each(function () {
-    form.repeaters.push(new Wpcf7cfRepeater(jQuery(this), form));
+  $('.wpcf7cf_repeater', $html).each(function () {
+    form.repeaters.push(new Wpcf7cfRepeater($(this), form));
   });
   form.$input_repeaters.val(JSON.stringify(form.repeaters.map(function (item) {
     return item.params.$repeater.id;
@@ -1234,12 +1241,12 @@ window.wpcf7cf = {
     });
     var sub_conditions = [];
 
-    for (var i = 0; i < groups.length; i++) {
+    var _loop2 = function _loop2(i) {
       var g = groups[i];
       var relevant_conditions = conditions.filter(function (condition, i) {
         return condition.then_field === g.original_name;
       });
-      var relevant_conditions = relevant_conditions.map(function (item, i) {
+      relevant_conditions = relevant_conditions.map(function (item, i) {
         return {
           then_field: g.name,
           and_rules: item.and_rules.map(function (and_rule, i) {
@@ -1252,6 +1259,10 @@ window.wpcf7cf = {
         };
       });
       sub_conditions = sub_conditions.concat(relevant_conditions);
+    };
+
+    for (var i = 0; i < groups.length; i++) {
+      _loop2(i);
     }
 
     return sub_conditions;
