@@ -343,14 +343,24 @@ var Wpcf7cfForm = function Wpcf7cfForm($form) {
     var inputs = Object.values(form.simpleDom).filter(function (item) {
       return item.type === 'input';
     });
-    var formdata = new FormData(form.$form[0]);
+    var formdata = new FormData(form.$form[0]); // const oldformdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
+    // const formdataEntries = [ ... jQuery(':input:not(button)', form.$form) ].map(entry => [entry.name, entry.value]);
 
     var formdataEntries = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(formdata.entries()).map(function (entry) {
       var _entry$1$name;
 
       return [entry[0], (_entry$1$name = entry[1].name) !== null && _entry$1$name !== void 0 ? _entry$1$name : entry[1]];
-    }); // const changedInputs = inputs.filter(item => !form.isDomMatch(item, formdataEntries));
+    });
 
+    var buttonEntries = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(jQuery('button', form.$form)).map(function (entry) {
+      return [entry.name, entry.value];
+    });
+
+    formdataEntries = formdataEntries.concat(buttonEntries); // const str1 = JSON.stringify(oldformdataEntries);
+    // const str2 = JSON.stringify(formdataEntries);
+    // if ( str1 !== str2 ) {
+    //     debugger;
+    // }
 
     inputs.forEach(function (simpleDomItem) {
       var newValue = form.getNewDomValueIfChanged(simpleDomItem, formdataEntries);
