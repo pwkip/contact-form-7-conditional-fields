@@ -106,19 +106,10 @@ const Wpcf7cfForm = function($form) {
         }
         const inputs = Object.values(form.simpleDom).filter(item => item.type === 'input');
         const formdata = new FormData(form.$form[0]);
-        // const oldformdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
-        // const formdataEntries = [ ... jQuery(':input:not(button)', form.$form) ].map(entry => [entry.name, entry.value]);
 
         let formdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
         const buttonEntries = [ ... jQuery('button', form.$form) ].map(entry => [entry.name, entry.value]);
-
         formdataEntries = formdataEntries.concat(buttonEntries);
-
-        // const str1 = JSON.stringify(oldformdataEntries);
-        // const str2 = JSON.stringify(formdataEntries);
-        // if ( str1 !== str2 ) {
-        //     debugger;
-        // }
 
         inputs.forEach(simpleDomItem => {
             const newValue = form.getNewDomValueIfChanged(simpleDomItem, formdataEntries);

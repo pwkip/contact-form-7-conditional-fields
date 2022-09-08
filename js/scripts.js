@@ -343,8 +343,7 @@ var Wpcf7cfForm = function Wpcf7cfForm($form) {
     var inputs = Object.values(form.simpleDom).filter(function (item) {
       return item.type === 'input';
     });
-    var formdata = new FormData(form.$form[0]); // const oldformdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
-    // const formdataEntries = [ ... jQuery(':input:not(button)', form.$form) ].map(entry => [entry.name, entry.value]);
+    var formdata = new FormData(form.$form[0]);
 
     var formdataEntries = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(formdata.entries()).map(function (entry) {
       var _entry$1$name;
@@ -356,12 +355,7 @@ var Wpcf7cfForm = function Wpcf7cfForm($form) {
       return [entry.name, entry.value];
     });
 
-    formdataEntries = formdataEntries.concat(buttonEntries); // const str1 = JSON.stringify(oldformdataEntries);
-    // const str2 = JSON.stringify(formdataEntries);
-    // if ( str1 !== str2 ) {
-    //     debugger;
-    // }
-
+    formdataEntries = formdataEntries.concat(buttonEntries);
     inputs.forEach(function (simpleDomItem) {
       var newValue = form.getNewDomValueIfChanged(simpleDomItem, formdataEntries);
 

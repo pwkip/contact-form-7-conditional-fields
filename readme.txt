@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.2.5
+Stable tag: 2.2.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -127,6 +127,10 @@ Make sure to also update CF7 to the latest version! (Version 2.2 is only compati
 
 
 == Changelog ==
+
+= 2.2.6 (2022-09-08) =
+* PRO: Fix issues with validation in nested repeaters [GH issue 92](https://github.com/pwkip/contact-form-7-conditional-fields/issues/92)
+* Fix error with optional file field in hidden group [GH issue 92](https://github.com/pwkip/contact-form-7-conditional-fields/issues/92)
 
 = 2.2.5 (2022-09-04) =
 * PRO: Fix bug with togglebutton
