@@ -8,15 +8,6 @@ class CF7CF {
 
     function __construct() {
 
-	    // can't use wpcf7_enqueue_scripts hook, because it's possible that people
-	    // want to disable the CF7 scripts. but in this case Conditional fields should still work.
-        // add_action('wpcf7_enqueue_scripts', array(__CLASS__, 'enqueue_js')); // <-- don't use this
-
-	    // Enqueue_scripts moved to function outside class.
-
-//	    add_action('wp_enqueue_scripts', array(__CLASS__, 'enqueue_js'), 20);
-//	    add_action('wpcf7_enqueue_styles', array(__CLASS__, 'enqueue_css'));
-
         // Register shortcodes
         add_action('wpcf7_init', array(__CLASS__, 'add_shortcodes'));
 
@@ -35,9 +26,14 @@ class CF7CF {
         add_filter( 'wpcf7_validate_file*', array($this, 'skip_validation_for_hidden_file_field'), 30, 3);
         add_filter( 'wpcf7_validate_multifile*', array($this, 'skip_validation_for_hidden_file_field'), 30, 3);
 
+        // If acceptance_as_validation is on, then Acceptance fields inside hidden groups should not trigger an error
+        add_filter( 'wpcf7_acceptance', function($accepted, $submission) {
+            $acceptance_as_validation = $submission->get_contact_form()->additional_setting('acceptance_as_validation');
+            return $accepted || $acceptance_as_validation === 'on';
+        }, 20, 2 );
+
 	    // validation messages
 	    add_action('wpcf7_config_validator_validate', array($this,'wpcf7cf_config_validator_validate'));
-
 
 	    add_action("wpcf7_before_send_mail", [$this, 'hide_hidden_mail_fields'], 10, 3);
 
@@ -281,13 +277,16 @@ class CF7CF {
             if (!is_array($props[$mail])) { continue; }
 			foreach ($props[$mail] as $key=>$val) {
 
-                $parser = new Wpcf7cfMailParser($val, $this->visible_groups, $this->hidden_groups, $this->repeaters, $_POST);
+                // remove unwanted whitespace between closing and opening groups from email
+                $count = 1;
+                while ($count) {
+                    $val = preg_replace(WPCF7CF_REGEX_MAIL_UNWANTED_WHITESPACE, '$1$2', $val, -1, $count);
+                }
 
-				// $props[$mail][$key] = preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $val );
+                // remove hiddden groups from email
+                $parser = new Wpcf7cfMailParser($val, $this->visible_groups, $this->hidden_groups, $this->repeaters, $_POST);
 				$props[$mail][$key] = $parser->getParsedMail();
             }
-
-
         }
 
 

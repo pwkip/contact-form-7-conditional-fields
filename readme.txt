@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,7 @@ Adds conditional logic to Contact Form 7.
 This plugin adds conditional logic to [Contact Form 7](https://wordpress.org/plugins/contact-form-7/).
 
 If you edit your CF7 form, you will see an additional tag called "Conditional fields Group". Everything you put between the start and end tag will be hidden by default.
-After you have added the field group(s), click Save and go to the "Conditional fields" tab to create one or more conditions that will make the group(s) appear.
+After you have added the field group(s), go to the "Conditional fields" tab to create one or more conditions that will make the group(s) appear.
 
 = How to use it =
 
@@ -127,6 +127,11 @@ Make sure to also update CF7 to the latest version! (Version 2.2 is only compati
 
 
 == Changelog ==
+
+= 2.2.7 (2022-10-14) =
+* Remove unwanted whitespace between closing and opening group tags in mail messages.
+* Fix problems with acceptance fields [More info](https://conditional-fields-cf7.bdwm.be/acceptance/)
+* Redesign of [form tester](https://conditional-fields-cf7.bdwm.be/form-tester/)
 
 = 2.2.6 (2022-09-08) =
 * PRO: Fix issues with validation in nested repeaters [GH issue 92](https://github.com/pwkip/contact-form-7-conditional-fields/issues/92)
