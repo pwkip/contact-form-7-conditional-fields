@@ -29,7 +29,7 @@ class CF7CF {
         // If acceptance_as_validation is on, then Acceptance fields inside hidden groups should not trigger an error
         add_filter( 'wpcf7_acceptance', function($accepted, $submission) {
             $acceptance_as_validation = $submission->get_contact_form()->additional_setting('acceptance_as_validation');
-            return $accepted || $acceptance_as_validation === 'on';
+            return $accepted || (is_array($acceptance_as_validation) && in_array('on', $acceptance_as_validation));
         }, 20, 2 );
 
 	    // validation messages

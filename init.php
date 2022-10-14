@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.2.7' );
+if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.2.8' );
 if (!defined('WPCF7CF_CF7_MIN_VERSION')) define( 'WPCF7CF_CF7_MIN_VERSION', '5.6' );
 if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '5.6.3' );
 if (!defined('WPCF7CF_REQUIRED_WP_VERSION')) define( 'WPCF7CF_REQUIRED_WP_VERSION', '4.1' );
