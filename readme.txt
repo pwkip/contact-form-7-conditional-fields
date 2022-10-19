@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 2.2.8
+Tested up to: 6.0.3
+Stable tag: 2.2.9
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -127,6 +127,10 @@ Make sure to also update CF7 to the latest version! (Version 2.2 is only compati
 
 
 == Changelog ==
+
+= 2.2.9 (2022-10-19) =
+* Fully tested with Contact Form 7 version 5.6.4
+* Add action hook: [wpcf7cf_step_completed](https://conditional-fields-cf7.bdwm.be/wpcf7cf_step_completed/)
 
 = 2.2.8 (2022-10-14) =
 * Fix acceptance field bug
