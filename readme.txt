@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 6.0.3
-Stable tag: 2.2.9
+Tested up to: 6.1.1
+Stable tag: 2.2.10
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -125,8 +125,15 @@ Make sure to also update CF7 to the latest version! (Version 2.0 is only compati
 
 Make sure to also update CF7 to the latest version! (Version 2.2 is only compatible with CF7 versions 5.6 and up. Version 2.1.6 is only compatible with CF7 version 5.5.*)
 
+= 2.2.10 =
+
+Because the nature of the changes introduced in version 5.7 of Contact Form 7 you might need to make some manual changes to your forms and/or to your wp-config.php file. Please check the changelog. You could also wait for the release of version 5.7.1 of Contact Form 7. We hope the author will have address some of the issues by then.
 
 == Changelog ==
+
+= 2.2.10 (2022-12-11) =
+* Fully tested with Contact Form 7 version 5.7 (when WP_DEBUG is false). Note: due to some errors in Contact Form 7 version 5.7 you will need to make sure WP_DEBUG is set to false in your wp-config.php file.
+* disable automatic insertion of paragraphs. Recent CF7 updates have changed the autop mechanism, causing too many problems with parsing the HTML code. If you still want to use autop (at your own risk) copy this code to your functions.php file: `add_filter( 'wpcf7_autop_or_not', '__return_true', 41, 0);`. Untill further notice Conditional Fields and Conditional Fields for Contact Form 7 will not use the automatic paragraph feature of CF7. Always try to write clean and valid HTML code. [GH issue 85](https://github.com/pwkip/contact-form-7-conditional-fields/issues/85)
 
 = 2.2.9 (2022-10-19) =
 * Fully tested with Contact Form 7 version 5.6.4
