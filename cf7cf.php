@@ -37,11 +37,6 @@ class CF7CF {
 
 	    add_action("wpcf7_before_send_mail", [$this, 'hide_hidden_mail_fields'], 10, 3);
 
-        // disable autop because it introduces too many problems with parsing.
-        // If you still want to use autop (at your own risk) copy this line to your functions.php file:
-        // add_filter( 'wpcf7_autop_or_not', '__return_true', 41, 0);
-        add_filter( 'wpcf7_autop_or_not', '__return_false', 40, 0);
-
         register_activation_hook(__FILE__, array($this, 'activate'));
 
         if (is_admin()) {
