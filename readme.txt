@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.2.11
+Stable tag: 2.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,10 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.3 (2022-12-16) =
+* Fully tested with Contact Form 7 version 5.7.1
+* PRO: Changed containing element for repeater and step controls from DIV to P. Otherwise CF7 would create additional P elements. 
 
 = 2.2.11 (2022-12-13) =
 * DO NOT UPDATE TO CONTACT FORM VERSION 5.7!! At least wait for version 5.7.1 before updating
