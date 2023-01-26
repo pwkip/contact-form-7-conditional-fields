@@ -105,10 +105,12 @@ class CF7CF {
         }
     }
 
+    // TODO: check if we can remove this function. Doesn't seem to be called.
     function group_shortcode_handler( $atts, $content = "" ) {
         return $content;
     }
 
+    // TODO: check if we can remove this function. Doesn't seem to be called.
     public static function shortcode_handler($tag) {
         //$tag = new WPCF7_Shortcode($tag);
         $tag = new WPCF7_FormTag($tag);
