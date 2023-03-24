@@ -390,9 +390,9 @@ class CF7CF {
                 $if_value = $rule['if_value'];
 
                 if ($i == 0) {
-                    $lines[] = "show [${then_field}] if [${if_field}] ${operator} \"${if_value}\"";
+                    $lines[] = "show [$then_field] if [$if_field] $operator \"$if_value\"";
                 } else {
-                    $lines[] = str_repeat(' ',$indent)."and if [${if_field}] ${operator} \"${if_value}\"";
+                    $lines[] = str_repeat(' ',$indent)."and if [$if_field] $operator \"$if_value\"";
                 }
             }
         }
@@ -460,7 +460,7 @@ function wpcf7cf_properties($properties, $wpcf7form) {
     return $properties;
 }
 
-add_action('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
+add_filter('wpcf7_form_hidden_fields', 'wpcf7cf_form_hidden_fields',10,1);
 
 function wpcf7cf_form_hidden_fields($hidden_fields) {
 
