@@ -1124,7 +1124,7 @@ window.wpcf7cf = {
         const type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' :
             currentNode.dataset.class == 'wpcf7cf_group' ? 'group' :
             currentNode.className == 'wpcf7cf_step' ? 'step' :
-            currentNode.hasAttribute('name') && !currentNode.disabled ? 'input' : false;
+            currentNode.hasAttribute('name') ? 'input' : false;
 
         let newParentRepeaters = [...parentRepeaters];
         let newParentGroups = [...parentGroups];
@@ -1239,6 +1239,7 @@ window.wpcf7cf = {
     should_group_be_shown : function(condition, form) {
 
         let show_group = true;
+        let atLeastOneFieldFound = false;
 
         for (let and_rule_i = 0; and_rule_i < condition.and_rules.length; and_rule_i++) {
 
@@ -1249,6 +1250,8 @@ window.wpcf7cf = {
             const inputField = form.getFieldByName(condition_and_rule.if_field);
 
             if (!inputField) continue; // field not found
+
+            atLeastOneFieldFound = true;
 
             const if_val = condition_and_rule.if_value;
             let operator = condition_and_rule.operator;
@@ -1266,7 +1269,7 @@ window.wpcf7cf = {
             show_group = show_group && condition_ok;
         }
 
-        return show_group;
+        return show_group && atLeastOneFieldFound;
 
     },
 

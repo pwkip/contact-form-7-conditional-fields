@@ -1275,7 +1275,7 @@ window.wpcf7cf = {
     var simplified_dom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var parentGroups = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
     var parentRepeaters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-    var type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') && !currentNode.disabled ? 'input' : false;
+    var type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' : currentNode.dataset["class"] == 'wpcf7cf_group' ? 'group' : currentNode.className == 'wpcf7cf_step' ? 'step' : currentNode.hasAttribute('name') ? 'input' : false;
 
     var newParentRepeaters = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(parentRepeaters);
 
@@ -1388,6 +1388,7 @@ window.wpcf7cf = {
   },
   should_group_be_shown: function should_group_be_shown(condition, form) {
     var show_group = true;
+    var atLeastOneFieldFound = false;
 
     for (var and_rule_i = 0; and_rule_i < condition.and_rules.length; and_rule_i++) {
       var condition_ok = false;
@@ -1395,6 +1396,7 @@ window.wpcf7cf = {
       var inputField = form.getFieldByName(condition_and_rule.if_field);
       if (!inputField) continue; // field not found
 
+      atLeastOneFieldFound = true;
       var if_val = condition_and_rule.if_value;
       var operator = condition_and_rule.operator; //backwards compat
 
@@ -1407,7 +1409,7 @@ window.wpcf7cf = {
       show_group = show_group && condition_ok;
     }
 
-    return show_group;
+    return show_group && atLeastOneFieldFound;
   },
   isConditionTrue: function isConditionTrue(values, operator) {
     var testValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
