@@ -2,6 +2,7 @@
 
 // disable client side validation introduced in CF7 5.6 for now
 if (typeof wpcf7 !== 'undefined') {
+    wpcf7._cf_validate = wpcf7.validate;
     wpcf7.validate = (a,b) => null;
 }
 
