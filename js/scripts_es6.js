@@ -2,8 +2,46 @@
 
 // disable client side validation introduced in CF7 5.6 for now
 if (typeof wpcf7 !== 'undefined') {
-    wpcf7._cf_validate = wpcf7.validate;
-    wpcf7.validate = (a,b) => null;
+    Object.defineProperties(wpcf7, '_cf_validate', {
+        value: wpcf7.validate,
+        writable: false,
+        enumerable: false,
+        configurable: false,
+    });
+
+    // wpcf7.validate = (a,b) => null; // No need to override anymore
+}
+
+if (typeof swv !== 'undefined') {
+    Object.defineProperties(swv, '_cf_validate', {
+        value: swv.validate,
+        writable: false,
+        enumerable: false,
+        configurable: false,
+    });
+
+    // Override swv.validate as it's what is used to signal form errors on the front-end
+    swv.validate = function(schema, formData) {
+        /**
+         * @type {Map<string, unknown>}
+         */
+        const results = swv._cf_validate(schema, formData);
+
+        if (results.size === 0) {
+            return results;
+        }
+
+        const unitTag = formData.get("_wpcf7_unit_tag");
+        const $form = jQuery(`input[type="hidden"][value="${unitTag}"]`).closest(form);
+        const cfForm = wpcf7cf.getFormObj($form);
+
+        // Remove the errors related to the currently hidden fields
+        cfForm.hidden_fields.forEach(fieldName => {
+            results.delete(fieldName);
+        });
+
+        return results;
+    }
 }
 
 let cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
