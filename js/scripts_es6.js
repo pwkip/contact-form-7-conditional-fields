@@ -32,7 +32,7 @@ if (typeof swv !== 'undefined') {
         }
 
         const unitTag = formData.get("_wpcf7_unit_tag");
-        const $form = jQuery(`input[type="hidden"][value="${unitTag}"]`).closest(form);
+        const $form = jQuery(`input[type="hidden"][value="${unitTag}"]`).closest("form");
         const cfForm = wpcf7cf.getFormObj($form);
 
         // Remove the errors related to the currently hidden fields
@@ -51,7 +51,7 @@ let wpcf7cf_change_time_ms = 100; // the timeout after a change in the form is d
 
 if (window.wpcf7 && !wpcf7.setStatus) {
     wpcf7.setStatus = ( form, status ) => {
-        form = form instanceof HTMLElement ? form : form[0]; // if form is a jQuery object, only grab te html-element
+        form = form instanceof jQuery ? form[0] : form; // if form is a jQuery object, only grab te html-element
         const defaultStatuses = new Map( [
             // 0: Status in API response, 1: Status in HTML class
             [ 'init', 'init' ],
