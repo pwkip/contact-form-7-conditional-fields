@@ -543,7 +543,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         wpcf7cf.copyFieldsToText();
     });
     
-    jQuery(document).on('ready', function() {
+    jQuery(document).ready(function() {
     
         wpcf7cf.$if_values = jQuery('.if-value'); // gets updated now and then
     
