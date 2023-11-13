@@ -75,23 +75,15 @@ class CF7CF {
 		    // TODO 2: Dirty hack. Because of TODO 2 we are just going to kill the error message if we detect the string '[/'
 		    //         Start removing here.
 		    if (strpos($prop_val, '[/') !== false) {
-				if ( defined( 'WPCF7_ConfigValidator::error_invalid_mailbox_syntax' ) ) {
-					// Pre CF7 v5.8
-					$wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
-				} else {
-					// CF7 v5.8+
+                if ( defined( 'WPCF7_ConfigValidator::error_invalid_mailbox_syntax' ) ) {
+                    // Pre CF7 v5.8
+			        $wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
+                } else {
+                    // CF7 v5.8+
 					$wpcf7_config_validator->remove_error($err_type, 'invalid_mail_header');
-				}
+                }
 				continue;
 		    }
-		    // TODO 2: Stop removing here. and uncomment code below.
-
-//		    foreach ($all_group_tags as $form_tag) {
-//				if (strpos($prop_val, '['.$form_tag->name.']') !== false) {
-//					$wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
-//				}
-//		    }
-
 	    }
 
     	return new WPCF7_ConfigValidator($wpcf7_config_validator->contact_form());
