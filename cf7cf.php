@@ -75,7 +75,13 @@ class CF7CF {
 		    // TODO 2: Dirty hack. Because of TODO 2 we are just going to kill the error message if we detect the string '[/'
 		    //         Start removing here.
 		    if (strpos($prop_val, '[/') !== false) {
-			    $wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
+				if ( defined( 'WPCF7_ConfigValidator::error_invalid_mailbox_syntax' ) ) {
+					// Pre CF7 v5.8
+					$wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
+				} else {
+					// CF7 v5.8+
+					$wpcf7_config_validator->remove_error($err_type, 'invalid_mail_header');
+				}
 				continue;
 		    }
 		    // TODO 2: Stop removing here. and uncomment code below.
