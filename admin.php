@@ -212,7 +212,7 @@ add_action('admin_notices', function () {
 	$settings = wpcf7cf_get_settings();
 
 	$nid = 'install-cf7';
-	if (!defined('WPCF7_VERSION') && empty($settings['notice_dismissed_'.$nid])) {
+	if (!defined('WPCF7_VERSION') && empty($settings['notice_dismissed_'.$nid]) && current_user_can('update_plugins') ) {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>">
 				<p>
