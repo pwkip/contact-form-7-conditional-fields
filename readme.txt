@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: wordpress, contact form 7, forms, conditional fields
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 2.4.1
+Tested up to: 6.3
+Stable tag: 2.4.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,12 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.4.2 (2023-11-22) =
+* Prevent "CF7 needs to be installed" notice from being dismissable. (This notice is only shown to users with the update_plugins capability)
+* Add nonce for dismissing other notices, so bad people who are stealing your session can't dismiss your precious CF7CF related notices on your behalf anymore. Hopefully now the people of Patchstack will be happy and stop marking this plugin as vulnerable.
+* Tested up to WP 6.3
+* Remove some unused constants
 
 = 2.4.1 (2023-11-16) =
 * Patch minor access-control vulnerability reported by [patchstack](https://patchstack.com/database/vulnerability/cf7-conditional-fields/wordpress-conditional-fields-for-contact-form-7-plugin-2-4-broken-access-control-vulnerability?_a_id=110)

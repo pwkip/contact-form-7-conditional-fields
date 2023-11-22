@@ -51,6 +51,16 @@ function wpcf7cf_get_settings() {
     return $wpcf7cf_settings_glob;
 }
 
+function wpcf7cf_get_dismiss_notice_nonce() {
+    // We use the same nonce for all admin notices, because we don't care about users trying to hack themselves.
+    // This nonce is only intended to prevent CSRF attacks.
+    static $nonce = false;
+    if (!$nonce) {
+        $nonce = wp_create_nonce( 'wpcf7cf_dismiss_notice' );
+    }
+    return $nonce;
+}
+
 function wpcf7cf_set_options($settings) {
     global $wpcf7cf_settings_glob;
     $wpcf7cf_settings_glob = $settings;
@@ -87,7 +97,7 @@ function wpcf7cf_options_page() {
     <div class="wrap wpcf7cf-admin-wrap">
         <h2><?php _e( 'Conditional Fields for Contact Form 7 Settings', 'cf7-conditional-fields'); ?></h2>
         <?php if (!$settings['notice_dismissed']) { ?>
-        <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="">
+        <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
             <div style="padding: 10px 0;">
                 <?php _e( '<strong>Notice</strong>: These are global settings for Conditional Fields for Contact Form 7.', 'cf7-conditional-fields'); ?>
                 <br><br>
@@ -288,6 +298,12 @@ function wpcf7cf_options_sanitize($input) {
 
 add_action( 'wp_ajax_wpcf7cf_dismiss_notice', 'wpcf7cf_dismiss_notice' );
 function wpcf7cf_dismiss_notice() {
+
+    // check nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wpcf7cf_dismiss_notice' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Nonce verification failed', 'cf7-conditional-fields' ) ) );
+    }
+
     $notice_id = sanitize_text_field($_POST['noticeId'] ?? '');
     $notice_suffix = $notice_id ? '_'.$notice_id : $notice_id;
 
