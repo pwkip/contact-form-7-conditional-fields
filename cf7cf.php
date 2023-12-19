@@ -521,7 +521,7 @@ function wpcf7cf_do_enqueue_scripts() {
 
 function wpcf7cf_enqueue_scripts() {
 	if (is_admin()) return;
-	wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery'), WPCF7CF_VERSION, true);
+	wp_enqueue_script('wpcf7cf-scripts', plugins_url('js/scripts.js', __FILE__), array('jquery', 'contact-form-7'), WPCF7CF_VERSION, true);
 	wp_localize_script('wpcf7cf-scripts', 'wpcf7cf_global_settings',
 		array(
 			'ajaxurl' => admin_url('admin-ajax.php'),
