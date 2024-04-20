@@ -141,7 +141,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     }
     
     /**
-     * Tranform an array of conditions (Objects) to HTML fields
+     * Transform an array of conditions (Objects) to HTML fields
      * @param Array conditions 
      * @returns jQuery
      */
@@ -547,7 +547,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     
         wpcf7cf.$if_values = jQuery('.if-value'); // gets updated now and then
     
-        // init HTML templates (will be updated immediatly by updateAvailableGroupsAndFields())
+        // init HTML templates (will be updated immediately by updateAvailableGroupsAndFields())
         wpcf7cf.template_for_condition_fields_with_one_and_rule = wpcf7cf.$newEntry[0].outerHTML;
         wpcf7cf.template_for_and_rule = wpcf7cf.$newEntry.find('.wpcf7cf-and-rule')[0] ? wpcf7cf.$newEntry.find('.wpcf7cf-and-rule')[0].outerHTML : '';
     

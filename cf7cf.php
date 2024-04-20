@@ -247,7 +247,7 @@ class CF7CF {
     }
 
     /**
-     * Finds the currently submitted form and set the hidden_fields variables accoringly
+     * Finds the currently submitted form and set the hidden_fields variables accordingly
      *
      * @param bool|array $posted_data
      */
@@ -283,7 +283,7 @@ class CF7CF {
                     $val = preg_replace(WPCF7CF_REGEX_MAIL_UNWANTED_WHITESPACE, '$1$2', $val, -1, $count);
                 }
 
-                // remove hiddden groups from email
+                // remove hidden groups from email
                 $parser = new Wpcf7cfMailParser($val, $this->visible_groups, $this->hidden_groups, $this->repeaters, $_POST);
 				$props[$mail][$key] = $parser->getParsedMail();
             }

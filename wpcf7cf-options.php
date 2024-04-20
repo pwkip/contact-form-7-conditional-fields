@@ -151,7 +151,7 @@ function wpcf7cf_options_page() {
                 <li><?php _e( 'Toggle buttons', 'cf7-conditional-fields'); ?></li>
                 <li><?php _e( 'Additional operators', 'cf7-conditional-fields'); ?>< <code>&lt;</code> <code>&gt;</code> <code>&le;</code> <code>&ge;</code> <code><?php _e( 'is empty', 'cf7-conditional-fields'); ?></code></li>
                 <li><?php _e( 'Multistep (with Summary)', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
+                <li><?php _e( 'More coming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
             </ul>
             <p><a target="_blank" class="button button-primary" href="https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
             <?php
@@ -207,7 +207,7 @@ function wpcf7cf_input_field($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'default' => wpcf7cf_get_default_settings()[$slug],
         'label_editable' => false
     );
@@ -251,7 +251,7 @@ function wpcf7cf_input_select($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'select_options' => array(), // array($name => $value)
         'default' => wpcf7cf_get_default_settings()[$slug],
     );
