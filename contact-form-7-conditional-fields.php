@@ -1,19 +1,26 @@
 <?php
 /**
- * Plugin Name: Conditional Fields for Contact Form 7
- * Plugin URI: https://bdwm.be/
- * Description: Adds support for conditional fields to Contact Form 7.
- * Author: Jules Colle
- * Author URI: https://bdwm.be/
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: cf7-conditional-fields
- * Version: 2.4.10
- * Requires PHP: 7.0
- * Requires Plugins: contact-form-7
- */
-
-/**
+ * Conditional Fields for Contact Form 7
+ *
+ * @package           CF7_Conditional_Fields
+ * @author            Jules Colle
+ * @copyright         2016 Jules Colle
+ * @license           GPL-2.0-or-later
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Conditional Fields for Contact Form 7
+ * Plugin URI:        https://bdwm.be/
+ * Description:       Adds support for conditional fields to Contact Form 7.
+ * Version:           2.4.10
+ * Requires at least: 5.0
+ * Requires PHP:      7.0
+ * Author:            Jules Colle
+ * Author URI:        https://bdwm.be/
+ * Text Domain:       cf7-conditional-fields
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires Plugins:  contact-form-7
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -28,7 +35,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
 
 if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
 	add_action( 'admin_notices', 'wpcf7cf_pro_deactivate_free_version_notice' );
