@@ -1,17 +1,26 @@
 <?php
 /**
-* Plugin Name: Conditional Fields for Contact Form 7
-* Plugin URI: http://bdwm.be/
-* Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
-* Author: Jules Colle
-* Version: 2.4.10
-* Author URI: http://bdwm.be/
-* Text Domain: cf7-conditional-fields
-* License: GPL v2 or later
-* License URI: https://www.gnu.org/licenses/gpl-2.0.html
-*/
-
-/**
+ * Conditional Fields for Contact Form 7
+ *
+ * @package           CF7_Conditional_Fields
+ * @author            Jules Colle
+ * @copyright         2016 Jules Colle
+ * @license           GPL-2.0-or-later
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Conditional Fields for Contact Form 7
+ * Plugin URI:        https://bdwm.be/
+ * Description:       Adds support for conditional fields to Contact Form 7.
+ * Version:           2.4.10
+ * Requires at least: 5.0
+ * Requires PHP:      7.0
+ * Author:            Jules Colle
+ * Author URI:        https://bdwm.be/
+ * Text Domain:       cf7-conditional-fields
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires Plugins:  contact-form-7
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -27,7 +36,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
 if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
 	add_action( 'admin_notices', 'wpcf7cf_pro_deactivate_free_version_notice' );
 } else {
@@ -35,9 +43,9 @@ if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
 	function wpcf7cf_pro_deactivate_free_version_notice() {
 		?>
         <div class="notice notice-error is-dismissible">
-			<p><?php 
-			// translators: 1. <a>, 2. </a> 
-			printf( __( '<strong>Conditional Fields for Contact Form 7</strong> needs to %1$sdeactivate the free plugin%1$s', 'cf7-conditional-fields' ), '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fcontact-form-7-conditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/contact-form-7-conditional-fields.php' ) . '">', '</a>' ); 
+			<p><?php
+			// translators: 1. <a>, 2. </a>
+			printf( __( '<strong>Conditional Fields for Contact Form 7</strong> needs to %1$sdeactivate the free plugin%1$s', 'cf7-conditional-fields' ), '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fcontact-form-7-conditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/contact-form-7-conditional-fields.php' ) . '">', '</a>' );
 			?></p>
         </div>
 		<?php
