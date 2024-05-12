@@ -850,6 +850,11 @@ function Wpcf7cfMultistep($multistep, form) {
     // then trigger click event on the $btn_next button instead.
     multistep.form.$form.on('submit.wpcf7cf_step', function(e) {
 
+        if (multistep.form.$form.hasClass('submitting')) { // prevent double submit
+            e.stopImmediatePropagation();
+            return false;
+        }
+
         if (multistep.currentStep !== multistep.numSteps) {
             multistep.$btn_next.trigger('click.wpcf7cf_step');
 
@@ -1187,6 +1192,7 @@ window.wpcf7cf = {
 
     updateMultistepState: function (multistep) {
         if (multistep == null) return;
+        if (multistep.form.$form.hasClass('submitting')) return;
 
         // update hidden input field
 
