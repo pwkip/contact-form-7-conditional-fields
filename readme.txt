@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic, conditional
 Requires at least: 5.0
 Tested up to: 6.5
-Stable tag: 2.4.11
+Stable tag: 2.4.12
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,9 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.4.12 (2024-05-25) =
+* Fully tested with Contact Form 7 version 5.9.5
 
 = 2.4.11 (2024-05-12) =
 * PRO: multistep - Disable next button and prevent submitting while step is being validated.
