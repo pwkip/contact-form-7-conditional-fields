@@ -181,6 +181,7 @@ function wpcf7cf_options_page() {
     <form method="post" id="reset-form" action="">
         <p class="submit">
             <input name="reset" class="button button-secondary" type="submit" value="<?php _e( 'Restore defaults', 'cf7-conditional-fields' ); ?>" >
+            <?php wp_nonce_field( 'wpcf7cf_reset_options' ); ?>
             <input type="hidden" name="action" value="reset" />
         </p>
     </form>
@@ -285,7 +286,7 @@ function wpcf7cf_input_select($slug, $args) {
 add_action('admin_init', 'wpcf7cf_admin_init');
 function wpcf7cf_admin_init(){
 
-    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_forms' ) ) {
+    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_forms' ) && wp_verify_nonce( $_POST['_wpnonce'], 'wpcf7cf_reset_options' )) {
         wpcf7cf_reset_options();
     }
 
