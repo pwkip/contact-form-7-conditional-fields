@@ -470,7 +470,7 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     }
     
     function updateAvailableGroupsAndFields() {
-        const formCode = wpcf7cf.$formEditor.val();
+        const formCode = wpcf7cf.$formEditor.text();
         const [ fields, groups ] = scanFormTags(formCode);
     
         $temp = jQuery(wpcf7cf.template_for_condition_fields_with_one_and_rule);
