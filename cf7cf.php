@@ -5,6 +5,7 @@ class CF7CF {
     private $visible_groups = array();
     private $hidden_groups = array();
     private $repeaters = array();
+    private $steps = array();
 
     function __construct() {
 

@@ -236,7 +236,7 @@ function wpcf7cf_input_field($slug, $args) {
 
         </th>
         <td>
-            <input type="text" data-default-value="<?php echo $default ?>" value="<?php echo $settings[$slug] ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
+            <input type="text" data-default-value="<?php echo $default ?>" value="<?php echo htmlspecialchars($settings[$slug]) ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
             <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">
                 <?php echo $description ?><?php if (!empty($default)) echo ' (' . __( 'Default:', 'cf7-conditional-fields' ) . ' '.$default.')' ?>
             </p>
@@ -272,7 +272,7 @@ function wpcf7cf_input_select($slug, $args) {
             <td>
                 <select id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" data-default-value="<?php echo $default ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
                     <?php foreach($select_options as $value => $text) { ?>
-                        <option value="<?php echo $value ?>" <?php echo $settings[$slug]==$value?'selected':'' ?>><?php echo $text ?></option>
+                        <option value="<?php echo htmlspecialchars( $value ) ?>" <?php echo $settings[$slug]==$value?'selected':'' ?>><?php echo $text ?></option>
                     <?php } ?>
                 </select>
                 <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">

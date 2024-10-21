@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 6.6
-Stable tag: 2.4.15
+Stable tag: 2.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,15 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.5 (2024-10-22) =
+* Add Plugin Dependency for CF7 in plugin header
+* fix deprecated warning dynamic property creation
+* fix Using ${var} in strings is deprecated
+* Fix XSS vulnerability in admin settings page. Thanks to [Patchstack](patchstack.com) for reporting this issue.
+* PRO: Fix: [response] tag doesn't work properly in multistep [#127](https://github.com/pwkip/contact-form-7-conditional-fields/issues/127)
+* PRO: Add support for checkbox free_text option in summary field [#126](https://github.com/pwkip/contact-form-7-conditional-fields/issues/126)
+* PRO: Fix: [multifile] allows uploading of filetype that is not specified in allowed filetypes [#103]((https://github.com/pwkip/contact-form-7-conditional-fields/issues/103)
 
 = 2.4.15 (2024-07-27) =
 * Fully tested with Contact Form 7 version 5.9.8

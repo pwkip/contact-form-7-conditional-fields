@@ -907,7 +907,6 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
             
             $multistep.find('.wpcf7-form-control-wrap .wpcf7-not-valid-tip').remove();
             $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
-            $multistep.find('.wpcf7-response-output').remove();
             $multistep.find('.wpcf7-response-output.wpcf7-validation-errors').removeClass('wpcf7-validation-errors');
 
             multistep.$btn_next.removeClass('disabled').attr('disabled', false);
