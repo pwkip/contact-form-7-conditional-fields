@@ -418,40 +418,40 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     //      CF7 TAG GENERATOR OVERRIDE
     // ------------------------------------
     
-    if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix
-    var old_compose = _wpcf7.taggen.compose;
-    // ...before overwriting the jQuery extension point
-    _wpcf7.taggen.compose = function(tagType, $form)
-    {
+    // if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix
+    // var old_compose = _wpcf7.taggen.compose;
+    // // ...before overwriting the jQuery extension point
+    // _wpcf7.taggen.compose = function(tagType, $form)
+    // {
     
-        jQuery('#tag-generator-panel-group-style-hidden').val(jQuery('#tag-generator-panel-group-style').val());
+    //     jQuery('#tag-generator-panel-group-style-hidden').val(jQuery('#tag-generator-panel-group-style').val());
     
-        // original behavior - use function.apply to preserve context
-        var ret = old_compose.apply(this, arguments);
-        //tagType = arguments[0];
-        //$form = arguments[1];
+    //     // original behavior - use function.apply to preserve context
+    //     var ret = old_compose.apply(this, arguments);
+    //     //tagType = arguments[0];
+    //     //$form = arguments[1];
     
-        // START: code here will be executed after the _wpcf7.taggen.update function
-        if (tagType== 'group') ret += "[/group]";
-        if (tagType== 'repeater') ret += "[/repeater]";
-        // END
+    //     // START: code here will be executed after the _wpcf7.taggen.update function
+    //     if (tagType== 'group') ret += "[/group]";
+    //     if (tagType== 'repeater') ret += "[/repeater]";
+    //     // END
     
-        if (tagType== 'togglebutton') {
-            $val1 = jQuery('#tag-generator-panel-togglebutton-value-1');
-            $val2 = jQuery('#tag-generator-panel-togglebutton-value-2');
-            var val1 = $val1.val();
-            var val2 = $val2.val();
+    //     if (tagType== 'togglebutton') {
+    //         $val1 = jQuery('#tag-generator-panel-togglebutton-value-1');
+    //         $val2 = jQuery('#tag-generator-panel-togglebutton-value-2');
+    //         var val1 = $val1.val();
+    //         var val2 = $val2.val();
     
-            if (val1 == "") val1 = $val1.data('default');
-            if (val2 == "") val2 = $val2.data('default');
+    //         if (val1 == "") val1 = $val1.data('default');
+    //         if (val2 == "") val2 = $val2.data('default');
     
-            str_val = ' "'+val1+'" "'+val2+'"';
+    //         str_val = ' "'+val1+'" "'+val2+'"';
     
-            ret = ret.replace(']', str_val+']');
-        }
+    //         ret = ret.replace(']', str_val+']');
+    //     }
     
-        return ret;
-    };
+    //     return ret;
+    // };
     
     
     // console.log('huh');

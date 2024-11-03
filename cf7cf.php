@@ -121,16 +121,16 @@ class CF7CF {
 
 
     public static function tag_generator() {
-        if (! function_exists( 'wpcf7_add_tag_generator'))
-            return;
+        // if (! function_exists( 'wpcf7_add_tag_generator'))
+        //     return;
 
-        wpcf7_add_tag_generator('group',
-            __('Conditional Fields Group', 'cf7-conditional-fields'),
-            'wpcf7-tg-pane-group',
-            array(__CLASS__, 'tg_pane')
-        );
+        // wpcf7_add_tag_generator('group',
+        //     __('Conditional Fields Group', 'cf7-conditional-fields'),
+        //     'wpcf7-tg-pane-group',
+        //     array(__CLASS__, 'tg_pane')
+        // );
 
-        do_action('wpcf7cf_tag_generator');
+        // do_action('wpcf7cf_tag_generator');
     }
 
     static function tg_pane( $contact_form, $args = '' ) {
