@@ -131,7 +131,7 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 
 = 2.2.11 =
 
-Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
+Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
 
@@ -250,12 +250,12 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 
 = 2.2.11 (2022-12-13) =
 * DO NOT UPDATE TO CONTACT FORM VERSION 5.7!! At least wait for version 5.7.1 before updating
-* Reverted autop-fix because it was causing addional errors.
+* Reverted autop-fix because it was causing additional errors.
 * Reverted compatibility declaration to CF7 version 5.6.4
 
 = 2.2.10 (2022-12-11) =
 * Fully tested with Contact Form 7 version 5.7 (when WP_DEBUG is false). Note: due to some errors in Contact Form 7 version 5.7 you will need to make sure WP_DEBUG is set to false in your wp-config.php file.
-* disable automatic insertion of paragraphs. Recent CF7 updates have changed the autop mechanism, causing too many problems with parsing the HTML code. If you still want to use autop (at your own risk) copy this code to your functions.php file: `add_filter( 'wpcf7_autop_or_not', '__return_true', 41, 0);`. Untill further notice Conditional Fields and Conditional Fields for Contact Form 7 will not use the automatic paragraph feature of CF7. Always try to write clean and valid HTML code. [GH issue 85](https://github.com/pwkip/contact-form-7-conditional-fields/issues/85)
+* disable automatic insertion of paragraphs. Recent CF7 updates have changed the autop mechanism, causing too many problems with parsing the HTML code. If you still want to use autop (at your own risk) copy this code to your functions.php file: `add_filter( 'wpcf7_autop_or_not', '__return_true', 41, 0);`. Until further notice Conditional Fields and Conditional Fields for Contact Form 7 will not use the automatic paragraph feature of CF7. Always try to write clean and valid HTML code. [GH issue 85](https://github.com/pwkip/contact-form-7-conditional-fields/issues/85)
 
 = 2.2.9 (2022-10-19) =
 * Fully tested with Contact Form 7 version 5.6.4
@@ -293,7 +293,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Fully tested with Contact Form 7 version 5.6.1
 
 = 2.2 (2022-06-17) =
-* Make compatibile with Contact Form 7 version 5.6
+* Make compatible with Contact Form 7 version 5.6
 
 = 2.1.6 (2022-06-07) =
 * Fix bug: text view cleared after making a change to form code when there are more than 50 conditions.
@@ -312,7 +312,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * PRO multistep: make "Next step" and "Previous step" buttons translatable by third party plugins like wpml and loco translate.
 * PRO multistep: show spinner while validating a step.
 * PRO Fix additional disable_on_hide bug with multistep [GH issue 87-4](https://github.com/pwkip/contact-form-7-conditional-fields/issues/87)
-* Replace all occurences of text domain 'contact-form-7' with 'cf7-conditional-fields'
+* Replace all occurrences of text domain 'contact-form-7' with 'cf7-conditional-fields'
 
 = 2.1.2 (2022-02-23) =
 * Fully tested with Contact Form 7 version 5.5.6
@@ -368,7 +368,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * WARNING! 2.0 requires at least Contact Form 7 version 5.4 to work!
 * Make plugin compatible with CF7 5.4
 * Modify wpcf7cf_generate_summary function, so it can be used without $_POST
-* fix animaton when showing group
+* fix animation when showing group
 
 = 1.9.16 (2021-03-09) =
 * Make notice dismissable
@@ -379,13 +379,13 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Fix [PHP Error if all mails are disabled](https://github.com/pwkip/contact-form-7-conditional-fields/issues/68)
 * PRO: Fix [rename $settings to $wpcf7cf_settings](https://github.com/pwkip/contact-form-7-conditional-fields/issues/75)
 * Compatibility with [CF7 Smart-grid layout plugin](https://wordpress.org/support/topic/rule-sets-only-saving-when-in-text-mode/)
-* Added global variable WPCF7CF_CF7_MAX_VERSION to indicate latest version of CF7 that was succesfully tested with this plugin.
+* Added global variable WPCF7CF_CF7_MAX_VERSION to indicate latest version of CF7 that was successfully tested with this plugin.
 * Show notice in admin if the current CF7 version is anything other than WPCF7CF_CF7_MAX_VERSION
 
 = 1.9.14 (2020-10-03) =
 * PRO:Repeater: Hide Remove button initially when repeater has min:0
 * PRO:Multistep: Disable Next button while validating step.
-* IE11 compat: Fix classList bug (occured in IE11 if form contained SVG elements)
+* IE11 compat: Fix classList bug (occurred in IE11 if form contained SVG elements)
 
 = 1.9.13 (2020-09-28) =
 * IE11 compatibility: Add Array.from polyfill
@@ -397,7 +397,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 = 1.9.11 (2020-09-07) =
 * PRO:Repeater: Fix bug [group inside repeater not visible when shown by default #64](https://github.com/pwkip/contact-form-7-conditional-fields/issues/64)
 * PRO:Multifile: Add new tag: [multifile]. Allows to upload multiple files at once.
-* PRO:Repeater: Fix bug that occured when removing sub-repeater before the animation of the previous removal was finished.
+* PRO:Repeater: Fix bug that occurred when removing sub-repeater before the animation of the previous removal was finished.
 * PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterAddSub](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeateraddsub/)
 * PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterAddSubAtIndex](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeateraddsubatindex/)
 * PRO:Repeater: Introduce global JS API function [wpcf7cf.repeaterRemoveSub](https://conditional-fields-cf7.bdwm.be/docs/javascript-api/wpcf7cf-repeaterremovesub/)
@@ -426,7 +426,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * PRO: Fixed bug: function operator no longer working.
 
 = 1.9.4 (2020-06-23) =
-* Fixed bug: JS error when conditonal fields settings where not saved manually by the user.
+* Fixed bug: JS error when conditional fields settings where not saved manually by the user.
 
 = 1.9.3 (2020-06-21) =
 * Ignore conditions where group or field name does not exist, instead of throwing an error
@@ -505,7 +505,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 
 = 1.7.6 (2019-11-01) =
 * Fixed small compatibility problem with CF7 Smart Grid [link](https://wordpress.org/support/topic/problem-on-save-form-when-the-active-tabs-are-not-conditional-form/#post-12085173)
-* Fixed some more porblems with parsing conditions (regex changes)
+* Fixed some more problems with parsing conditions (regex changes)
 * Got rid of screen_icon notice on CF settings page
 
 = 1.7.5 (2019-10-31) =
@@ -565,7 +565,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 = 1.5.5 (2019-05-20) =
 * Fixed and explained how to disable loading of the styles and scripts and only enable it on certain pages. [More info](https://conditional-fields-cf7.bdwm.be/docs/faq/can-i-load-js-and-css-only-when-necessary/)
 * Made sure default settings get set after activating plugin, without the need to visit the Contact > Conditional Fields page first.
-* PRO: extended the repeater with min and max paramaters and the possibility to change the add and remove buttons texts
+* PRO: extended the repeater with min and max parameters and the possibility to change the add and remove buttons texts
 * PRO: enabling the pro plugin will show a notification to disable the free plugin, instead of throwing a PHP error.
 
 = 1.5.4 (2019-05-06) =
@@ -575,7 +575,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Refix the fix from version 1.4.3 that got unfixed in version 1.5 somehow 🙄
 
 = 1.5.2 (2019-05-03) =
-* by reverting changes in 1.5.1, the possibility to load forms via AJAX was destroyed. So, from now on the wpcf7cf scripts will be loaded in the 'wp_enqueue_scripts' hook. Analogous with the WPCF7_LOAD_JS constant, a new constant is defined called WPCF7CF_LOAD_JS wich is set to true by default.
+* by reverting changes in 1.5.1, the possibility to load forms via AJAX was destroyed. So, from now on the wpcf7cf scripts will be loaded in the 'wp_enqueue_scripts' hook. Analogous with the WPCF7_LOAD_JS constant, a new constant is defined called WPCF7CF_LOAD_JS which is set to true by default.
 
 = 1.5.1 (2019-05-02) =
 * revert changes: enqueue scripts in 'wpcf7_contact_form' hook instead of 'wpcf7_enqueue_scripts', because loading it in the latter would cause problems with plugins that disable WPCF7_LOAD_JS (like for example contact-form-7-paypal-add-on).
@@ -595,7 +595,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Really fix clear_on_hide problem (https://wordpress.org/support/topic/clear_on_hide-still-not-working-right-after-1-4-2-update/)
 
 = 1.4.2 (2019-04-10) =
-* Disabled mailbox syntax errors if there are group tags present. (this is overkill, and should be changed if the necassary hooks become available) https://wordpress.org/support/topic/filter-detect_invalid_mailbox_syntax/
+* Disabled mailbox syntax errors if there are group tags present. (this is overkill, and should be changed if the necessary hooks become available) https://wordpress.org/support/topic/filter-detect_invalid_mailbox_syntax/
 * Checked issue: https://github.com/pwkip/contact-form-7-conditional-fields/issues/26 (nothing changed, but turns out to be working fine)
 * Fixed issue where mail_2 added extra lines in the email message. https://github.com/pwkip/contact-form-7-conditional-fields/issues/30
 * Made the clear_on_hide property a bit more useful (https://github.com/pwkip/contact-form-7-conditional-fields/issues/27)
@@ -630,7 +630,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 = 1.3.2 =
 * Removed a piece of code that was trying to load a non existing stylesheet
 * Updated FAQ
-* Code rearangement and additions for the upcomming Conditional Fields Pro plugin
+* Code rearangement and additions for the upcoming Conditional Fields Pro plugin
 
 = 1.3.1 =
 * Fixed bug in 1.3 that broke everything
@@ -713,7 +713,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 = 0.2 =
 * Added support for required conditional fields inside hidden groups. A big thank you to @stevish for implementing this.
 * Added support for conditional fields in the email messages. This one also goes entirely to @stevish. Thanks man!
-* Added @stevish as a contributer to the project :)
+* Added @stevish as a contributor to the project :)
 * Fix form not working in widgets or other places outside of the loop. Thanks to @ciprianolaru for the solution (https://wordpress.org/support/topic/problem-with-unit_tag-when-not-in-the-loop-form-not-used-in-post-or-page/#post-8299801)
 
 = 0.1.7 =
