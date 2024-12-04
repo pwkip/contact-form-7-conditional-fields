@@ -417,51 +417,60 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     // ------------------------------------
     //      CF7 TAG GENERATOR OVERRIDE
     // ------------------------------------
-    
-    // if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix
-    // var old_compose = _wpcf7.taggen.compose;
-    // // ...before overwriting the jQuery extension point
-    // _wpcf7.taggen.compose = function(tagType, $form)
-    // {
-    
-    //     jQuery('#tag-generator-panel-group-style-hidden').val(jQuery('#tag-generator-panel-group-style').val());
-    
-    //     // original behavior - use function.apply to preserve context
-    //     var ret = old_compose.apply(this, arguments);
-    //     //tagType = arguments[0];
-    //     //$form = arguments[1];
-    
-    //     // START: code here will be executed after the _wpcf7.taggen.update function
-    //     if (tagType== 'group') ret += "[/group]";
-    //     if (tagType== 'repeater') ret += "[/repeater]";
-    //     // END
-    
-    //     if (tagType== 'togglebutton') {
-    //         $val1 = jQuery('#tag-generator-panel-togglebutton-value-1');
-    //         $val2 = jQuery('#tag-generator-panel-togglebutton-value-2');
-    //         var val1 = $val1.val();
-    //         var val2 = $val2.val();
-    
-    //         if (val1 == "") val1 = $val1.data('default');
-    //         if (val2 == "") val2 = $val2.data('default');
-    
-    //         str_val = ' "'+val1+'" "'+val2+'"';
-    
-    //         ret = ret.replace(']', str_val+']');
-    //     }
-    
-    //     return ret;
-    // };
-    
-    
-    // console.log('huh');
-    // jQuery( window ).on( 'beforeunload', function( event ) {
-    //     wpcf7cf.copyFieldsToText();
-    //     if (wpcf7cf.$textView.val() === wpcf7cf.$textView[0].defaultValue) {
-    //         // jQuery('#wpcf7cf-entries-ui').remove();
-    //         jQuery("#wpcf7cf-entries-ui :input").prop("disabled", true);
-    //     }
-    // });
+
+    window.addEventListener('load', function() {
+
+        document.querySelectorAll(
+            '[data-taggen="open-dialog"]'
+        ).forEach( button => {
+            button.addEventListener( 'click', event => {
+                const dialog = document.querySelector( `#${ button.dataset.target }` );
+                if (!dialog) {
+                    return true;
+                }
+                const form = dialog.querySelector( 'form.tag-generator-panel' );
+                if (!form) {
+                    return true;
+                }
+                setTimeout( function() {
+                    wpcf7cf.updateTagGenerator(form);
+                }, 10 );
+            } );
+        } );
+
+        document.querySelectorAll('form.tag-generator-panel .control-box input').forEach(function(input){
+            const form = input.closest('form.tag-generator-panel');
+            if (!form) { return; }
+            setTimeout( function() {
+                wpcf7cf.updateTagGenerator(form);
+            }, 10 );
+            input.addEventListener('keyup', function(e) {
+                wpcf7cf.updateTagGenerator(form);
+            });
+            input.addEventListener('change', function(e) {
+                wpcf7cf.updateTagGenerator(form);
+            });
+        });
+    });
+
+    wpcf7cf.updateTagGenerator = function( form ) {
+        setTimeout( function() {
+            form.querySelectorAll(
+                '[data-tag-part="mail-tag-closed"]'
+            ).forEach( tag => {
+                const nameField = form.querySelector( '[data-tag-part="name"]' );
+
+                if ( nameField ) {
+                    tag.innerText = `[/${ nameField.value.trim() }]`;
+                }
+            } );
+        }, 10 );
+    };
+
+
+
+
+
     
     function scanFormTags(formCode) {
         const fields = [...formCode.matchAll(/\[(?!group|step|repeater|submit)[^\] ]+ ([^\] ]+)/g)].map(e=>e[1]);

@@ -9,12 +9,6 @@ class CF7CF {
 
     function __construct() {
 
-        // Register shortcodes
-        add_action('wpcf7_init', array(__CLASS__, 'add_shortcodes'));
-
-        // Tag generator
-        add_action('admin_init', array(__CLASS__, 'tag_generator'), 590);
-
         // compatibility with CF7 multi-step forms by Webhead LLC.
         add_filter( 'wpcf7_posted_data', array($this,'cf7msm_merge_post_with_cookie'), 8, 1 );
 
@@ -92,54 +86,6 @@ class CF7CF {
 
     function activate() {
         //add options with add_option and stuff
-    }
-
-    public static function add_shortcodes() {
-        if (function_exists('wpcf7_add_form_tag'))
-            wpcf7_add_form_tag('group', array(__CLASS__, 'shortcode_handler'), true);
-        else if (function_exists('wpcf7_add_shortcode')) {
-            wpcf7_add_shortcode('group', array(__CLASS__, 'shortcode_handler'), true);
-        } else {
-            throw new Exception('functions wpcf7_add_form_tag and wpcf7_add_shortcode not found.');
-        }
-    }
-
-    // TODO: check if we can remove this function. Doesn't seem to be called.
-    function group_shortcode_handler( $atts, $content = "" ) {
-        return $content;
-    }
-
-    // TODO: check if we can remove this function. Doesn't seem to be called.
-    public static function shortcode_handler($tag) {
-        //$tag = new WPCF7_Shortcode($tag);
-        $tag = new WPCF7_FormTag($tag);
-        //ob_start();
-        //print_r($tag);
-        //return print_r($tag, true);
-        return $tag->content;
-    }
-
-
-    public static function tag_generator() {
-        // if (! function_exists( 'wpcf7_add_tag_generator'))
-        //     return;
-
-        // wpcf7_add_tag_generator('group',
-        //     __('Conditional Fields Group', 'cf7-conditional-fields'),
-        //     'wpcf7-tg-pane-group',
-        //     array(__CLASS__, 'tg_pane')
-        // );
-
-        // do_action('wpcf7cf_tag_generator');
-    }
-
-    static function tg_pane( $contact_form, $args = '' ) {
-        $args = wp_parse_args( $args, array() );
-        $type = 'group';
-
-        $description = __( "Generate a group tag to group form elements that can be shown conditionally.", 'cf7-conditional-fields' );
-
-        include 'tg_pane_group.php';
     }
 
     /**
