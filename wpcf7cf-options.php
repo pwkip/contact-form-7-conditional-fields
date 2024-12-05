@@ -108,7 +108,7 @@ function wpcf7cf_options_page() {
                     <li><?php _e( 'Save the Contact Form', 'cf7-conditional-fields'); ?></li>
                     <li><?php _e( 'Go to the <strong><em>Conditional Fields</em></strong> Tab', 'cf7-conditional-fields'); ?></li>
                 </ol>
-                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank"><?php _e( 'Show me an example', 'cf7-conditional-fields'); ?></a> | <a class="notice-dismiss-alt" href="#"><?php _e( 'Dismiss notice', 'cf7-conditional-fields'); ?></a>
+                <a href="https://conditional-fields-cf7.bdwm.be/conditional-fields-for-contact-form-7-tutorial/" target="_blank"><?php _e( 'Show me an example', 'cf7-conditional-fields'); ?></a>
             </div>
         </div>
         <?php } ?>
@@ -142,19 +142,19 @@ function wpcf7cf_options_page() {
             submit_button();
 
             if (!WPCF7CF_IS_PRO) {
-            ?>
-            <h3><?php _e( 'Conditional Fields  PRO', 'cf7-conditional-fields'); ?></h3>
-            <?php _e( 'Get Conditional Fields  PRO to unlock the full potential of CF7', 'cf7-conditional-fields'); ?>
-            <ul class="wpcf7cf-list">
-                <li><?php _e( 'Repeaters', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Regular expressions', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Toggle buttons', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'Additional operators', 'cf7-conditional-fields'); ?>< <code>&lt;</code> <code>&gt;</code> <code>&le;</code> <code>&ge;</code> <code><?php _e( 'is empty', 'cf7-conditional-fields'); ?></code></li>
-                <li><?php _e( 'Multistep (with Summary)', 'cf7-conditional-fields'); ?></li>
-                <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
-            </ul>
-            <p><a target="_blank" class="button button-primary" href="https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
-            <?php
+                ?>
+                <h3><?php _e( 'Conditional Fields  PRO', 'cf7-conditional-fields'); ?></h3>
+                <?php _e( 'Get Conditional Fields  PRO to unlock the full potential of CF7', 'cf7-conditional-fields'); ?>
+                <ul class="wpcf7cf-list">
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/repeater/"><?php _e( 'Repeatable fields', 'cf7-conditional-fields'); ?></a></li>
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/multistep/"><?php _e( 'Multistep forms (with Summary)', 'cf7-conditional-fields'); ?></a></li>
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/regular-expressions/"><?php _e( 'Define conditions with regular expression', 'cf7-conditional-fields'); ?></a></li>
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/advanced-conditional-logic-with-custom-javascript-functions/"><?php _e( 'Define conditions with custom javascript functions', 'cf7-conditional-fields'); ?></a></li>
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/multifile/"><?php _e( 'Multiple file upload', 'cf7-conditional-fields'); ?></a></li>
+                    <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
+                </ul>
+                <p><a target="_blank" class="button button-primary" href="https://shop.bdwm.be/contact-form-7-conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
+                <?php
             }
             do_action('wpcf7cf_after_animation_settings');
 

@@ -35,15 +35,13 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
     wpcf7cf.operators = [
         'equals',
         'not equals',
-        'equals (regex)',
-        'not equals (regex)',
         'greater than',
         'greater than or equals',
         'less than',
         'less than or equals',
         'is empty',
         'not empty',
-        'function',
+        
      ];
     
     wpcf7cf.$newEntry = jQuery(`<div class="entry">
