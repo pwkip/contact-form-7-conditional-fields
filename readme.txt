@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.5.4
+Stable tag: 2.5.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,6 +19,8 @@ This plugin adds conditional logic to [Contact Form 7](https://wordpress.org/plu
 
 If you edit your CF7 form, you will see an additional tag called "Conditional fields Group". Everything you put between the start and end tag will be hidden by default.
 After you have added the field group(s), go to the "Conditional fields" tab to create one or more conditions that will make the group(s) appear.
+
+Conditional Fields for Contact Form 7 is an independent plugin. This plugin is not affiliated with or endorsed by the developers of Contact Form 7.
 
 = How to use it =
 
@@ -135,6 +137,10 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.5.5 (2024-12-20) =
+* FREE: Rename plugin folder and main file from contact-form-7-conditional-fields/contact-form-7-conditional-fields to conditional-fields
+* PRO: Rename plugin folder and main file from contact-form-7-conditional-fields-pro to conditional-fields-pro/conditional-fields.php
 
 = 2.5.4 (2024-12-05) =
 * Remove some code in the free plugin that was only needed for the PRO version.

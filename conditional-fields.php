@@ -4,7 +4,7 @@
 * Plugin URI: http://bdwm.be/
 * Description: Adds support for conditional fields to Contact Form 7. This plugin depends on Contact Form 7.
 * Author: Jules Colle
-* Version: 2.5.4
+* Version: 2.5.5
 * Author URI: http://bdwm.be/
 * Text Domain: cf7-conditional-fields
 * License: GPL v2 or later
@@ -38,7 +38,7 @@ if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
         <div class="notice notice-error is-dismissible">
 			<p><?php 
 			// translators: 1. <a>, 2. </a> 
-			printf( __( '<strong>Conditional Fields for Contact Form 7</strong> needs to %1$sdeactivate the free plugin%1$s', 'cf7-conditional-fields' ), '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fcontact-form-7-conditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/contact-form-7-conditional-fields.php' ) . '">', '</a>' ); 
+			printf( __( '<strong>Conditional Fields for Contact Form 7</strong> needs to %1$sdeactivate the free plugin%1$s', 'cf7-conditional-fields' ), '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fconditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/conditional-fields.php' ) . '">', '</a>' ); 
 			?></p>
         </div>
 		<?php

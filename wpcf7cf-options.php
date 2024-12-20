@@ -153,7 +153,7 @@ function wpcf7cf_options_page() {
                     <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/multifile/"><?php _e( 'Multiple file upload', 'cf7-conditional-fields'); ?></a></li>
                     <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
                 </ul>
-                <p><a target="_blank" class="button button-primary" href="https://shop.bdwm.be/contact-form-7-conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
+                <p><a target="_blank" class="button button-primary" href="https://shop.bdwm.be/conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
                 <?php
             }
             do_action('wpcf7cf_after_animation_settings');
