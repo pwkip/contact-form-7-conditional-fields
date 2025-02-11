@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -71,7 +71,6 @@ Pro features include:
 * Repeatable fields (repeaters)
 * Forms with multiple steps (multistep)
 * Custom conditions with JavaScript functions
-* Conditions with regular expressions
 * Multiple file upload
 
 [Get the PRO version of Conditional Fields for Contact Form 7!](https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/)
@@ -137,6 +136,10 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.5.8 (2025-02-11) =
+* Enable regular expressions again in the free version.
+* Temporarily add contact-form-7-conditional-fields.php file again and point it to the new file. This is to prevent users from getting a fatal error when updating from version 2.5.4. This file will be removed again in a future update.
 
 = 2.5.7 (2025-01-14) =
 * Fully tested with Contact Form 7 version 6.0.3

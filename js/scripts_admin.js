@@ -41,6 +41,8 @@ if (typeof(_wpcf7) != 'undefined' || typeof(wpcf7) != 'undefined') {
         'less than or equals',
         'is empty',
         'not empty',
+        'equals (regex)',
+        'not equals (regex)',
         
      ];
     
