@@ -1,7 +1,7 @@
 <?php
 
-if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.5.9' );
-if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '6.0.4' );
+if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.5.10' );
+if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '6.0.5' );
 if (!defined('WPCF7CF_PLUGIN')) define( 'WPCF7CF_PLUGIN', __FILE__ );
 if (!defined('WPCF7CF_PLUGIN_BASENAME')) define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
 if (!defined('WPCF7CF_PLUGIN_NAME')) define( 'WPCF7CF_PLUGIN_NAME', trim( dirname( WPCF7CF_PLUGIN_BASENAME ), '/' ) );
