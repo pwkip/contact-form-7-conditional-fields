@@ -308,7 +308,25 @@ class CF7CF {
     public static function getConditions($form_id) {
         // make sure conditions are an array.
         $options = get_post_meta($form_id,'wpcf7cf_options',true);
-        return is_array($options) ? $options : array(); // the meta key 'wpcf7cf_options' is a bit misleading at this point, because it only holds the form's conditions, no other options/settings
+        if (!is_array($options)) {
+            return array();
+        }
+        if (isset($options[0]['if_field'])) {
+            // this is a legacy condition format, so we need to convert it to the new format
+            foreach ($options as $i => $option) {
+                $options[$i]['and_rules'] = [
+                    [
+                        'if_field' => $option['if_field'],
+                        'operator' => $option['operator'],
+                        'if_value' => $option['if_value'],
+                    ]
+                ];
+                unset($options[$i]['if_field']);
+                unset($options[$i]['operator']);
+                unset($options[$i]['if_value']);
+            }
+        }
+        return $options; // the meta key 'wpcf7cf_options' is a bit misleading at this point, because it only holds the form's conditions, no other options/settings
     }
 
     /**
@@ -431,8 +449,8 @@ function wpcf7cf_form_hidden_fields($hidden_fields) {
 }
 
 function wpcf7cf_endswith($string, $test) {
-    $strlen = strlen($string);
-    $testlen = strlen($test);
+    $strlen = strlen($string ?? '');
+    $testlen = strlen($test ?? '');
     if ($testlen > $strlen) return false;
     return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
 }
