@@ -42,46 +42,67 @@ class CF7CF {
 
 
 	/**
-	 * Suppress invalid mailbox syntax errors on fields that contain existing conditional
+	 * Suppress invalid mailbox syntax errors on fields that contain existing conditional groups.
+     * Fields to check:
+     *  - mail.recipient, mail.sender, mail.additional_headers
+     *  - mail2.recipient, mail2.sender, mail2.additional_headers
 	 */
     function wpcf7cf_config_validator_validate(WPCF7_ConfigValidator $wpcf7_config_validator) {
 
-    	// TODO: For now we kill every syntax error once a [groupname] tag is detected.
-	    //       Ideally, this function should check each string inside the group for invalid syntax.
-	    // TODO 2: ajax validation not working yet, because $cf->scan_form_tags() does not seem to contain group tags if it's an ajax request. Need to investigate.
+        $errors = $wpcf7_config_validator->collect_error_messages();
+        
+        if (empty($errors)) {
+            return; // no errors, nothing to do
+        }
+        
+        $cf = $wpcf7_config_validator->contact_form();
+        
+        // find all group names from the form tags
+        $all_group_tags = array_filter($cf->scan_form_tags(), function($tag) { return $tag['type'] == 'group'; });
+        $all_group_names = array_map(function($tag) { return $tag['name']; }, $all_group_tags);
 
-	    $cf = $wpcf7_config_validator->contact_form();
-	    $all_group_tags = $cf->scan_form_tags();
+        $available_error_codes = (array) apply_filters(
+            'wpcf7_config_validator_available_error_codes',
+            WPCF7_ConfigValidator::error_codes,
+            $cf
+        );
 
-    	foreach ($wpcf7_config_validator->collect_error_messages() as $err_type => $err) {
-
-//    	    print_r($err_type);
+    	foreach ($errors as $err_type => $err) {
 
 		    $parts = explode('.',$err_type);
 
 		    $property = $parts[0];
+            $sub_prop = $parts[1];
 
-		    if ($property == 'form') continue; // the 'form' field can be safely validated by CF7. No need to suppress it.
+            $is_emailadress_property = in_array($property, ['mail', 'mail_2']) && in_array($sub_prop, ['recipient', 'sender', 'additional_headers']);
 
-		    $sub_prop = $parts[1];
+		    if ( !$is_emailadress_property ) {
+                continue; // only check email address properties
+            }
+
+            if (!isset($cf->prop($property)[$sub_prop]) || empty($cf->prop($property)[$sub_prop])) {
+                continue; // skip if the property is not set
+            }
+
+            // get the value of the property
 		    $prop_val = $cf->prop($property)[$sub_prop];
 
+            // strip all [group_name] and [/group_name] tags from the prop_value
+            foreach ($all_group_names as $group_name) {
+                $prop_val = str_replace("[$group_name]", '', $prop_val);
+                $prop_val = str_replace("[/$group_name]", '', $prop_val);
+            }
 
-		    // TODO 2: Dirty hack. Because of TODO 2 we are just going to kill the error message if we detect the string '[/'
-		    //         Start removing here.
-		    if (strpos($prop_val, '[/') !== false) {
-                if ( defined( 'WPCF7_ConfigValidator::error_invalid_mailbox_syntax' ) ) {
-                    // Pre CF7 v5.8
-			        $wpcf7_config_validator->remove_error($err_type, WPCF7_ConfigValidator::error_invalid_mailbox_syntax);
-                } else {
-                    // CF7 v5.8+
-					$wpcf7_config_validator->remove_error($err_type, 'invalid_mail_header');
+            // remove all current errors on the property, and then run the validation function again with the group tags stripped from the prop_value
+            if (in_array($sub_prop, ['recipient', 'sender', 'additional_headers'])) {
+                foreach ($available_error_codes as $error_code) {
+                    $wpcf7_config_validator->remove_error($err_type, $error_code);
                 }
-				continue;
-		    }
-	    }
+                $validation_function = 'validate_mail_' . $sub_prop;
+                $wpcf7_config_validator->$validation_function($property, $prop_val);
+            }
 
-    	return new WPCF7_ConfigValidator($wpcf7_config_validator->contact_form());
+	    }
     }
 
     function activate() {
