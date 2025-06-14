@@ -419,19 +419,27 @@ function wpcf7cf_properties($properties, $wpcf7form) {
 	    		$tag_id = $tag_parts[0];
 	    		$tag_html_type = 'div';
 	    		$tag_html_data = array();
+                $tag_classes = array();
 
 	    		foreach ($tag_parts as $i => $tag_part) {
                     if ($i==0) continue;
                     $tag_part = explode(':',$tag_part);
-					if ($tag_part[0] == 'inline') $tag_html_type = 'span';
-					else if ($tag_part[0] == 'clear_on_hide') $tag_html_data[] = 'data-clear_on_hide';
-					else if ($tag_part[0] == 'disable_on_hide' && WPCF7CF_IS_PRO) $tag_html_data[] = 'data-disable_on_hide';
-                    else if ($tag_part[0] == 'class') $tag_html_data[] = 'class="'.($tag_part[1]??'').'"';
+					if ($tag_part[0] == 'inline') {
+                        $tag_html_type = 'span';
+                    } else if ($tag_part[0] == 'clear_on_hide') {
+                        $tag_html_data[] = 'data-clear_on_hide';
+                    } else if ($tag_part[0] == 'disable_on_hide' && WPCF7CF_IS_PRO) {
+                        $tag_html_data[] = 'data-disable_on_hide';
+                    } else if ($tag_part[0] == 'class') {
+                        $tag_classes[] = $tag_part[1] ?? '';
+                    }
 			    }
+
+                $class_html = 'class="' . implode(' ', array_filter($tag_classes)) . '"';
 
 			    array_push($stack,$tag_html_type);
 
-			    echo '<'.$tag_html_type.' data-id="'.$tag_id.'" data-orig_data_id="'.$tag_id.'" '.implode(' ',$tag_html_data).' data-class="wpcf7cf_group">';
+			    echo '<'.$tag_html_type.' data-id="'.$tag_id.'" data-orig_data_id="'.$tag_id.'" '.implode(' ',$tag_html_data).' '.$class_html.' data-class="wpcf7cf_group">';
 		    } else if ($form_part == '[/group]') {
 	    		echo '</'.array_pop($stack).'>';
 		    } else {

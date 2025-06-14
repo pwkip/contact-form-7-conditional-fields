@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.5.13
+Stable tag: 2.5.14
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -137,12 +137,15 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 
 == Changelog ==
 
+= 2.5.14 (2025-06-14) =
+* Bug fix: Allow multiple class names for group tags [#129](https://github.com/pwkip/contact-form-7-conditional-fields/issues/129)
+
 = 2.5.13 (2025-06-13) =
 * Improve backend mailbox validation.
 
 = 2.5.12 (2025-06-07) =
 * Bug fix: Make sure legacy forms (created before version 1.4) can be edited.
-* Bug fix: Validation Issue with CF7 file upload within multistep form [#128](https://pwkip.github.io/contact-form-7-conditional-fields/issues/128) - Thanks to Sebastian Blasius from [huishu-agentur.de](https://huishu-agentur.de) for the fix!
+* Bug fix: Validation Issue with CF7 file upload within multistep form [#128](https://github.com/pwkip/contact-form-7-conditional-fields/issues/128) - Thanks to Sebastian Blasius from [huishu-agentur.de](https://huishu-agentur.de) for the fix!
 
 = 2.5.11 (2025-04-10) =
 * Fully tested with Contact Form 7 version 6.0.6
