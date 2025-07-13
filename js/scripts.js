@@ -140,7 +140,7 @@ const Wpcf7cfForm = function($form) {
         const formdata = new FormData(form.$form[0]);
 
         let formdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
-        const buttonEntries = [ ... jQuery('button', form.$form) ].map(entry => [entry.name, entry.value]);
+        const buttonEntries = jQuery('button', form.$form).map(entry => [entry.name, entry.value]);
         formdataEntries = formdataEntries.concat(buttonEntries);
 
         inputs.forEach(simpleDomItem => {
