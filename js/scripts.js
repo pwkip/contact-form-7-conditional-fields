@@ -140,7 +140,7 @@ const Wpcf7cfForm = function($form) {
         const formdata = new FormData(form.$form[0]);
 
         let formdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
-        const buttonEntries = jQuery('button', form.$form).map(entry => [entry.name, entry.value]);
+        const buttonEntries = Array.from(form.$form[0].querySelectorAll('button'), b => [b.name, b.value]);
         formdataEntries = formdataEntries.concat(buttonEntries);
 
         inputs.forEach(simpleDomItem => {
@@ -571,6 +571,7 @@ window.wpcf7cf = {
     },
 
     get_simplified_dom_model : function(currentNode, simplified_dom = {}, parentGroups = [], parentRepeaters = []) {
+
 
         const type = currentNode.classList && currentNode.classList.contains('wpcf7cf_repeater') ? 'repeater' :
             currentNode.dataset.class == 'wpcf7cf_group' ? 'group' :
