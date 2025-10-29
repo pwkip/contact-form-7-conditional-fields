@@ -47,12 +47,11 @@ if (window.wpcf7 && !wpcf7.setStatus) {
 }
 
 if (window.wpcf7cf_running_tests) {
-    jQuery('input[name="_wpcf7cf_options"]').each(function(e) {
-        const $input = jQuery(this);
-        const opt = JSON.parse($input.val());
+    document.querySelectorAll('input[name="_wpcf7cf_options"]').forEach(input => {
+        const opt = JSON.parse(input.value);
         opt.settings.animation_intime = 0;
         opt.settings.animation_outtime = 0;
-        $input.val(JSON.stringify(opt));
+        input.value = JSON.stringify(opt);
     });
     wpcf7cf_change_time_ms = 0;
 }
@@ -67,7 +66,9 @@ const wpcf7cf_change_events = 'input.wpcf7cf paste.wpcf7cf change.wpcf7cf click.
 
 const wpcf7cf_forms = [];
 
-const Wpcf7cfForm = function($form) {
+const Wpcf7cfForm = function(formElement) {
+
+    const $form = jQuery(formElement);
 
     const options_element = $form.find('input[name="_wpcf7cf_options"]').eq(0);
     if (!options_element.length || !options_element.val()) {
@@ -78,7 +79,7 @@ const Wpcf7cfForm = function($form) {
     const form = this;
 
     // always wait until groups are updated before submitting the form
-    $form[0].addEventListener('submit', function(e) {
+    formElement.addEventListener('submit', function(e) {
         if (window.wpcf7cf_updatingGroups) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -87,7 +88,7 @@ const Wpcf7cfForm = function($form) {
             const retry = () => {
                 if (!window.wpcf7cf_updatingGroups) {
                     $form.off('.wpcf7cf-autosubmit'); // prevent duplicates
-                    $form[0].requestSubmit(); // safe submit
+                    formElement.requestSubmit(); // safe submit
                 } else {
                     requestAnimationFrame(retry);
                 }
@@ -102,20 +103,21 @@ const Wpcf7cfForm = function($form) {
     }, true); // use capture to run before WP's own handler
 
     // Disable submit buttons while the form is submitting
-    const submitButtons = $form[0].querySelectorAll('button[type=submit], input[type=submit]');
+    const submitButtons = formElement.querySelectorAll('button[type=submit], input[type=submit]');
     const observer = new MutationObserver(() => {
-        const isSubmitting = $form[0].classList.contains('submitting');
+        const isSubmitting = formElement.classList.contains('submitting');
 
         submitButtons.forEach(button => {
             button.disabled = isSubmitting;
             button.classList.toggle('is-disabled', isSubmitting);
         });
     });
-    observer.observe($form[0], { attributes: true, attributeFilter: ['class'] });
+    observer.observe(formElement, { attributes: true, attributeFilter: ['class'] });
 
     const form_options = JSON.parse(options_element.val());
 
     form.$form = $form;
+    form.formElement = formElement;
     form.$input_hidden_group_fields = $form.find('[name="_wpcf7cf_hidden_group_fields"]');
     form.$input_hidden_groups = $form.find('[name="_wpcf7cf_hidden_groups"]');
     form.$input_visible_groups = $form.find('[name="_wpcf7cf_visible_groups"]');
@@ -128,7 +130,7 @@ const Wpcf7cfForm = function($form) {
     form.simpleDom = null;
 
     form.reloadSimpleDom = function() {
-        form.simpleDom = wpcf7cf.get_simplified_dom_model(form.$form[0]);
+        form.simpleDom = wpcf7cf.get_simplified_dom_model(form.formElement);
     }
 
     // quicker than reloading the simpleDom completely with reloadSimpleDom
@@ -137,10 +139,10 @@ const Wpcf7cfForm = function($form) {
             form.reloadSimpleDom();
         }
         const inputs = Object.values(form.simpleDom).filter(item => item.type === 'input');
-        const formdata = new FormData(form.$form[0]);
+        const formdata = new FormData(form.formElement);
 
         let formdataEntries = [... formdata.entries()].map(entry => [ entry[0], entry[1].name ?? entry[1] ]);
-        const buttonEntries = Array.from(form.$form[0].querySelectorAll('button'), b => [b.name, b.value]);
+        const buttonEntries = Array.from(form.formElement.querySelectorAll('button'), b => [b.name, b.value]);
         formdataEntries = formdataEntries.concat(buttonEntries);
 
         inputs.forEach(simpleDomItem => {
@@ -515,13 +517,13 @@ window.wpcf7cf = {
     // keep this for backwards compatibility
     initForm : function($forms) {
         $forms.each(function(){
-            const $form = jQuery(this);
+            const formElement = this;
             // only add form is its class is "wpcf7-form" and if the form was not previously added
             if (
-                $form.hasClass('wpcf7-form') &&
-                !wpcf7cf_forms.some((form)=>{ return form.$form.get(0) === $form.get(0); })
+                formElement.classList.contains('wpcf7-form') &&
+                !wpcf7cf_forms.some((form)=>{ return form.$form.get(0) === formElement; })
             ) {
-                wpcf7cf_forms.push(new Wpcf7cfForm($form));
+                wpcf7cf_forms.push(new Wpcf7cfForm(formElement));
             }
         });
     },
@@ -932,23 +934,14 @@ window.wpcf7cf = {
 
 };
 
-jQuery('.wpcf7-form').each(function(){
-    wpcf7cf_forms.push(new Wpcf7cfForm(jQuery(this)));
+document.querySelectorAll('.wpcf7-form').forEach(function(formElement){
+    wpcf7cf_forms.push(new Wpcf7cfForm(formElement));
 });
 
 // Call displayFields again on all forms
 // Necessary in case some theme or plugin changed a form value by the time the entire page is fully loaded.
-jQuery('document').ready( function() {
+document.addEventListener('DOMContentLoaded', function () {
     wpcf7cf_forms.forEach(function(f){
         f.displayFields();
     });
 });
-
-// fix for exclusive checkboxes in IE (this will call the change-event again after all other checkboxes are unchecked, triggering the display_fields() function)
-const old_wpcf7ExclusiveCheckbox = jQuery.fn.wpcf7ExclusiveCheckbox;
-jQuery.fn.wpcf7ExclusiveCheckbox = function() {
-    return this.find('input:checkbox').on('click', function() {
-        const name = jQuery(this).attr('name');
-        jQuery(this).closest('form').find('input:checkbox[name="' + name + '"]').not(this).prop('checked', false).eq(0).change();
-    });
-};

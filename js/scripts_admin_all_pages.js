@@ -2,23 +2,49 @@
 //    DISMISS NOTICES
 // ------------------------------------
 
-jQuery(document).ready(function($) {
+document.addEventListener('DOMContentLoaded', () => {
+    // Delegated click handler covers notices added later, too
+    document.addEventListener('click', (event) => {
+        const trigger = event.target.closest(
+            '.wpcf7cf-admin-notice .notice-dismiss, .wpcf7cf-admin-notice .notice-dismiss-alt'
+        );
+        if (!trigger) return;
 
-    $('.notice-dismiss,.notice-dismiss-alt', '.wpcf7cf-admin-notice').click(function () {
-        const $noticeEl = $(this).closest('.wpcf7cf-admin-notice');
-        wpcf7cf_dismiss_notice( $noticeEl.data('noticeId'), $noticeEl.data('nonce') );
-    });
+        event.preventDefault();
 
-    function wpcf7cf_dismiss_notice(noticeId, nonce) {
+        const noticeEl = trigger.closest('.wpcf7cf-admin-notice');
+        if (!noticeEl) return;
 
+        const noticeId = noticeEl.dataset.noticeId || '';
+        const nonce = noticeEl.dataset.nonce || '';
+
+        // Update hidden input when noticeId is empty (parity with original)
         if (noticeId === '') {
-            $('input[name="wpcf7cf_options[notice_dismissed]"]').val('true');
+            const input = document.querySelector('input[name="wpcf7cf_options[notice_dismissed]"]');
+            if (input) input.value = 'true';
         }
 
-        $.post(ajaxurl, { action:'wpcf7cf_dismiss_notice', noticeId:noticeId, nonce:nonce }, function (response) {
-            // nothing to do. dismiss_notice option should be set to TRUE server side by now.
-        });
+        // Fire AJAX (needs admin `ajaxurl`; front-end must localize it)
+        if (typeof ajaxurl !== 'undefined') {
+            const params = new URLSearchParams();
+            params.append('action', 'wpcf7cf_dismiss_notice');
+            params.append('noticeId', noticeId);
+            params.append('nonce', nonce);
 
-    }
-
+            fetch(ajaxurl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString(),
+                cache: 'no-cache'
+            }).then((response) => {
+                if (response.ok) {
+                    // Remove notice from DOM on success
+                    noticeEl.remove();
+                }
+            }).catch(() => {
+                // Silently fail
+            });
+        }
+    });
 });
