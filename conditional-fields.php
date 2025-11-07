@@ -37,8 +37,8 @@ if ( function_exists( 'wpcf7cf_pro_deactivate_free_version_notice' ) ) {
 		?>
         <div class="notice notice-error is-dismissible">
 			<p><?php 
-			// translators: 1. <a>, 2. </a> 
-			printf( __( '<strong>Conditional Fields for Contact Form 7</strong> needs to %1$sdeactivate the free plugin%1$s', 'cf7-conditional-fields' ), '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fconditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/conditional-fields.php' ) . '">', '</a>' ); 
+			// translators: %1$s: <strong>, %2$s: </strong>, %3$s: <a>, %4$s: </a> 
+			printf( esc_html__( '%1$sConditional Fields for Contact Form 7%2$s needs to %3$sdeactivate the free plugin%4$s.', 'cf7-conditional-fields' ), '<strong>', '</strong>', '<a href="' . wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=cf7-conditional-fields%2Fconditional-fields.php&amp;plugin_status=all&amp;paged=1&amp;s=', 'deactivate-plugin_cf7-conditional-fields/conditional-fields.php' ) . '">', '</a>' ); 
 			?></p>
         </div>
 		<?php

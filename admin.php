@@ -38,7 +38,7 @@ function add_conditional_panel($panels) {
 function wpcf7cf_all_field_options($post, $selected = '-1') {
 	$all_fields = $post->scan_form_tags();
 	?>
-	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>><?php _e( '-- Select field --', 'cf7-conditional-fields' ); ?></option>
+	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>><?php esc_html_e( '-- Select field --', 'cf7-conditional-fields' ); ?></option>
 	<?php
 	foreach ($all_fields as $tag) {
 		if ($tag['type'] == 'group' || $tag['name'] == '') continue;
@@ -52,7 +52,7 @@ function wpcf7cf_all_group_options($post, $selected = '-1') {
 	$all_groups = $post->scan_form_tags(array('type'=>'group'));
 
 	?>
-	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>><?php _e( '-- Select group --', 'cf7-conditional-fields' ); ?></option>
+	<option value="-1" <?php echo $selected == '-1'?'selected':'' ?>><?php esc_html_e( '-- Select group --', 'cf7-conditional-fields' ); ?></option>
 	<?php
 	foreach ($all_groups as $tag) {
 		?>
@@ -99,29 +99,29 @@ function wpcf7cf_editor_panel_conditional($form) {
     <div class="wpcf7cf-inner-container">
 
 		<label class="wpcf7cf-switch" id="wpcf7cf-text-only-switch">
-			<span class="label"><?php _e( 'Text mode', 'cf7-conditional-fields' ); ?></span>
+			<span class="label"><?php esc_html_e( 'Text mode', 'cf7-conditional-fields' ); ?></span>
 			<span class="switch">
 				<input type="checkbox" id="wpcf7cf-text-only-checkbox" name="wpcf7cf-text-only-checkbox" value="text_only" <?php echo $is_text_only ? 'checked':''; ?>>
 				<span class="slider round"></span>
 			</span>
 		</label>
 
-		<h2><?php _e( 'Conditional fields', 'cf7-conditional-fields' ); ?></h2>
+		<h2><?php esc_html_e( 'Conditional fields', 'cf7-conditional-fields' ); ?></h2>
 
 		<div id="wpcf7cf-entries-ui" style="display:none">
 			<div id="wpcf7cf-entries">
 			</div>
 			
-			<span id="wpcf7cf-add-button" title="<?php _e( 'add new rule', 'cf7-conditional-fields' ); ?>"><?php _e( '+ add new conditional rule', 'cf7-conditional-fields'); ?></span>
+			<span id="wpcf7cf-add-button" title="<?php esc_html_e( 'add new rule', 'cf7-conditional-fields' ); ?>"><?php esc_html_e( '+ add new conditional rule', 'cf7-conditional-fields'); ?></span>
 
 			<div id="wpcf7cf-a-lot-of-conditions" class="wpcf7cf-notice notice-warning" style="display:none;">
 				<p>
-					<strong><?php _e( 'Wow, That\'s a lot of conditions!', 'cf7-conditional-fields' ); ?></strong><br>
+					<strong><?php esc_html_e( 'Wow, That\'s a lot of conditions!', 'cf7-conditional-fields' ); ?></strong><br>
 					<?php 
 					// translators: 1. max recommended conditions
-					echo sprintf( __( 'You can only add up to %d conditions using this interface.', 'cf7-conditional-fields' ), WPCF7CF_MAX_RECOMMENDED_CONDITIONS ) . ' ';
+					printf( esc_html__( 'You can only add up to %d conditions using this interface.', 'cf7-conditional-fields' ), WPCF7CF_MAX_RECOMMENDED_CONDITIONS ) . ' ';
 					// translators: 1,2: strong tags, 3. max recommended conditions
-					printf( __( 'Please switch to %1$sText mode%2$s if you want to add more than %3$d conditions.', 'cf7-conditional-fields' ), '<a href="#" class="wpcf7cf-switch-to-txt-link">', '</a>', WPCF7CF_MAX_RECOMMENDED_CONDITIONS ); ?>
+					printf( esc_html__( 'Please switch to %1$sText mode%2$s if you want to add more than %3$d conditions.', 'cf7-conditional-fields' ), '<a href="#" class="wpcf7cf-switch-to-txt-link">', '</a>', WPCF7CF_MAX_RECOMMENDED_CONDITIONS ); ?>
 				</p>
 			</div>
 
@@ -217,7 +217,10 @@ add_action('admin_notices', function () {
 			?>
 				<div class="wpcf7cf-admin-notice notice notice-warning" data-notice-id="<?php echo $nid ?>">
 					<p>
-						<strong>Conditional Fields for Contact Form 7</strong> depends on Contact Form 7. Please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">Contact Form 7</a>.
+					<?php printf(
+						/* translators: %1$s is the opening anchor tag, %2$s is the closing anchor tag. */
+						esc_html__( '%1$sConditional Fields for Contact Form 7%2$s depends on Contact Form 7. Please install %3$sContact Form 7%4$s.', 'cf7-conditional-fields' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://downloads.wordpress.org/plugin/contact-form-7.' . WPCF7CF_CF7_MAX_VERSION . '.zip' ) . '">', '</a>'
+					);?>
 					</p>
 				</div>
 			<?php
@@ -230,9 +233,10 @@ add_action('admin_notices', function () {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is not yet tested with your current version of Contact Form 7.
-					<br>If you notice any problems with your forms, please roll back to Contact Form 7 <strong>version <?php echo WPCF7CF_CF7_MAX_VERSION ?></strong>.
-					<br>For a quick and safe rollback, we recommend <a href="https://wordpress.org/plugins/wp-rollback/" target="_blank">WP Rollback</a>.
+				<?php printf(
+					/* translators: %1$s: <strong>, %2$s: </strong>, %3$s: <br>, %4$s: CF7 plugin version, %5$s: Opening anchor tag, %6$s: Closing anchor tag. */
+					esc_html__( '%1$sConditional Fields for Contact Form 7%2$s is not yet tested with your current version of Contact Form 7.%3$sIf you notice any problems with your forms, please roll back to Contact Form 7 %1$sversion %4$s%2$s.%3$sFor a quick and safe rollback, we recommend %5$sWP Rollback%6$s.', 'cf7-conditional-fields' ), '<strong>', '</strong>', '<br>', esc_html( WPCF7CF_CF7_MAX_VERSION ), '<a href="' . esc_url( 'https://wordpress.org/plugins/wp-rollback/' ) . '" target="_blank">', '</a>'
+				);?>
 				</p>
 			</div>
 		<?php
@@ -243,8 +247,11 @@ add_action('admin_notices', function () {
 		?>
 			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is fully compatible and tested with Contact Form 7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?>.
-					<br>Compatibility with other versions of CF7 is not guaranteed, so please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>
+				<?php
+				printf(
+					/* translators: %1$s: <strong>, %2$s: </strong>, %3$s: CF7 plugin version, %4$s: <br>, %5$s: Opening anchor tag, %6$s: Closing anchor tag. */
+					esc_html__( '%1$sConditional Fields for Contact Form 7%2$s is fully compatible and tested with Contact Form 7 version %3$s. %4$sCompatibility with other versions of CF7 is not guaranteed, so please install %5$sCF7 version %3$s%6$s.', 'cf7-conditional-fields' ), '<strong>', '<strong>', esc_html( WPCF7CF_CF7_MAX_VERSION ), '<br>', '<a target="_blank" href="' . esc_url( 'https://downloads.wordpress.org/plugin/contact-form-7.' . WPCF7CF_CF7_MAX_VERSION . '.zip' ) . '">', '</a>'
+				);?>
 				</p>
 			</div>
 		<?php
