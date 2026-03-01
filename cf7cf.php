@@ -538,4 +538,4 @@ add_filter( 'wpcf7_feedback_response', function($response, $result) {
         }
     }
     return $response;
-}, 2, 10 );
+}, 10, 2 );
