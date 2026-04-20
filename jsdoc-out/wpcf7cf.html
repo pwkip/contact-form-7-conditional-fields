@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1043">line 1043</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1141">line 1141</a>
     </li></ul></dd>
     
 
@@ -102,6 +102,741 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".calculatedfieldsCreateFieldsHelper"><span class="type-signature">(static) </span>calculatedfieldsCreateFieldsHelper<span class="signature">(form, suffix)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a fields helper object for use in user-defined calculation functions.
+Provides get(), raw(), all(), and sum() methods.
+When suffix is provided, get() and raw() auto-resolve to the same repeater sub.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>form</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Wpcf7cfForm.html">Wpcf7cfForm</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The form object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>suffix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Repeater suffix (e.g. '__2' or '__1__3'), empty string if not in repeater</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1630">line 1630</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The fields helper</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".calculatedfieldsEvaluateFormula"><span class="type-signature">(static) </span>calculatedfieldsEvaluateFormula<span class="signature">(formula, form, suffix)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Evaluate a formula string by replacing [field-name] references with actual field values.
+Supports: +, -, *, /, parentheses, and nested field references.
+When suffix is provided, field references auto-resolve to the same repeater sub.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>formula</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The formula string, e.g. &quot;[quantity] * [price] + 10&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>form</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Wpcf7cfForm.html">Wpcf7cfForm</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The form object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>suffix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Repeater suffix (e.g. '__2'), empty string if not in repeater</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1737">line 1737</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The calculated result</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".calculatedfieldsGetCalcValue"><span class="type-signature">(static) </span>calculatedfieldsGetCalcValue<span class="signature">(fieldName, form)</span><span class="type-signature"> &rarr; {Number|null}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the numeric calc value for a field by reading data-calc-value from DOM elements.
+Returns the sum of data-calc-value attributes from selected options or checked inputs.
+Returns null if no data-calc-value attributes are found (field is not a calc_select/radio/checkbox).</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The field name (possibly with [] suffix)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>form</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Wpcf7cfForm.html">Wpcf7cfForm</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The form object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1813">line 1813</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".calculatedfieldsSafeMathEval"><span class="type-signature">(static) </span>calculatedfieldsSafeMathEval<span class="signature">(expr)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Safely evaluate a mathematical expression string.
+Only allows numbers, +, -, *, /, parentheses, and decimal points.
+Does NOT use eval().</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>expr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The mathematical expression</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1856">line 1856</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The result, or 0 on error</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
             
@@ -236,7 +971,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1501">line 1501</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1599">line 1599</a>
     </li></ul></dd>
     
 
@@ -399,7 +1134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1512">line 1512</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1610">line 1610</a>
     </li></ul></dd>
     
 
@@ -562,7 +1297,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1433">line 1433</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1531">line 1531</a>
     </li></ul></dd>
     
 
@@ -748,7 +1483,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1453">line 1453</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1551">line 1551</a>
     </li></ul></dd>
     
 
@@ -934,7 +1669,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1477">line 1477</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1575">line 1575</a>
     </li></ul></dd>
     
 
@@ -1120,7 +1855,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1465">line 1465</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1563">line 1563</a>
     </li></ul></dd>
     
 
@@ -1307,7 +2042,7 @@ Subs are either appended to or removed from the end of the repeater.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1490">line 1490</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line1588">line 1588</a>
     </li></ul></dd>
     
 
@@ -1353,13 +2088,13 @@ Subs are either appended to or removed from the end of the repeater.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wpcf7cf.html">wpcf7cf</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="wpcf7cf.html">wpcf7cf</a></li></ul><h3>Global</h3><ul><li><a href="global.html#all">all</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#raw">raw</a></li><li><a href="global.html#suffix">suffix</a></li><li><a href="global.html#sum">sum</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Feb 08 2026 11:47:29 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 21 2026 00:24:24 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

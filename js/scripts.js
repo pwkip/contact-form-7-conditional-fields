@@ -336,8 +336,11 @@ Wpcf7cfForm.prototype.displayFields = function() {
     });
 
     form.updateHiddenFields();
+    
     form.updateSummaryFields();
 };
+
+
 
 Wpcf7cfForm.prototype.updateSummaryFields = function() {
     const form = this;
@@ -931,6 +934,7 @@ window.wpcf7cf = {
         }
     },
 
+    
 
 };
 

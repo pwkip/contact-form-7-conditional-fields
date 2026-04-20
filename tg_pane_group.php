@@ -34,17 +34,17 @@ function wpcf7_group_validation_filter( $result, $tag ) {
 
 /* Tag generator */
 
-add_action( 'wpcf7_admin_init', 'wpcf7_add_tag_generator_group', 590, 0 );
+add_action( 'wpcf7_admin_init', 'wpcf7_add_tag_generator_group', 600, 0 );
 
 function wpcf7_add_tag_generator_group() {
 	$tag_generator = WPCF7_TagGenerator::get_instance();
+
+    do_action('wpcf7cf_tag_generator');
 
 	$tag_generator->add( 'group', __( 'Conditional group', 'cf7-conditional-fields' ),
 		'wpcf7_tag_generator_group',
 	 	array( 'version' => '2' )
 	);
-
-    do_action('wpcf7cf_tag_generator');
 }
 
 function wpcf7_tag_generator_group( $contact_form, $options ) {
