@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.7
+Stable tag: 2.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -70,7 +70,8 @@ Pro features include:
 
 * Repeatable fields (repeaters)
 * Forms with multiple steps (multistep)
-* Custom conditions with JavaScript functions
+* Calculated fields
+* Advanced conditions with JavaScript functions
 * Multiple file upload
 
 [Get the PRO version of Conditional Fields for Contact Form 7!](https://conditional-fields-cf7.bdwm.be/contact-form-7-conditional-fields-pro/)
@@ -103,9 +104,9 @@ Correct form (all groups and fields have unique names):
 
 = All my groups show up all the time and never get hidden. =
 
-<strong>Reason #1: Javascript error</strong>
-Check your browser console (F12) for any javascript errors. WPCF7CF loads it's scripts at the bottom of the HTML page, so if some javascript error gets triggered before that, the code will not be executed in most browsers.
-Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing theme.
+<strong>Reason #1: JavaScript error</strong>
+Check your browser console (F12) for any JavaScript errors. WPCF7CF loads its scripts at the bottom of the HTML page, so if some JavaScript error gets triggered before that, the code will not be executed in most browsers.
+Before reaching out to the support forum try to determine which plugin or theme is causing the problem, by gradually disabling plugins and changing the theme.
 
 <strong>Reason #2: wp_footer() isn't loaded</strong>
 Check if your theme is calling the `wp_footer()` function. Typically this function will be called in your theme's footer.php file.
@@ -133,9 +134,12 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 
 = 2.2.11 =
 
-Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
+Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.7.1 (2026-04-21) =
+* PRO: Fix bugs with tg-pane for calculated fields.
 
 = 2.7 (2026-04-20) =
 * PRO: Add calculated fields feature.
@@ -182,7 +186,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Bug fix: Make sure legacy forms (created before version 1.4) can be edited.
 * Bug fix: Validation Issue with CF7 file upload within multistep form [#128](https://github.com/pwkip/contact-form-7-conditional-fields/issues/128) - Thanks to Sebastian Blasius from [huishu-agentur.de](https://huishu-agentur.de) for the fix!
 
-= 2.5.11 (2025-04-10) =`
+= 2.5.11 (2025-04-10) =
 * Fully tested with Contact Form 7 version 6.0.6
 * Tested up to WP 6.8
 
@@ -227,7 +231,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 * Fix XSS vulnerability in admin settings page. Thanks to [Patchstack](patchstack.com) for reporting this issue.
 * PRO: Fix: [response] tag doesn't work properly in multistep [#127](https://github.com/pwkip/contact-form-7-conditional-fields/issues/127)
 * PRO: Add support for checkbox free_text option in summary field [#126](https://github.com/pwkip/contact-form-7-conditional-fields/issues/126)
-* PRO: Fix: [multifile] allows uploading of filetype that is not specified in allowed filetypes [#103]((https://github.com/pwkip/contact-form-7-conditional-fields/issues/103)
+* PRO: Fix: [multifile] allows uploading of filetype that is not specified in allowed filetypes [#103](https://github.com/pwkip/contact-form-7-conditional-fields/issues/103)
 
 = 2.4.15 (2024-07-27) =
 * Fully tested with Contact Form 7 version 5.9.8
@@ -331,7 +335,7 @@ Reverted autop-fix because it was causing addional errors. Bottom line: Make sur
 
 = 2.2.11 (2022-12-13) =
 * DO NOT UPDATE TO CONTACT FORM VERSION 5.7!! At least wait for version 5.7.1 before updating
-* Reverted autop-fix because it was causing addional errors.
+* Reverted autop-fix because it was causing additional errors.
 * Reverted compatibility declaration to CF7 version 5.6.4
 
 = 2.2.10 (2022-12-11) =
