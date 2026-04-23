@@ -81,7 +81,7 @@ function wpcf7_tag_generator_group( $contact_form, $options ) {
 <div class="control-box">
 	<fieldset style="display:none;">
 		<legend id="<?php echo esc_attr( $tgg->ref( 'type-legend' ) ); ?>"><?php
-			echo esc_html( __( 'Field type', 'contact-form-7' ) );
+			esc_html_e( 'Field type', 'contact-form-7' );
 		?></legend>
 
 		<select data-tag-part="basetype" aria-labelledby="<?php echo esc_attr( $tgg->ref( 'type-legend' ) ); ?>"><?php
@@ -97,29 +97,29 @@ function wpcf7_tag_generator_group( $contact_form, $options ) {
 	</fieldset>
 
     <fieldset>
-        <legend id="tag-generator-panel-group-name-legend">Group name</legend>
+        <legend id="tag-generator-panel-group-name-legend"><?php esc_html_e( 'Group name', 'cf7-conditional-fields' ); ?></legend>
         <input type="text" data-tag-part="name" pattern="[A-Za-z][A-Za-z0-9_\-]*" aria-labelledby="tag-generator-panel-group-name-legend">
     </fieldset>
 
     
     <fieldset>
 		<legend id="<?php echo esc_attr( $tgg->ref( 'type-legend' ) ); ?>"><?php
-			echo esc_html( __( 'Options', 'cf7-conditional-fields' ) );
+			esc_html_e( 'Options', 'cf7-conditional-fields' );
 		?></legend>
 		<label>
 			<input type="checkbox" data-tag-part="option" data-tag-option="clear_on_hide" />
-			<strong>clear_on_hide</strong> (<?php echo esc_html( __( "clear inner fields when this group is hidden", 'cf7-conditional-fields' ) ); ?>)
+			<strong>clear_on_hide</strong> (<?php esc_html_e( "clear inner fields when this group is hidden", 'cf7-conditional-fields' ); ?>)
 		</label>
         <br>
 		<label>
 			<input type="checkbox" data-tag-part="option" data-tag-option="inline" />
-			<strong>inline</strong> (<?php echo esc_html( __( "use <span> instead of <div>", 'cf7-conditional-fields' ) ); ?>)
+			<strong>inline</strong> (<?php esc_html_e( "use <span> instead of <div>", 'cf7-conditional-fields' ); ?>)
 		</label>
         <?php if (WPCF7CF_IS_PRO) { ?>
             <br>
             <label>
                 <input type="checkbox" data-tag-part="option" data-tag-option="disable_on_hide" />
-                <strong>disable_on_hide</strong> (<?php echo esc_html( __( "disable inner fields when this group is hidden", 'cf7-conditional-fields' ) ); ?>)
+                <strong>disable_on_hide</strong> (<?php esc_html_e( "disable inner fields when this group is hidden", 'cf7-conditional-fields' ); ?>)
             </label>
         <?php } ?>
 	</fieldset>
@@ -146,7 +146,7 @@ function wpcf7_tag_generator_group( $contact_form, $options ) {
 	<?php
 		$tgg->print( 'insert_box_content' );
 	?>
-	<p class="mail-tag-tip">To show conditional information in the email, put it between <strong data-tag-part="mail-tag">[group-455]</strong> and <strong data-tag-part="mail-tag-closed">[/group-455]</strong> in the email template.</p>
+	<p class="mail-tag-tip"><?php printf(esc_html__( 'To show conditional information in the email, put it between %1$s[group-455]%2$s and %3$s[/group-455]%2$s in the email template.', 'cf7-conditional-fields' ),'<strong data-tag-part="mail-tag">','</strong>','<strong data-tag-part="mail-tag-closed">'); ?></p>
 </footer>
 <?php
 }
