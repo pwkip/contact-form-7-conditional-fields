@@ -9,6 +9,7 @@ define('WPCF7CF_DEFAULT_ANIMATION_INTIME', 200);
 define('WPCF7CF_DEFAULT_ANIMATION_OUTTIME', 200);
 define('WPCF7CF_DEFAULT_CONDITIONS_UI', 'normal');
 define('WPCF7CF_DEFAULT_NOTICE_DISMISSED', false);
+define('WPCF7CF_DEFAULT_REPEATER_REMOVE_BUTTON', 'bottom');
 
 if ( ! defined( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY' ) ) {
 	define( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY', 'publish_pages' );
@@ -25,7 +26,8 @@ function wpcf7cf_get_default_settings() {
         'animation_intime' => WPCF7CF_DEFAULT_ANIMATION_INTIME,
         'animation_outtime' => WPCF7CF_DEFAULT_ANIMATION_OUTTIME,
         'conditions_ui' => WPCF7CF_DEFAULT_CONDITIONS_UI,
-        'notice_dismissed' => WPCF7CF_DEFAULT_NOTICE_DISMISSED
+        'notice_dismissed' => WPCF7CF_DEFAULT_NOTICE_DISMISSED,
+        'repeater_remove_button' => WPCF7CF_DEFAULT_REPEATER_REMOVE_BUTTON,
     );
     $wpcf7cf_default_settings_glob = apply_filters('wpcf7cf_default_options', $wpcf7cf_default_settings_glob);
     return $wpcf7cf_default_settings_glob;
@@ -151,12 +153,30 @@ function wpcf7cf_options_page() {
                     <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/regular-expressions/"><?php _e( 'Define conditions with regular expression', 'cf7-conditional-fields'); ?></a></li>
                     <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/advanced-conditional-logic-with-custom-javascript-functions/"><?php _e( 'Define conditions with custom javascript functions', 'cf7-conditional-fields'); ?></a></li>
                     <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/multifile/"><?php _e( 'Multiple file upload', 'cf7-conditional-fields'); ?></a></li>
-                    <li><?php _e( 'More comming soon (Calculated Fields, ...)', 'cf7-conditional-fields'); ?></li>
+                    <li><a target="_blank" href="https://conditional-fields-cf7.bdwm.be/calculated-fields/"><?php _e( 'Calculated fields', 'cf7-conditional-fields'); ?></a></li>
                 </ul>
                 <p><a target="_blank" class="button button-primary" href="https://shop.bdwm.be/conditional-fields-pro/"><?php _e( 'Get PRO', 'cf7-conditional-fields'); ?></a></p>
                 <?php
             }
             do_action('wpcf7cf_after_animation_settings');
+
+            if (WPCF7CF_IS_PRO) {
+
+                echo '<h3>' . __( 'Default Repeater Settings', 'cf7-conditional-fields') . '</h3>';
+                wpcf7cf_input_fields_wrapper_start();
+
+                wpcf7cf_input_select('repeater_remove_button', array(
+                    'label' => __( 'Remove button placement', 'cf7-conditional-fields'),
+                    'description' => __( 'Override per repeater with <code>remove_button:bottom</code> or <code>remove_button:per_entry</code>.', 'cf7-conditional-fields'),
+                    'select_options' => array(
+                        'bottom' => __( 'Single button at the bottom', 'cf7-conditional-fields'),
+                        'per_entry' => __( 'One button per entry', 'cf7-conditional-fields'),
+                    )
+                ));
+
+                wpcf7cf_input_fields_wrapper_end();
+                submit_button();
+            }
 
             echo '<h3>' . __( 'Advanced Settings', 'cf7-conditional-fields') . '</h3>';
             wpcf7cf_input_fields_wrapper_start();
