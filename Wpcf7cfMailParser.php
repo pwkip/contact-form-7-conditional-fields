@@ -50,7 +50,10 @@ class Wpcf7cfMailParser {
 
             ob_start();
 
-            $num_subs = $this->posted_data[$name.'_count'];
+            $max_repeaters = apply_filters('wpcf7cf_max_repeater_count', 200);
+            $num_subs = isset($this->posted_data[$name.'_count'])
+                ? min($max_repeaters, max(0, intval($this->posted_data[$name.'_count'])))
+                : 0;
 
             for ($i=1; $i<=$num_subs; $i++) {
 				$str = preg_replace(["/\[{$original_name}\:index[^\]]*?\]/"],$i,$inner_template);
