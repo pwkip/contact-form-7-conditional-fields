@@ -665,6 +665,12 @@ window.wpcf7cf = {
             multistep.$btn_prev.addClass('disabled').attr('disabled', true);
         }
 
+        const $current_step = multistep.$steps.eq(multistep.currentStep - 1);
+        const prev_text = $current_step.attr('data-prev-button-text');
+        const next_text = $current_step.attr('data-next-button-text');
+        if (prev_text !== undefined) multistep.$btn_prev.text(prev_text);
+        if (next_text !== undefined) multistep.$btn_next.text(next_text);
+
         // replace next button with submit button on last step.
         // TODO: make this depend on a setting
         const $submit_button = multistep.form.$form.find('input[type="submit"]:last').eq(0);
