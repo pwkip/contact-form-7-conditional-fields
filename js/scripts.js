@@ -268,7 +268,8 @@ Wpcf7cfForm.prototype.displayFields = function() {
         }
     }
 
-    form.$groups.addClass('wpcf7cf-hidden');
+    // 'novalidate' makes CF7 skip inline validation inside hidden groups (issue #137)
+    form.$groups.addClass('wpcf7cf-hidden novalidate');
 
     for (let i=0; i < wpcf7cf_conditions.length; i++) {
 
@@ -277,7 +278,7 @@ Wpcf7cfForm.prototype.displayFields = function() {
         const show_group = window.wpcf7cf.should_group_be_shown(condition, form);
 
         if (show_group) {
-            form.get('[data-id="'+condition.then_field+'"]').removeClass('wpcf7cf-hidden');
+            form.get('[data-id="'+condition.then_field+'"]').removeClass('wpcf7cf-hidden novalidate');
         }
     }
 
