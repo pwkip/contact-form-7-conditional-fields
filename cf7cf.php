@@ -223,7 +223,8 @@ class CF7CF {
 
         if (!$posted_data) $posted_data = $_POST;
 
-        $hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields']));
+        // keys may be absent on REST API submissions, fall back to defaults to avoid PHP 8 undefined-key warnings
+        $hidden_fields = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_group_fields'] ?? '[]'));
         if (is_array($hidden_fields) && count($hidden_fields) > 0) {
             foreach ($hidden_fields as $field) {
                 $this->hidden_fields[] = $field;
@@ -232,10 +233,10 @@ class CF7CF {
                 }
             }
         }
-        $this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups']));
-        $this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups']));
-        $this->repeaters = json_decode(stripslashes($posted_data['_wpcf7cf_repeaters']));
-        $this->steps = json_decode(stripslashes($posted_data['_wpcf7cf_steps']));
+        $this->hidden_groups = json_decode(stripslashes($posted_data['_wpcf7cf_hidden_groups'] ?? '[]'));
+        $this->visible_groups = json_decode(stripslashes($posted_data['_wpcf7cf_visible_groups'] ?? '[]'));
+        $this->repeaters = json_decode(stripslashes($posted_data['_wpcf7cf_repeaters'] ?? '[]'));
+        $this->steps = json_decode(stripslashes($posted_data['_wpcf7cf_steps'] ?? '{}'));
     }
 
 	function hide_hidden_mail_fields($form,$abort,$submission) {

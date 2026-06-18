@@ -102,14 +102,24 @@ const Wpcf7cfForm = function(formElement) {
         }
     }, true); // use capture to run before WP's own handler
 
-    // Disable submit buttons while the form is submitting
+    // Disable submit buttons only during the actual submit, then restore prior state — don't clobber CF7's acceptance gating or any custom disabling (#136)
     const submitButtons = formElement.querySelectorAll('button[type=submit], input[type=submit]');
+    const prevDisabled = new WeakMap();
+    let wasSubmitting = formElement.classList.contains('submitting');
     const observer = new MutationObserver(() => {
         const isSubmitting = formElement.classList.contains('submitting');
+        if (isSubmitting === wasSubmitting) return; // only act on the submitting transition
+        wasSubmitting = isSubmitting;
 
         submitButtons.forEach(button => {
-            button.disabled = isSubmitting;
-            button.classList.toggle('is-disabled', isSubmitting);
+            if (isSubmitting) {
+                prevDisabled.set(button, button.disabled);
+                button.disabled = true;
+                button.classList.add('is-disabled');
+            } else {
+                button.disabled = prevDisabled.get(button) || false;
+                button.classList.remove('is-disabled');
+            }
         });
     });
     observer.observe(formElement, { attributes: true, attributeFilter: ['class'] });
