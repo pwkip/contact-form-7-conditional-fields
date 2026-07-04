@@ -18,31 +18,31 @@ class Wpcf7cfMailParser {
 	}
 
 	public function getParsedMail() {
-		return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $this->mail_body );
+		return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE, array($this, 'hide_hidden_mail_fields_regex_callback'), $this->mail_body );
 	}
 
 	function hide_hidden_mail_fields_regex_callback ( $matches ) {
-		$name = $matches[1];
+		$inverted = $matches[1] === '!'; // [!tagname]...[/!tagname] shows its content when the group is hidden
+		$name = $matches[2];
 
-		$name_parts = explode('__', $name);
-
-		$name_root = array_shift($name_parts);
-        $name_suffix = implode('__',$name_parts);
-
-		$content = $matches[2];
+		$content = $matches[3];
 
 		if ( in_array( $name, $this->hidden_groups ) ) {
 
-		    // The tag name represents a hidden group, so replace everything from [tagname] to [/tagname] with nothing
-            return '';
+		    // The tag name represents a hidden group, so keep only the inverted content
+            return $inverted
+                ? preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE, array($this, 'hide_hidden_mail_fields_regex_callback'), $content )
+                : '';
 
 		} elseif ( in_array( $name, $this->visible_groups ) ) {
 
 		    // The tag name represents a visible group, so remove the tags themselves, but return everything else
 			// ( instead of just returning the $content, return the preg_replaced content )
-			return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $content );
+			return $inverted
+                ? ''
+                : preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE, array($this, 'hide_hidden_mail_fields_regex_callback'), $content );
 
-		} elseif ( $this->repeaters !== null && in_array( $name, $this->repeaters ) ) {
+		} elseif ( !$inverted && $this->repeaters !== null && in_array( $name, $this->repeaters ) ) {
 
 			$original_name = explode('__',$name)[0];
 
@@ -63,7 +63,7 @@ class Wpcf7cfMailParser {
 
             $underscored_content = ob_get_clean();
 
-            return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP, array($this, 'hide_hidden_mail_fields_regex_callback'), $underscored_content );
+            return preg_replace_callback(WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE, array($this, 'hide_hidden_mail_fields_regex_callback'), $underscored_content );
 
 		}else {
 

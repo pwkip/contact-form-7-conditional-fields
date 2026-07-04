@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 2.7.8
+Stable tag: 2.7.9
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,6 +36,7 @@ Required fields inside hidden groups will never trigger validation errors.
 
 Conditional groups can now be added to the emails as well.
 Just wrap the content with `[group-name] ... [/group-name]` tags.
+To show content only when a group is hidden, invert the tag with an exclamation mark: `[!group-name] ... [/!group-name]`.
 
 = Groups can be nested =
 Groups can be nested, both in the form and in the email
@@ -137,6 +138,9 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.7.9 (2026-07-04) =
+* Add inverted group tags in email and summary templates: `[!group-name] ... [/!group-name]` shows its content only when the group is hidden ([#96](https://github.com/pwkip/contact-form-7-conditional-fields/issues/96)).
 
 = 2.7.8 (2026-06-18) =
 * Fix submit button being re-enabled when it should stay disabled ([#136](https://github.com/pwkip/contact-form-7-conditional-fields/issues/136)).

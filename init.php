@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.7.8' );
+if (!defined('WPCF7CF_VERSION')) define( 'WPCF7CF_VERSION', '2.7.9' );
 if (!defined('WPCF7CF_CF7_MAX_VERSION')) define( 'WPCF7CF_CF7_MAX_VERSION', '6.1.6' );
 if (!defined('WPCF7CF_PLUGIN')) define( 'WPCF7CF_PLUGIN', __FILE__ );
 if (!defined('WPCF7CF_PLUGIN_BASENAME')) define( 'WPCF7CF_PLUGIN_BASENAME', plugin_basename( WPCF7CF_PLUGIN ) );
@@ -11,7 +11,8 @@ if (!defined('WPCF7CF_LOAD_JS')) define('WPCF7CF_LOAD_JS', true);
 if (!defined('WPCF7CF_LOAD_CSS')) define('WPCF7CF_LOAD_CSS', true);
 
 if (!defined('WPCF7CF_REGEX_MAIL_GROUP')) define( 'WPCF7CF_REGEX_MAIL_GROUP', '@\[[\s]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\s]*\](.*?)\[[\s]*/[\s]*\1[\s]*\]@s');
-if (!defined('WPCF7CF_REGEX_MAIL_GROUP_INVERTED')) define( 'WPCF7CF_REGEX_MAIL_GROUP_INVERTED', '@\[![\s]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\s]*\](.*?)\[![\s]*/[\s]*\1[\s]*\]@s');
+// like WPCF7CF_REGEX_MAIL_GROUP, but also matches inverted tags: [!group]...[/!group]. $1 = optional '!', $2 = name, $3 = content
+if (!defined('WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE')) define( 'WPCF7CF_REGEX_MAIL_GROUP_INVERTIBLE', '@\[[\s]*(!?)[\s]*([a-zA-Z_][0-9a-zA-Z:._-]*)[\s]*\](.*?)\[[\s]*/[\s]*\1[\s]*\2[\s]*\]@s');
 if (!defined('WPCF7CF_REGEX_MAIL_UNWANTED_WHITESPACE')) define('WPCF7CF_REGEX_MAIL_UNWANTED_WHITESPACE', '@(\[/[^\]]*\])\s+?(\[)@s');
 if (!defined('WPCF7CF_REGEX_CONDITIONS')) define( 'WPCF7CF_REGEX_CONDITIONS', '/(?:show \[([^\]]*?)\]|and) if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/m');
 
