@@ -158,6 +158,7 @@ add_action( 'wpcf7_after_save', function($contact_form) {
 
 	if (isset($_POST['wpcf7cf-summary-template'])) {
 		WPCF7CF_Summary::saveSummaryTemplate($_POST['wpcf7cf-summary-template'],$post_id);
+		WPCF7CF_Summary::saveSummaryExcludeBlank(isset($_POST['wpcf7cf-summary-exclude-blank']),$post_id);
 	}
 	
 }, 8, 1 );
@@ -210,14 +211,24 @@ function wpcf7cf_sanitize_options($options) {
 add_action('admin_notices', function () {
 
 	$settings = wpcf7cf_get_settings();
+	$plugin_name = '<strong>Conditional Fields for Contact Form 7</strong>';
+	$cf7_zip_url = 'https://downloads.wordpress.org/plugin/contact-form-7.' . WPCF7CF_CF7_MAX_VERSION . '.zip';
 
 	$nid = 'install-cf7';
 	if ( !defined('WPCF7_VERSION') ) {
 		if ( current_user_can('update_plugins') ) {
 			?>
-				<div class="wpcf7cf-admin-notice notice notice-warning" data-notice-id="<?php echo $nid ?>">
+				<div class="wpcf7cf-admin-notice notice notice-warning" data-notice-id="<?php echo esc_attr( $nid ) ?>">
 					<p>
-						<strong>Conditional Fields for Contact Form 7</strong> depends on Contact Form 7. Please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">Contact Form 7</a>.
+						<?php
+						printf(
+							/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
+							esc_html__( '%1$s depends on Contact Form 7. Please install %2$sContact Form 7%3$s.', 'cf7-conditional-fields' ),
+							$plugin_name,
+							'<a target="_blank" href="' . esc_url( $cf7_zip_url ) . '">',
+							'</a>'
+						);
+						?>
 					</p>
 				</div>
 			<?php
@@ -228,11 +239,18 @@ add_action('admin_notices', function () {
 	$nid = 'rollback-cf7-'.WPCF7CF_CF7_MAX_VERSION;
 	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '<' ) && empty($settings['notice_dismissed_'.$nid]) && current_user_can('update_plugins') ) {
 		?>
-			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
+			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo esc_attr( $nid ) ?>" data-nonce="<?php echo esc_attr( wpcf7cf_get_dismiss_notice_nonce() ) ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is not yet tested with your current version of Contact Form 7.
-					<br>If you notice any problems with your forms, please roll back to Contact Form 7 <strong>version <?php echo WPCF7CF_CF7_MAX_VERSION ?></strong>.
-					<br>For a quick and safe rollback, we recommend <a href="https://wordpress.org/plugins/wp-rollback/" target="_blank">WP Rollback</a>.
+					<?php
+					/* translators: %s: plugin name */
+					printf( esc_html__( '%s is not yet tested with your current version of Contact Form 7.', 'cf7-conditional-fields' ), $plugin_name );
+					echo '<br>';
+					/* translators: 1: opening bold tag, 2: Contact Form 7 version number, 3: closing bold tag */
+					printf( esc_html__( 'If you notice any problems with your forms, please roll back to Contact Form 7 %1$sversion %2$s%3$s.', 'cf7-conditional-fields' ), '<strong>', esc_html( WPCF7CF_CF7_MAX_VERSION ), '</strong>' );
+					echo '<br>';
+					/* translators: 1: opening link tag, 2: closing link tag */
+					printf( esc_html__( 'For a quick and safe rollback, we recommend %1$sWP Rollback%2$s.', 'cf7-conditional-fields' ), '<a href="https://wordpress.org/plugins/wp-rollback/" target="_blank">', '</a>' );
+					?>
 				</p>
 			</div>
 		<?php
@@ -241,10 +259,15 @@ add_action('admin_notices', function () {
 	$nid = 'update-cf7-'.WPCF7CF_CF7_MAX_VERSION;
 	if ( version_compare( WPCF7CF_CF7_MAX_VERSION, WPCF7_VERSION, '>' ) && empty($settings['notice_dismissed_'.$nid]) && current_user_can('update_plugins') ) {
 		?>
-			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo $nid ?>" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
+			<div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="<?php echo esc_attr( $nid ) ?>" data-nonce="<?php echo esc_attr( wpcf7cf_get_dismiss_notice_nonce() ) ?>">
 				<p>
-					<strong>Conditional Fields for Contact Form 7</strong> is fully compatible and tested with Contact Form 7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?>.
-					<br>Compatibility with other versions of CF7 is not guaranteed, so please install <a target="_blank" href="https://downloads.wordpress.org/plugin/contact-form-7.<?php echo WPCF7CF_CF7_MAX_VERSION ?>.zip">CF7 version <?php echo WPCF7CF_CF7_MAX_VERSION ?></a>
+					<?php
+					/* translators: 1: plugin name, 2: Contact Form 7 version number */
+					printf( esc_html__( '%1$s is fully compatible and tested with Contact Form 7 version %2$s.', 'cf7-conditional-fields' ), $plugin_name, esc_html( WPCF7CF_CF7_MAX_VERSION ) );
+					echo '<br>';
+					/* translators: 1: opening link tag, 2: Contact Form 7 version number, 3: closing link tag */
+					printf( esc_html__( 'Compatibility with other versions of CF7 is not guaranteed, so please install %1$sCF7 version %2$s%3$s.', 'cf7-conditional-fields' ), '<a target="_blank" href="' . esc_url( $cf7_zip_url ) . '">', esc_html( WPCF7CF_CF7_MAX_VERSION ), '</a>' );
+					?>
 				</p>
 			</div>
 		<?php

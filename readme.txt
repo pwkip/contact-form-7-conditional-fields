@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 2.7.9
+Stable tag: 2.7.10
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -138,6 +138,14 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.7.10 (2026-07-07) =
+* Add support for `[_format_my-date "d/m/Y"]` and `[_raw_my-field]` mail-tags in the Summary field ([#117](https://github.com/pwkip/contact-form-7-conditional-fields/issues/117)).
+* Add a "Exclude a line from output if all of its mail-tags are blank" option to the Summary field, matching the same option for the email template ([#135](https://github.com/pwkip/contact-form-7-conditional-fields/issues/135)).
+* Confirmed compatibility with Contact Form 7's `[reflection]` and `[output]` tags ([#124](https://github.com/pwkip/contact-form-7-conditional-fields/issues/124)).
+* Compare `[date]` fields chronologically with the greater/less than operators, and offer a date-picker for the value in the condition editor ([#60](https://github.com/pwkip/contact-form-7-conditional-fields/issues/60)).
+* Make the plugin's admin notices translatable ([#123](https://github.com/pwkip/contact-form-7-conditional-fields/issues/123)).
+* PRO: The License key and Regular Expressions settings screen is now translatable, and German, French, Spanish, Italian and Dutch translations are bundled.
 
 = 2.7.9 (2026-07-04) =
 * Add inverted group tags in email and summary templates: `[!group-name] ... [/!group-name]` shows its content only when the group is hidden ([#96](https://github.com/pwkip/contact-form-7-conditional-fields/issues/96)).

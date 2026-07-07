@@ -467,6 +467,12 @@ Wpcf7cfForm.prototype.updateEventListeners = function() {
 
 
 
+// matches an ISO date (YYYY-MM-DD) as submitted by CF7's [date] field
+const wpcf7cf_date_regex = /^\d{4}-\d{2}-\d{2}$/;
+function wpcf7cf_isDateString(v) {
+    return typeof v === 'string' && wpcf7cf_date_regex.test(v) && !isNaN(Date.parse(v));
+}
+
 /**
  * @global
  * @namespace wpcf7cf
@@ -779,6 +785,7 @@ window.wpcf7cf = {
         }
 
         const testValueNumber = isFinite(parseFloat(testValue)) ? parseFloat(testValue) : NaN;
+        const testValueIsDate = wpcf7cf_isDateString(testValue);
 
 
         if (operator === 'not equals' || operator === 'not equals (regex)') {
@@ -812,15 +819,23 @@ window.wpcf7cf = {
             const valueNumber = isFinite(parseFloat(value)) ? parseFloat(value) : NaN;
             const valsAreNumbers = !isNaN(valueNumber) && !isNaN(testValueNumber);
 
+            // when both sides are ISO dates, compare chronologically instead of by parseFloat (which reads only the year)
+            const valueIsDate = wpcf7cf_isDateString(value);
+            const compareAsDates = testValueIsDate && valueIsDate;
+            const left = compareAsDates ? Date.parse(value) : valueNumber;
+            const right = compareAsDates ? Date.parse(testValue) : testValueNumber;
+            // a date on one side and a plain number on the other are not comparable
+            const comparable = compareAsDates || (valsAreNumbers && testValueIsDate === valueIsDate);
+
             if (
 
                 operator === 'equals' && value === testValue ||
                 operator === 'equals (regex)' && regex_patt.test(value) ||
-                operator === 'greater than' && valsAreNumbers && valueNumber > testValueNumber ||
-                operator === 'less than' && valsAreNumbers && valueNumber < testValueNumber ||
-                operator === 'greater than or equals' && valsAreNumbers && valueNumber >= testValueNumber ||
-                operator === 'less than or equals' && valsAreNumbers && valueNumber <= testValueNumber
-                
+                operator === 'greater than' && comparable && left > right ||
+                operator === 'less than' && comparable && left < right ||
+                operator === 'greater than or equals' && comparable && left >= right ||
+                operator === 'less than or equals' && comparable && left <= right
+
             ) {
 
                 condition_ok = true;
