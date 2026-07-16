@@ -47,7 +47,7 @@ function wpcf7cf_get_settings() {
     if (!$wpcf7cf_saved_settings) {
         $wpcf7cf_saved_settings = [];
     }
-    
+
     $wpcf7cf_settings_glob = array_merge($wpcf7cf_default_settings,$wpcf7cf_saved_settings);
 
     return $wpcf7cf_settings_glob;
@@ -183,12 +183,12 @@ function wpcf7cf_options_page() {
 
             wpcf7cf_input_select('conditions_ui', array(
                 'label' => __( 'Conditional Fields UI', 'cf7-conditional-fields'),
-                'description' => sprintf( 
+                'description' => sprintf(
                     // translators: max recommended conditions
                     __( 'If you want to add more than %s conditions, it\'s recommended to switch to <strong>Text mode</strong> mode for better performance.', 'cf7-conditional-fields' ), WPCF7CF_MAX_RECOMMENDED_CONDITIONS ),
                 'select_options' => array('normal'=> __( 'Normal', 'cf7-conditional-fields'), 'text_only' => __( 'Text mode', 'cf7-conditional-fields'))
             ));
-            
+
             wpcf7cf_input_fields_wrapper_end();
 
             submit_button();
@@ -228,7 +228,7 @@ function wpcf7cf_input_field($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'default' => wpcf7cf_get_default_settings()[$slug],
         'label_editable' => false
     );
@@ -272,7 +272,7 @@ function wpcf7cf_input_select($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'select_options' => array(), // array($name => $value)
         'default' => wpcf7cf_get_default_settings()[$slug],
     );
