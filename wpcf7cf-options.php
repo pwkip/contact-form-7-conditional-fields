@@ -223,6 +223,13 @@ function wpcf7cf_input_fields_wrapper_end() {
     echo '</tbody></table>';
 }
 
+/**
+ * Displays an input field wrapped in a table row.
+ *
+ * @param string $slug
+ * @param array<string, mixed> $args
+ * @return void
+ */
 function wpcf7cf_input_field($slug, $args) {
     $settings = wpcf7cf_get_settings();
 
@@ -267,6 +274,13 @@ function wpcf7cf_input_field($slug, $args) {
 
 }
 
+/**
+ * Displays a select field wrapped in a table row.
+ *
+ * @param string $slug
+ * @param array<string, mixed> $args
+ * @return void
+ */
 function wpcf7cf_input_select($slug, $args) {
     $settings = wpcf7cf_get_settings();
 
