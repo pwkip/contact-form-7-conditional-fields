@@ -97,7 +97,7 @@ function wpcf7_tag_generator_group( $contact_form, $options ) {
 	</fieldset>
 
     <fieldset>
-        <legend id="tag-generator-panel-group-name-legend">Group name</legend>
+        <legend id="tag-generator-panel-group-name-legend"><?php esc_html_e( 'Group name', 'cf7-conditional-fields' ); ?></legend>
         <input type="text" data-tag-part="name" pattern="[A-Za-z][A-Za-z0-9_\-]*" aria-labelledby="tag-generator-panel-group-name-legend">
     </fieldset>
 

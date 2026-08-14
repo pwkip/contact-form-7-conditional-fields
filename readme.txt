@@ -4,9 +4,9 @@ Donate link: https://shop.bdwm.be/contact-form-7-conditional-fields-pro/
 Author: Jules Colle
 Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
-Requires at least: 5.0
+Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 2.7.11
+Stable tag: 2.7.12
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -138,6 +138,12 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.7.12 (2026-08-14) =
+* Fix the "deactivate the free plugin" admin notice rendering a second opening link tag instead of closing the first one. Make  the "Group name" label in the group tag generator translatable. Thanks [alexclassroom](https://github.com/pwkip/contact-form-7-conditional-fields/pull/132)!
+* Fix the `wpcf7_feedback_response` filter being registered with its priority and argument count swapped. Thanks [szepeviktor](https://github.com/pwkip/contact-form-7-conditional-fields/pull/122)!
+* Declare `Requires at least` and `Requires PHP` in the plugin header so WordPress can check them on activation. Thanks [IanDelMar](https://github.com/pwkip/contact-form-7-conditional-fields/pull/119)!
+* Raise the minimum WordPress version to 5.9.
 
 = 2.7.11 (2026-08-14) =
 * Fix a typo in description variable ([#138](https://github.com/pwkip/contact-form-7-conditional-fields/issues/138)).
