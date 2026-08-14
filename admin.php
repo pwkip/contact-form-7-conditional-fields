@@ -150,7 +150,7 @@ add_action( 'wpcf7_after_save', function($contact_form) {
 
 	// we intentionally don't use sanitize_textarea_field here,
 	// because basically any character is a valid character.
-	// To arm agains SQL injections and other funky junky, the CF7CF::parse_conditions function is used.
+	// To arm against SQL injections and other funky junky, the CF7CF::parse_conditions function is used.
 	$conditions_string = stripslashes($_POST['wpcf7cf-settings-text']);
 	$conditions = CF7CF::parse_conditions($conditions_string);
 

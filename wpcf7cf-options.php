@@ -228,7 +228,7 @@ function wpcf7cf_input_field($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'default' => wpcf7cf_get_default_settings()[$slug],
         'label_editable' => false
     );
@@ -272,7 +272,7 @@ function wpcf7cf_input_select($slug, $args) {
 
     $defaults = array(
         'label'=>'',
-        'desription' => '',
+        'description' => '',
         'select_options' => array(), // array($name => $value)
         'default' => wpcf7cf_get_default_settings()[$slug],
     );
