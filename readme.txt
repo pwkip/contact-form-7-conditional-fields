@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 2.7.12
+Stable tag: 2.7.13
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -135,9 +135,12 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 
 = 2.2.11 =
 
-Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
+Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are on Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.7.13 (2026-08-17) =
+* Fully tested with Contact Form 7 version 6.1.7
 
 = 2.7.12 (2026-08-14) =
 * Fix the "deactivate the free plugin" admin notice rendering a second opening link tag instead of closing the first one. Make  the "Group name" label in the group tag generator translatable. Thanks [alexclassroom](https://github.com/pwkip/contact-form-7-conditional-fields/pull/132)!
