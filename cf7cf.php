@@ -139,10 +139,16 @@ class CF7CF {
         } else {
             foreach ($invalid_fields as $invalid_field_key => $invalid_field_data) {
                 if (!in_array($invalid_field_key, $this->hidden_fields)) {
+                    $matched = false;
                     foreach ($tags as $tag) {
                         if ($tag['name'] === $invalid_field_key) {
                            $return_result->invalidate($tag, $invalid_field_data['reason']);
+                           $matched = true;
                         }
+                    }
+                    // CF7 6.2+ validates file fields here too, but $tags excludes them
+                    if (!$matched) {
+                        $return_result->invalidate(['name' => $invalid_field_key], $invalid_field_data['reason']);
                     }
                 }
             }
@@ -166,16 +172,21 @@ class CF7CF {
             $this->set_hidden_fields_arrays($_POST);
         }
 
-        $invalid_field_keys = array_keys($result->get_invalid_fields());
+        $invalid_fields = $result->get_invalid_fields();
 
-        // if the current file is the only invalid tag in the result AND if the file is hidden: return a valid (blank) object
-        if (isset($this->hidden_fields) && is_array($this->hidden_fields) && in_array($tag->name, $this->hidden_fields) && count($invalid_field_keys) == 1) {
-            return new WPCF7_Validation();
+        // if the current file is not hidden (or not invalid), keep the result as is
+        if (!is_array($this->hidden_fields) || !in_array($tag->name, $this->hidden_fields) || !isset($invalid_fields[$tag->name])) {
+            return $result;
         }
 
-        // if the current file is not hidden, we'll just return the result (keep it invalid).
-        // (Note that this might also return the hidden files as invalid, but that shouldn't matter because the form is invalid, and the notification will be inside a hidden group)
-        return $result;
+        // drop only the hidden file's own error; errors of other fields in the shared result must survive
+        $return_result = new WPCF7_Validation();
+        foreach ($invalid_fields as $name => $data) {
+            if ($name !== $tag->name) {
+                $return_result->invalidate(['name' => $name], $data['reason']);
+            }
+        }
+        return $return_result;
     }
 
     function cf7msm_merge_post_with_cookie($posted_data) {

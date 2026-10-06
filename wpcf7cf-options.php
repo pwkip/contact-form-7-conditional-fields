@@ -82,7 +82,9 @@ function wpcf7cf_load_page_options_wp_admin_style() {
 
 add_action('admin_menu', 'wpcf7cf_admin_add_page');
 function wpcf7cf_admin_add_page() {
-    add_submenu_page('wpcf7', __( 'Conditional Fields', 'cf7-conditional-fields' ), __( 'Conditional Fields', 'cf7-conditional-fields' ), WPCF7_ADMIN_READ_WRITE_CAPABILITY, 'wpcf7cf', 'wpcf7cf_options_page' );
+    // CF7 6.2+ renamed the Contact menu slug to wpcf7-dashboard
+    $parent_slug = isset( $GLOBALS['admin_page_hooks']['wpcf7-dashboard'] ) ? 'wpcf7-dashboard' : 'wpcf7';
+    add_submenu_page($parent_slug, __( 'Conditional Fields', 'cf7-conditional-fields' ), __( 'Conditional Fields', 'cf7-conditional-fields' ), WPCF7_ADMIN_READ_WRITE_CAPABILITY, 'wpcf7cf', 'wpcf7cf_options_page' );
 }
 
 function wpcf7cf_options_page() {

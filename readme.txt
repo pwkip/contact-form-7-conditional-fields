@@ -5,8 +5,8 @@ Author: Jules Colle
 Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.9
-Tested up to: 7.0
-Stable tag: 2.7.13
+Tested up to: 7.1
+Stable tag: 2.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -138,6 +138,13 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are on Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.8 (2026-10-06) =
+* Fully tested with Contact Form 7 version 6.2
+* Fix the Conditional Fields settings page missing from the Contact menu with Contact Form 7 6.2.
+* Fix required file fields being ignored when the form contains a hidden group. Contact Form 7 6.2 validates file fields together with the other fields, and their errors were dropped.
+* PRO: Fix [file] fields not being validated (required, size, file type) when going to the next step of a multistep form with Contact Form 7 6.2.
+* PRO: Fix an empty required [multifile] field not blocking the submission when the form also has a file field inside a hidden group.
 
 = 2.7.13 (2026-08-17) =
 * Fully tested with Contact Form 7 version 6.1.7
