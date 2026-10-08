@@ -302,6 +302,15 @@ Wpcf7cfForm.prototype.displayFields = function() {
             $group.finish(); // stop any current animations on the group
         }
         if ($group.css('display') === 'none' && !$group.hasClass('wpcf7cf-hidden')) {
+            // drop CF7 validation errors on fields when group is hidden
+            $group.find('.wpcf7-not-valid-tip').remove();
+            $group.find('[aria-invalid]').attr('aria-invalid', 'false');
+            $group.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid').each(function() {
+                jQuery(document.getElementById(this.getAttribute('aria-describedby'))).remove();
+                this.removeAttribute('aria-describedby');
+                if (typeof this.setCustomValidity === 'function') this.setCustomValidity('');
+            });
+
             if ($group.prop('tagName') === 'SPAN') {
                 $group.show().trigger('wpcf7cf_show_group'); // show instantly
             } else {
