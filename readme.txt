@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -137,7 +137,16 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 
 Reverted autop-fix because it was causing additional errors. Bottom line: Make sure you are on Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
+= 2.8.4 =
+
+Contact Form 7 6.2.4 has a bug: an empty file field fails validation with "You are not allowed to upload files of this type." This needs to be fixed in Contact Form 7: https://github.com/rocklobster-in/contact-form-7/issues/1908
+
 == Changelog ==
+
+= 2.8.4 (2026-10-29) =
+* Fully tested with Contact Form 7 version 6.2.4
+* PRO: Fix multistep forms and [multifile] fields failing with a PHP error on Contact Form 7 6.2.4.
+* Known issue in Contact Form 7 6.2.4: an empty file field fails validation with "You are not allowed to upload files of this type." This needs to be fixed in Contact Form 7 ([contact-form-7#1908](https://github.com/rocklobster-in/contact-form-7/issues/1908)).
 
 = 2.8.3 (2026-10-21) =
 * Fully tested with Contact Form 7 version 6.2.3
