@@ -6,7 +6,7 @@ Website: http://bdwm.be
 Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 2.8.5
+Stable tag: 2.8.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -142,6 +142,10 @@ Reverted autop-fix because it was causing additional errors. Bottom line: Make s
 Contact Form 7 6.2.4 has a bug: an empty file field fails validation with "You are not allowed to upload files of this type." This needs to be fixed in Contact Form 7: https://github.com/rocklobster-in/contact-form-7/issues/1908
 
 == Changelog ==
+
+= 2.8.6 (2026-11-10) =
+* Fully tested with Contact Form 7 version 6.2.5
+* PRO: Fix a "deprecated" PHP notice from calculated fields on Contact Form 7 6.2.5.
 
 = 2.8.5 (2026-10-29) =
 * Fully tested with Contact Form 7 version 6.2.4.1
