@@ -129,7 +129,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 
         <div id="wpcf7cf-text-entries">
             <div id="wpcf7cf-settings-text-wrap">
-                <textarea id="wpcf7cf-settings-text" name="wpcf7cf-settings-text"><?php echo CF7CF::serializeConditions($wpcf7cf_entries) ?></textarea>
+                <textarea id="wpcf7cf-settings-text" name="wpcf7cf-settings-text"><?php echo esc_textarea( CF7CF::serializeConditions($wpcf7cf_entries) ) ?></textarea>
                 <br>
             </div>
         </div>
